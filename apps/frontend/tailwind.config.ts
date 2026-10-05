@@ -10,7 +10,19 @@ import type { Config } from "tailwindcss";
  */
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
-  darkMode: "class",
+  // Híbrido: `<html>` lleva siempre `.dark`, pero el contenido de página (`.app-main`) es CLARO.
+  // Con `darkMode: "class"` las 761 utilidades `dark:` (text-white, border-white/10, bg-white/5…)
+  // se aplicaban también dentro de `.app-main` → texto y bordes blancos sobre blanco. Ahora `dark:`
+  // solo rige fuera de `.app-main` (dock, navbar, modales en portal) y en las islas oscuras dentro
+  // de él (`.modal-surface`, `.dark-island`); en el contenido gana la clase base "claro primero".
+  darkMode: [
+    "variant",
+    [
+      "&:is(.dark *):not(.app-main *)",
+      "&:is(.app-main .modal-surface, .app-main .modal-surface *)",
+      "&:is(.app-main .dark-island, .app-main .dark-island *)"
+    ]
+  ],
   theme: {
     extend: {
       colors: {
@@ -37,11 +49,12 @@ const config: Config = {
         // globals.css) para poder "voltear" el contenido de las páginas a modo claro sin tocar cada
         // componente — Sidebar/Topbar/.modal-surface siguen oscuros porque viven fuera de `.app-main`.
         bg: {
-          light: "#0c0c0c",
-          canvas: "#0c0c0c",
-          surface: "#111009",
-          "surface-2": "#161310",
-          accent: "#1c1915",
+          // Variables (no hex fijo): oscuras en :root, claras dentro de .app-main (globals.css).
+          light: "var(--bg-light)",
+          canvas: "var(--bg-canvas)",
+          surface: "var(--bg-surface)",
+          "surface-2": "var(--bg-surface-2)",
+          accent: "var(--bg-accent)",
           dark: "var(--bg-dark)",
           dark2: "#111009",
           darkcard: "var(--bg-dark-card)",

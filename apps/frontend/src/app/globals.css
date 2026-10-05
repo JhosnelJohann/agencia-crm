@@ -967,6 +967,22 @@ html.fx-off .glass-input {
 
 
 /* ========== MODAL SURFACE (cristal 3D con blur — siempre oscuro, incluso dentro de .app-main) ========== */
+/* Islas oscuras dentro del contenido claro: re-anclan los tokens a los valores oscuros de :root.
+   `.dark-island` además reactiva las variantes `dark:` (ver darkMode en tailwind.config.ts). */
+.modal-surface,
+.dark-island {
+  --line: rgba(240,237,232,0.07);
+  --line-soft: rgba(240,237,232,0.04);
+  --bg-dark: #0c0c0c;
+  --bg-dark-card: #161310;
+  --bg-light: #0c0c0c;
+  --bg-canvas: #0c0c0c;
+  --bg-surface: #111009;
+  --bg-surface-2: #161310;
+  --bg-accent: #1c1915;
+  --content-fill: #161310;
+}
+.dark-island { --ink: #f0ede8; --ink-sub: #9b9490; --ink-muted: #5c5854; color: var(--ink); }
 .modal-surface {
   /* Re-ancla el texto a los valores oscuros: algunos modales se renderizan inline dentro de
      .app-main (sin portal) y heredarían el --ink claro del contenido si no se re-declara aquí. */
@@ -1196,6 +1212,12 @@ html.dark .glass-topbar {
   --line-soft: rgba(20, 18, 15, 0.04);
   --bg-dark: #f6f4f1;
   --bg-dark-card: #ffffff;
+  /* bg.light/canvas/surface/surface-2/accent de Tailwind (antes hex carbón fijos, p. ej. el panel de Correo). */
+  --bg-light: #f6f4f1;
+  --bg-canvas: #f6f4f1;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #faf9f7;
+  --bg-accent: #efece7;
   --content-fill: #ffffff;
   --content-shadow: 0 20px 50px -24px rgba(20, 18, 15, 0.12), 0 1px 0 rgba(20, 18, 15, 0.04);
   background: var(--bg-dark);
@@ -1221,6 +1243,21 @@ html.fx-off .app-main .glass-blur {
 .app-main .bg-bg-darkcard\/80,
 .app-main .bg-bg-darkcard\/90 {
   background-color: var(--content-fill);
+}
+/* Las superficies de cristal legacy (`html.dark .glass…`, más arriba y en el bloque 3D) también se
+   pintaban carbón dentro del contenido claro: filas del Pipeline, paneles de Drive, etc. Se voltean
+   a tarjeta blanca salvo dentro de las islas oscuras (.modal-surface / .dark-island).
+   `html.dark` delante para superar la especificidad de `html.dark .glass`. */
+html.dark .app-main :is(.glass, .glass-strong, .glass-light, .glass-panel):not(:is(.modal-surface, .dark-island) *) {
+  background: var(--content-fill);
+  border: 1px solid var(--line);
+  box-shadow: var(--content-shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+html.dark .app-main .skeleton:not(:is(.modal-surface, .dark-island) *) {
+  background: linear-gradient(90deg, #ebe8e3 0%, #f6f4f1 50%, #ebe8e3 100%);
+  background-size: 200% 100%;
 }
 
 /* --- Botones con gradiente animado ---------------------------------------------------------- */

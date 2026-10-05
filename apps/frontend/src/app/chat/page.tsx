@@ -556,7 +556,7 @@ export default function ChatPage() {
       {/* Móvil: una sola vista a la vez (lista o hilo), como cualquier app de mensajería —
           nunca las dos apretadas lado a lado en una pantalla de teléfono. Escritorio (`lg`):
           ambas visibles siempre, como hoy. */}
-      <div className="mx-3.5 lg:mx-5 mt-3.5 mb-3.5 flex h-[calc(100vh-8.2rem)] min-h-[420px] overflow-hidden glass-3d rounded-[28px]">
+      <div className="mx-3.5 lg:mx-5 mt-3.5 mb-3.5 flex h-[calc(100vh-8.2rem)] min-h-[420px] overflow-hidden glass-3d rounded-[28px] dark-island">
         <div className={cn("w-full lg:w-auto", activeId ? "hidden lg:block" : "block")}>
           <ChatSidebar
             grupos={grupos}
