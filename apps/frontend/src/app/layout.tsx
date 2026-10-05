@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/magic/ThemeProvider";
-import { LenisProvider } from "@/components/magic/LenisProvider";
 import { CallProvider } from "@/components/videollamada/CallProvider";
 import { SceneHost } from "@/components/magic/SceneHost";
 import { CursorGlow } from "@/components/magic/CursorGlow";
@@ -35,11 +34,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CursorGlow />
         <div className="grain-overlay" aria-hidden="true" />
         <ThemeProvider>
-          <LenisProvider>
-            <CallProvider>
-              {children}
-            </CallProvider>
-          </LenisProvider>
+          {/* Sin Lenis (smooth scroll): su bucle rAF + re-escaneo de contenedores cada 250 ms bloqueaba
+              el hilo principal en un CRM con listas en tiempo real. Scroll nativo del navegador. */}
+          <CallProvider>
+            {children}
+          </CallProvider>
         </ThemeProvider>
         <Toaster position="top-right" theme="dark" closeButton />
       </body>
