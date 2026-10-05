@@ -1,0 +1,1355 @@
+:root {
+  /* ── Identidad sandrogozz.com ── */
+  --brand-orange: #e8581a;
+  --brand-gold: #b8460f;
+  --brand-blue: #5d8fa8;
+  --brand-green: #16b91a;
+  --brand-red: #e30b0b;
+  --brand-neutral: #9b9490;
+
+  --neon-orange: #e8581a;
+  --neon-cyan: #f0a070;
+  --neon-magenta: #e8581a;
+  --neon-purple: #c96a3d;
+  --neon-yellow: #f0b040;
+  --neon-blue: #9b9490;
+
+  /* La app es solo oscura: los tokens "light" apuntan a los oscuros. */
+  --bg-light: #0c0c0c;
+  --bg-canvas: #0c0c0c;
+  --bg-surface: #111009;
+  --bg-surface-2: #161310;
+  --bg-accent: #1c1915;
+  --fg-light: #f0ede8;
+  --border-subtle: rgba(240,237,232,0.07);
+
+  --bg-dark: #0c0c0c;
+  --bg-dark-2: #111009;
+  --bg-dark-card: #161310;
+  --bg-sidebar: #0c0c0c;
+  --fg-dark: #f0ede8;
+  --border-dark: rgba(240,237,232,0.07);
+  --border-subtle-dark: rgba(240,237,232,0.07);
+
+  /* Tokens por nombre (landing) */
+  --bg: #0c0c0c;
+  --bg-alt: #111009;
+  --surface: #161310;
+  --surface-2: #1c1915;
+  --accent: #e8581a;
+  --accent-dim: rgba(232,88,26,0.10);
+  --accent-line: rgba(232,88,26,0.25);
+  --text: #f0ede8;
+  --text-sub: #9b9490;
+  --text-muted: #5c5854;
+  --border: rgba(240,237,232,0.07);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-barlow: "Inter";
+  --font-dm: "Inter";
+  --font-mono: "JetBrains Mono";
+
+  /* ── Tokens de contenido (pueden "voltear" a modo claro dentro de .app-main) ── */
+  --ink: #f0ede8;
+  --ink-sub: #9b9490;
+  --ink-muted: #5c5854;
+  --line: rgba(240,237,232,0.07);
+  --line-soft: rgba(240,237,232,0.04);
+  /* --bg-dark y --bg-dark-card ya existen arriba y sirven de base para Tailwind (bg.dark/darkcard) */
+}
+
+html, html.dark {
+  color-scheme: dark;
+  --fg: var(--fg-dark);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background: var(--bg);
+}
+html, body {
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  line-height: 1.6;
+}
+
+/* Resplandor naranja radial de la landing. Vive en un pseudo-elemento fijo (barato de componer)
+   en vez de `background-attachment: fixed`, que repinta toda la página en cada scroll. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 520px at 50% -220px, rgba(232,88,26,0.12) 0%, rgba(232,88,26,0.035) 40%, transparent 72%);
+}
+
+/* Titulares al estilo de la landing: Barlow Condensed, mayúsculas, peso 700–800. */
+h1, h2 {
+  font-family: var(--font-barlow), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+  font-weight: 800;
+}
+h3 {
+  font-family: var(--font-barlow), sans-serif;
+  letter-spacing: 0.4px;
+  font-weight: 700;
+}
+
+/* Grano de película: tesela PNG de 128px (sin filtros SVG ni blend modes: el feTurbulence con
+   mix-blend-mode sobre toda la ventana congelaba el render en máquinas modestas). */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("/noise.png");
+  background-size: 128px 128px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay { display: none; }
+}
+
+/* Kicker de la landing: línea naranja de 22px + texto en mayúsculas espaciado. */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-barlow), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.kicker::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--accent);
+}
+.eyebrow-num {
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ========== FUTURISTIC TEXTURE (replaces noise) ========== */
+.futuristic-texture {
+  /* Large-scale technical grid + crosshair intersection markers */
+  background-image:
+    /* Tiny crosshairs at grid intersections */
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(232,88,26, 0.18) calc(50% - 0.5px), rgba(232,88,26, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(232,88,26, 0.18) calc(50% - 0.5px), rgba(232,88,26, 0.18) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    /* Main technical grid (thin orange lines) */
+    linear-gradient(to right, rgba(232,88,26, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232,88,26, 0.035) 1px, transparent 1px);
+  background-size:
+    8px 8px, 8px 8px,
+    80px 80px, 80px 80px;
+  background-position:
+    240px 240px, 240px 240px,
+    0 0, 0 0;
+  mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 85%);
+  opacity: 0.18;
+}
+
+html.dark .futuristic-texture {
+  display: none;
+}
+
+.sidebar-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(232,88,26, 0.35) calc(50% - 0.5px), rgba(232,88,26, 0.35) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(232,88,26, 0.35) calc(50% - 0.5px), rgba(232,88,26, 0.35) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 60px 60px, 60px 60px;
+  background-position: 180px 180px, 180px 180px, 0 0, 0 0;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+  opacity: 0.6;
+}
+
+/* Kept for backward compat — empty */
+.noise-overlay { display: none !important; }
+
+/* ========== GLASS ========== */
+.glass {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .glass {
+  background: rgba(22, 19, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.glass-strong {
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+html.dark .glass-strong {
+  background: rgba(17, 16, 9, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========== GLASS — LIGHT-FIRST (rediseño 2026) ==========
+   No reemplaza .glass/.glass-strong (siguen sirviendo a las áreas legacy que aún no migran)
+   — son clases nuevas, diseñadas para claro desde el principio, para las superficies
+   rediseñadas (Topbar, tarjetas de login, dropdowns/paneles nuevos). */
+.glass-light {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 8px 32px rgba(16, 24, 40, 0.06);
+}
+html.dark .glass-light {
+  background: rgba(22, 19, 16, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.glass-topbar {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+}
+html.dark .glass-topbar {
+  background: rgba(17, 16, 9, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  box-shadow: 0 20px 48px rgba(16, 24, 40, 0.12);
+}
+html.dark .glass-panel {
+  background: rgba(17, 16, 9, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* ========== GRADIENTS ========== */
+.gradient-orange {
+  background: linear-gradient(135deg, #e8581a 0%, #b8460f 100%);
+}
+
+.gradient-aurora {
+  background: conic-gradient(from 180deg at 50% 50%, #e8581a 0deg, #e8581a 90deg, #c96a3d 180deg, #9b9490 270deg, #e8581a 360deg);
+}
+
+.gradient-mesh-1 {
+  background-color: #111009;
+  background-image:
+    radial-gradient(at 27% 37%, hsla(25, 100%, 52%, 0.45) 0, transparent 55%),
+    radial-gradient(at 97% 21%, hsla(292, 100%, 57%, 0.35) 0, transparent 55%),
+    radial-gradient(at 52% 99%, hsla(258, 82%, 58%, 0.35) 0, transparent 55%),
+    radial-gradient(at 10% 29%, hsla(225, 100%, 61%, 0.30) 0, transparent 55%),
+    radial-gradient(at 97% 96%, hsla(159, 100%, 50%, 0.20) 0, transparent 55%),
+    radial-gradient(at 33% 50%, hsla(48, 100%, 53%, 0.15) 0, transparent 55%);
+}
+
+.gradient-mesh-light {
+  background-color: #F5F3EE;
+  background-image:
+    radial-gradient(at 27% 37%, hsla(25, 100%, 60%, 0.18) 0, transparent 55%),
+    radial-gradient(at 97% 21%, hsla(292, 100%, 70%, 0.12) 0, transparent 55%),
+    radial-gradient(at 52% 99%, hsla(258, 82%, 70%, 0.10) 0, transparent 55%);
+}
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, #e8581a 0%, #b8460f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-neon {
+  background: linear-gradient(135deg, #e8581a 0%, #e8581a 50%, #c96a3d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-ocean {
+  background: linear-gradient(135deg, #16b91a 0%, #9b9490 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ========== BORDER BEAM ========== */
+.border-beam {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.border-beam::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle, 0deg), transparent 0%, #e8581a 10%, #e8581a 20%, transparent 30%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-spin 4s linear infinite;
+}
+@keyframes border-spin {
+  to { --angle: 360deg; }
+}
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ========== SHIMMER BUTTON ========== */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8581a, #b8460f);
+  box-shadow: 0 0 0 1px rgba(232,88,26, 0.3), 0 8px 32px rgba(232,88,26, 0.25);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.shimmer-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.shimmer-btn:hover::before {
+  transform: translateX(100%);
+}
+.shimmer-btn:hover {
+  box-shadow: 0 0 0 1px rgba(232,88,26, 0.5), 0 12px 48px rgba(232,88,26, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ========== AURORA BG ========== */
+.aurora-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora-bg::before,
+.aurora-bg::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg at 50% 50%, #e8581a, #e8581a, #c96a3d, #9b9490, #16b91a, #e8581a);
+  filter: blur(90px);
+  opacity: 0.35;
+  animation: aurora-spin 20s linear infinite;
+}
+.aurora-bg::after {
+  animation-duration: 30s;
+  animation-direction: reverse;
+  opacity: 0.2;
+}
+@keyframes aurora-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== LOADING BAR ========== */
+.loading-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e8581a, #e8581a, #c96a3d, transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  z-index: 9999;
+}
+
+/* ========== SKELETON ========== */
+.skeleton {
+  background: linear-gradient(90deg, #e5e5e0 0%, #f5f3ee 50%, #e5e5e0 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+html.dark .skeleton {
+  background: linear-gradient(90deg, #161310 0%, #1c1915 50%, #161310 100%);
+  background-size: 200% 100%;
+}
+
+/* ========== SCROLLBAR ========== */
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(92, 102, 112, 0.3); border-radius: 3px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(232,88,26, 0.5); }
+
+html.dark .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+html.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(232,88,26, 0.5); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(92, 102, 112, 0.25); border-radius: 5px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(232,88,26, 0.4); background-clip: content-box; }
+html.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); background-clip: content-box; }
+
+/* Oculta la barra de scroll nativa (se usa una barra superior sincronizada) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ========== ANIMATIONS ========== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(232,88,26, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(232,88,26, 0.6); }
+}
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+@keyframes spotlight-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee-scroll 30s linear infinite; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
+
+/* ========== GRID PATTERN ========== */
+.grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(232,88,26,0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232,88,26,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%);
+}
+html.dark .grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
+/* ========== DOT PATTERN ========== */
+.dot-pattern {
+  background-image: radial-gradient(circle, rgba(232,88,26,0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 80%);
+}
+html.dark .dot-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+}
+
+/* ========== SPOTLIGHT EFFECT ========== */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(232,88,26, 0.15) 0%, transparent 60%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  mix-blend-mode: plus-lighter;
+}
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+html.dark .spotlight-card::before {
+  background: radial-gradient(circle, rgba(232,88,26, 0.25) 0%, transparent 60%);
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== PAUSA EN SEGUNDO PLANO ========== */
+/* Cuando la pestaña no está visible (clase puesta por AppShell vía visibilitychange),
+   se pausan TODAS las animaciones CSS (aurora, marquee, dots, etc.) → CPU casi a 0
+   mientras el CRM está de fondo. Sin efecto visible para el usuario. */
+html.tab-hidden *,
+html.tab-hidden *::before,
+html.tab-hidden *::after {
+  animation-play-state: paused !important;
+}
+
+/* ========== LIGHT MODE CONTRAST AUTO-FIX (SCOPED) ========== */
+/* Solo dentro de contenedores light (.glass y .glass-strong). Los contenedores
+   dark (sidebar, login hardcoded, hero del dashboard, videollamada) NO se tocan. */
+html:not(.dark) .glass .text-white\/20,
+html:not(.dark) .glass-strong .text-white\/20 { color: rgba(17, 16, 9, 0.45); }
+html:not(.dark) .glass .text-white\/25,
+html:not(.dark) .glass-strong .text-white\/25 { color: rgba(17, 16, 9, 0.50); }
+html:not(.dark) .glass .text-white\/30,
+html:not(.dark) .glass-strong .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
+html:not(.dark) .glass .text-white\/40,
+html:not(.dark) .glass-strong .text-white\/40 { color: rgba(17, 16, 9, 0.62); }
+html:not(.dark) .glass .text-white\/45,
+html:not(.dark) .glass-strong .text-white\/45 { color: rgba(17, 16, 9, 0.67); }
+html:not(.dark) .glass .text-white\/50,
+html:not(.dark) .glass-strong .text-white\/50 { color: rgba(17, 16, 9, 0.70); }
+html:not(.dark) .glass .text-white\/55,
+html:not(.dark) .glass-strong .text-white\/55 { color: rgba(17, 16, 9, 0.75); }
+html:not(.dark) .glass .text-white\/60,
+html:not(.dark) .glass-strong .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
+html:not(.dark) .glass .text-white\/65,
+html:not(.dark) .glass-strong .text-white\/65 { color: rgba(17, 16, 9, 0.82); }
+html:not(.dark) .glass .text-white\/70,
+html:not(.dark) .glass-strong .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
+html:not(.dark) .glass .text-white\/75,
+html:not(.dark) .glass-strong .text-white\/75 { color: rgba(17, 16, 9, 0.88); }
+html:not(.dark) .glass .text-white\/80,
+html:not(.dark) .glass-strong .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
+html:not(.dark) .glass .text-white\/85,
+html:not(.dark) .glass-strong .text-white\/85 { color: rgba(17, 16, 9, 0.92); }
+html:not(.dark) .glass .text-white\/90,
+html:not(.dark) .glass-strong .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
+html:not(.dark) .glass .text-white\/95,
+html:not(.dark) .glass-strong .text-white\/95 { color: rgba(17, 16, 9, 0.96); }
+
+html:not(.dark) .glass .bg-white\/5,
+html:not(.dark) .glass-strong .bg-white\/5 { background-color: rgba(17, 16, 9, 0.05); }
+html:not(.dark) .glass .bg-white\/10,
+html:not(.dark) .glass-strong .bg-white\/10 { background-color: rgba(17, 16, 9, 0.08); }
+html:not(.dark) .glass .bg-white\/15,
+html:not(.dark) .glass-strong .bg-white\/15 { background-color: rgba(17, 16, 9, 0.10); }
+
+html:not(.dark) .glass .border-white\/5,
+html:not(.dark) .glass-strong .border-white\/5 { border-color: rgba(17, 16, 9, 0.08); }
+html:not(.dark) .glass .border-white\/10,
+html:not(.dark) .glass-strong .border-white\/10 { border-color: rgba(17, 16, 9, 0.12); }
+html:not(.dark) .glass .border-white\/15,
+html:not(.dark) .glass-strong .border-white\/15 { border-color: rgba(17, 16, 9, 0.15); }
+html:not(.dark) .glass .border-white\/20,
+html:not(.dark) .glass-strong .border-white\/20 { border-color: rgba(17, 16, 9, 0.18); }
+
+/* Text contrast overrides inside .glass / .glass-strong en light mode */
+html:not(.dark) .glass .text-white\/20,
+html:not(.dark) .glass-strong .text-white\/20 { color: rgba(17, 16, 9, 0.45); }
+html:not(.dark) .glass .text-white\/25,
+html:not(.dark) .glass-strong .text-white\/25 { color: rgba(17, 16, 9, 0.50); }
+html:not(.dark) .glass .text-white\/30,
+html:not(.dark) .glass-strong .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
+html:not(.dark) .glass .text-white\/40,
+html:not(.dark) .glass-strong .text-white\/40 { color: rgba(17, 16, 9, 0.62); }
+html:not(.dark) .glass .text-white\/45,
+html:not(.dark) .glass-strong .text-white\/45 { color: rgba(17, 16, 9, 0.67); }
+html:not(.dark) .glass .text-white\/50,
+html:not(.dark) .glass-strong .text-white\/50 { color: rgba(17, 16, 9, 0.70); }
+html:not(.dark) .glass .text-white\/55,
+html:not(.dark) .glass-strong .text-white\/55 { color: rgba(17, 16, 9, 0.75); }
+html:not(.dark) .glass .text-white\/60,
+html:not(.dark) .glass-strong .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
+html:not(.dark) .glass .text-white\/65,
+html:not(.dark) .glass-strong .text-white\/65 { color: rgba(17, 16, 9, 0.82); }
+html:not(.dark) .glass .text-white\/70,
+html:not(.dark) .glass-strong .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
+html:not(.dark) .glass .text-white\/75,
+html:not(.dark) .glass-strong .text-white\/75 { color: rgba(17, 16, 9, 0.88); }
+html:not(.dark) .glass .text-white\/80,
+html:not(.dark) .glass-strong .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
+html:not(.dark) .glass .text-white\/85,
+html:not(.dark) .glass-strong .text-white\/85 { color: rgba(17, 16, 9, 0.92); }
+html:not(.dark) .glass .text-white\/90,
+html:not(.dark) .glass-strong .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
+html:not(.dark) .glass .text-white\/95,
+html:not(.dark) .glass-strong .text-white\/95 { color: rgba(17, 16, 9, 0.96); }
+
+/* ========== LIGHT-CONTRAST UTILITY ==========
+   Aplica esta clase al contenedor de una sección (ej. <section className="light-contrast">)
+   cuando es un panel sobre fondo claro pero internamente usa text-white/XX heredado.
+   Reescribe todas las utilidades blancas a slate equivalente. */
+html:not(.dark) .light-contrast .text-white { color: rgba(17, 16, 9, 0.95); }
+html:not(.dark) .light-contrast .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
+html:not(.dark) .light-contrast .text-white\/40 { color: rgba(17, 16, 9, 0.65); }
+html:not(.dark) .light-contrast .text-white\/50 { color: rgba(17, 16, 9, 0.72); }
+html:not(.dark) .light-contrast .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
+html:not(.dark) .light-contrast .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
+html:not(.dark) .light-contrast .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
+html:not(.dark) .light-contrast .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
+html:not(.dark) .light-contrast .border-white\/5 { border-color: rgba(17, 16, 9, 0.06); }
+html:not(.dark) .light-contrast .border-white\/10 { border-color: rgba(17, 16, 9, 0.12); }
+html:not(.dark) .light-contrast .border-white\/15 { border-color: rgba(17, 16, 9, 0.15); }
+html:not(.dark) .light-contrast .border-white\/20 { border-color: rgba(17, 16, 9, 0.20); }
+html:not(.dark) .light-contrast .bg-white\/5 { background-color: rgba(17, 16, 9, 0.04); }
+html:not(.dark) .light-contrast .bg-white\/10 { background-color: rgba(17, 16, 9, 0.08); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.02\] { background-color: rgba(17, 16, 9, 0.02); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.03\] { background-color: rgba(17, 16, 9, 0.03); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.04\] { background-color: rgba(17, 16, 9, 0.04); }
+
+/* ========== DOC VIEWER (mammoth output) ========== */
+/* Selección naranja marca en toda la app */
+::selection {
+  background: rgba(232,88,26, 0.28);
+  color: inherit;
+}
+*::selection {
+  background: rgba(232,88,26, 0.28);
+  color: inherit;
+}
+html.dark ::selection, html.dark *::selection {
+  background: rgba(232,88,26, 0.40);
+  color: inherit;
+}
+
+/* Selección fuerte para superficies docu (visor, email, notas) */
+.selection-doc ::selection {
+  background: rgba(232,88,26, 0.40);
+  color: inherit;
+}
+.selection-doc *::selection {
+  background: rgba(232,88,26, 0.40);
+  color: inherit;
+}
+
+/* Seleccion en burbujas propias (fondo naranja): resaltado oscuro contrastante */
+.glass-bubble-me ::selection,
+.glass-bubble-me::selection {
+  background: rgba(0, 0, 0, 0.38);
+  color: #fff;
+}
+
+.doc-prose {
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+}
+
+/* ========== BRAND MARK — GOZZ ™ ========== */
+@keyframes brand-shift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes brand-shimmer {
+  0%   { background-position: 150% 50%; opacity: 0; }
+  15%  { opacity: 1; }
+  50%  { background-position: -50% 50%; opacity: 0.9; }
+  85%  { opacity: 0.3; }
+  100% { background-position: -150% 50%; opacity: 0; }
+}
+.animate-brand-shift  { animation: brand-shift  8s linear infinite; }
+.animate-brand-shimmer { animation: brand-shimmer 5.5s cubic-bezier(0.23,1,0.32,1) infinite; animation-delay: 0.8s; }
+
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.brand-mark-base {
+  filter: drop-shadow(0 0 20px rgba(232,88,26, 0.22)) drop-shadow(0 2px 6px rgba(255, 0, 110, 0.12));
+}
+html:not(.dark) .brand-mark-base {
+  filter: drop-shadow(0 0 14px rgba(232,88,26, 0.22));
+}
+
+.doc-prose h1, .doc-prose h2, .doc-prose h3, .doc-prose h4 {
+  font-family: "Oswald", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
+  color: #0F172A;
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+html.dark .doc-prose h1, html.dark .doc-prose h2, html.dark .doc-prose h3, html.dark .doc-prose h4 {
+  color: #F8FAFC;
+}
+.doc-prose h1 { font-size: 2.1em; }
+.doc-prose h2 { font-size: 1.55em; }
+.doc-prose h3 { font-size: 1.25em; }
+.doc-prose p { margin: 0.6em 0; }
+.doc-prose ul, .doc-prose ol { margin: 0.6em 0; padding-left: 1.6em; }
+.doc-prose ul { list-style: disc; }
+.doc-prose ol { list-style: decimal; }
+.doc-prose li { margin: 0.2em 0; }
+.doc-prose a {
+  color: #e8581a;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  font-weight: 500;
+}
+.doc-prose a:hover { color: #c96a3d; }
+.doc-prose strong, .doc-prose b { font-weight: 700; color: inherit; }
+.doc-prose em, .doc-prose i { font-style: italic; }
+.doc-prose blockquote {
+  border-left: 3px solid #e8581a;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #475569;
+  font-style: italic;
+}
+html.dark .doc-prose blockquote { color: #CBD5E1; }
+.doc-prose table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+  font-size: 0.95em;
+}
+.doc-prose table td, .doc-prose table th {
+  border: 1px solid #E2E8F0;
+  padding: 0.4em 0.7em;
+}
+html.dark .doc-prose table td, html.dark .doc-prose table th {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.doc-prose table th {
+  background: #F8FAFC;
+  font-weight: 700;
+}
+html.dark .doc-prose table th { background: rgba(255, 255, 255, 0.05); }
+.doc-prose img { max-width: 100%; height: auto; border-radius: 8px; margin: 0.8em 0; }
+.doc-prose hr {
+  border: 0;
+  border-top: 1px solid #E2E8F0;
+  margin: 1.4em 0;
+}
+html.dark .doc-prose hr { border-color: rgba(255, 255, 255, 0.10); }
+
+
+/* ========== CHAT BACKGROUND (imagen de fondo al 20%) ========== */
+/* Truco: overlay del color base al 80% sobre la imagen → la imagen luce al 20%.
+   Aplicado vía background-image multi-capa (no opacity, para no afectar a los hijos). */
+/* Wallpaper del chat — mosaico SVG repetido (mismo mecanismo que usa WhatsApp: un patrón chico y
+   sutil que se repite, no una foto). Antes usaba una foto con `background-size: cover`, que se
+   escala distinto según el alto:ancho del contenedor — en un teléfono (angosto y alto) se veía
+   como un remolino gigante. Un SVG en mosaico se ve idéntico en PC y teléfono porque el tamaño del
+   tile es fijo y no depende del contenedor. Motivo: lunas + destellos de marca a muy baja opacidad. */
+.chat-bg {
+  background-color: #0e0c0a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M100 26a12 12 0 1 1-8.5-11.5A9 9 0 0 0 100 26z' fill='none' stroke='%23e8581a' stroke-width='1.6' opacity='0.13'/%3E%3Cpath d='M34 92l1.7 4 4 1.7-4 1.7-1.7 4-1.7-4-4-1.7 4-1.7z' fill='%23e8581a' opacity='0.12'/%3E%3Ccircle cx='70' cy='58' r='1.6' fill='%23e8581a' opacity='0.11'/%3E%3Ccircle cx='18' cy='38' r='1.2' fill='%23e8581a' opacity='0.09'/%3E%3Ccircle cx='118' cy='102' r='1.2' fill='%23e8581a' opacity='0.09'/%3E%3Cpath d='M50 15a7 7 0 1 1-5-6.6A5.4 5.4 0 0 0 50 15z' fill='none' stroke='%23e8581a' stroke-width='1.3' opacity='0.10'/%3E%3C/svg%3E");
+  background-size: 140px;
+  background-repeat: repeat;
+}
+html.dark .chat-bg {
+  background-color: #0e0c0a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M100 26a12 12 0 1 1-8.5-11.5A9 9 0 0 0 100 26z' fill='none' stroke='%23f08a5a' stroke-width='1.6' opacity='0.16'/%3E%3Cpath d='M34 92l1.7 4 4 1.7-4 1.7-1.7 4-1.7-4-4-1.7 4-1.7z' fill='%23f08a5a' opacity='0.15'/%3E%3Ccircle cx='70' cy='58' r='1.6' fill='%23f08a5a' opacity='0.13'/%3E%3Ccircle cx='18' cy='38' r='1.2' fill='%23f08a5a' opacity='0.11'/%3E%3Ccircle cx='118' cy='102' r='1.2' fill='%23f08a5a' opacity='0.11'/%3E%3Cpath d='M50 15a7 7 0 1 1-5-6.6A5.4 5.4 0 0 0 50 15z' fill='none' stroke='%23f08a5a' stroke-width='1.3' opacity='0.13'/%3E%3C/svg%3E");
+  background-size: 140px;
+  background-repeat: repeat;
+}
+
+
+/* ========== CHAT GLASSMORPHISM (sidebar, header, bubbles, composer) ========== */
+/* Cristal cálido 2026 (carbón + naranja), coherente con `--glass-fill`/`--glass-shadow`
+   del resto de la app — esta sección venía con la paleta fría azul/rosa original del
+   CRM de inmigración y nunca se recoloró. La app es solo oscura: sin variantes de tema claro.
+   Regla de rendimiento: el blur SOLO en el chrome que aparece una vez (sidebar, header,
+   composer, input) — nunca en lo que se repite por fila (item del sidebar, burbuja de
+   mensaje), que se queda en cristal plano. */
+
+/* Sidebar / paneles laterales — chrome único, puede llevar blur */
+.glass-sidebar {
+  background: linear-gradient(180deg, rgba(17, 16, 9, 0.82), rgba(12, 12, 12, 0.68));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-right: 1px solid rgba(240, 237, 232, 0.07);
+}
+html.fx-off .glass-sidebar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(17, 16, 9, 0.94);
+}
+
+/* Item del sidebar (chat de la lista) — se repite por fila: cristal plano, sin blur */
+.glass-sidebar-item {
+  transition: background-color .2s ease, transform .2s ease, border-color .2s ease;
+}
+.glass-sidebar-item:hover {
+  background: rgba(240, 237, 232, 0.04);
+  transform: translateX(2px);
+}
+.glass-sidebar-item-active {
+  background: rgba(232, 88, 26, 0.10) !important;
+  border-left: 3px solid #e8581a !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Header del chat (parte de arriba con avatar + nombre + botón videollamada) — chrome único */
+.glass-header {
+  background: linear-gradient(180deg, rgba(17, 16, 9, 0.80), rgba(12, 12, 12, 0.60));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-bottom: 1px solid rgba(232, 88, 26, 0.12);
+}
+html.fx-off .glass-header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(17, 16, 9, 0.95);
+}
+
+/* Composer (caja de escribir abajo) — chrome único */
+.glass-composer {
+  background: linear-gradient(0deg, rgba(17, 16, 9, 0.82), rgba(12, 12, 12, 0.62));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-top: 1px solid rgba(240, 237, 232, 0.07);
+}
+html.fx-off .glass-composer {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(17, 16, 9, 0.95);
+}
+
+/* Input pill del composer y la búsqueda del sidebar */
+.glass-input {
+  background: rgba(240, 237, 232, 0.05);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(240, 237, 232, 0.09);
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+html.fx-off .glass-input {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.glass-input:focus-within {
+  background: rgba(240, 237, 232, 0.08);
+  border-color: rgba(232,88,26, 0.5);
+  box-shadow: 0 0 0 4px rgba(232,88,26, 0.15);
+}
+
+/* Burbujas de mensaje — se repiten por mensaje: cristal plano, SIN blur (regla de rendimiento) */
+/* Mías: gradiente naranja de marca, sólido (no traslúcido: así no depende del blur para leerse bien) */
+.glass-bubble-me {
+  background: linear-gradient(135deg, #e8581a 0%, #c9550f 55%, #b8460f 100%);
+  border: 1px solid rgba(255, 190, 140, 0.30);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 18px -4px rgba(232, 88, 26, 0.45);
+}
+.glass-bubble-me a { color: #ffffff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.6); text-underline-offset: 2px; font-weight: 600; }
+/* Dentro de mi burbuja (gradiente naranja→rosa) las clases grises de Tailwind no
+   contrastan — las re-pinto a blanco translúcido SOLO en elementos <span>
+   (texto). No en SVG/íconos: el botón de "Reaccionar" y "Más" del MessageActions
+   tiene fondo blanco con un SVG `text-neutral-500` adentro → si recoloreáramos
+   los íconos también, quedarían blancos sobre blanco (invisibles). */
+.glass-bubble-me span.text-neutral-500,
+.glass-bubble-me span.text-neutral-400,
+.glass-bubble-me span.text-neutral-600 { color: rgba(255, 255, 255, 0.82) !important; }
+/* Los botones de acción (SmilePlus, MoreHorizontal) cuando flotan arriba de mi
+   burbuja: sombra más fuerte y borde para separarse del gradiente naranja. */
+.glass-bubble-me > div > button.h-7.w-7 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+/* Menciones dentro de mi burbuja: el azul de marca queda ilegible sobre el
+   gradiente naranja → blanco sobre pill blanco translúcido. */
+.glass-bubble-me span.text-brand-blue {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  font-weight: 700;
+}
+/* Reply preview (botón "respondiendo a…" arriba del mensaje): el border-left
+   naranja se confunde con el gradiente, el bg negro/5 no se ve, y el user_nombre
+   es text-brand-orange (mismo color que el bg). Pill blanco translúcido. */
+.glass-bubble-me button[class*="border-l-"] {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  border-left-color: rgba(255, 255, 255, 0.7) !important;
+}
+.glass-bubble-me button[class*="border-l-"] .text-brand-orange,
+.glass-bubble-me button[class*="border-l-"] > div { color: #ffffff !important; }
+.glass-bubble-me button[class*="border-l-"] > div.opacity-70 { opacity: 0.85 !important; }
+/* "Reenviado desde X" label: text-brand-blue (sin pill) → blanco semi */
+.glass-bubble-me div.flex.items-center > .text-brand-blue,
+.glass-bubble-me div.text-brand-blue { color: rgba(255, 255, 255, 0.95) !important; }
+/* Caja de transcripción del audio: en isMe es `bg-white/10 text-neutral-700/90
+   border-white/15` — en light mode el text-neutral-700 no contrasta sobre el
+   naranja. Re-pinto a blanco translúcido y subo el bg/border. */
+.glass-bubble-me .italic[class*="border"] {
+  color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+.glass-bubble-me .italic > span.text-violet-600,
+.glass-bubble-me .italic > span[class*="text-violet"] {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+/* Recibidas: cristal cálido plano, consistente con --glass-fill del resto de la app */
+.glass-bubble-other {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015) 55%), rgba(28, 25, 21, 0.92);
+  border: 1px solid rgba(240, 237, 232, 0.09);
+  color: rgba(240, 237, 232, 0.94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+
+/* ========== TYPING INDICATOR ANIMATION ========== */
+/* 3 bolitas que rebotan con cascada — usado en header del chat, fila del
+   sidebar, y burbuja "escribiendo" al final de los mensajes. */
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0) scale(0.85); opacity: 0.45; }
+  30%           { transform: translateY(-4px) scale(1.15); opacity: 1; }
+}
+.typing-dot {
+  display: inline-block;
+  animation: typing-bounce 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 0s;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* Pulso sutil del texto "escribiendo…" (acompaña a los dots) */
+@keyframes typing-text-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+.typing-text {
+  animation: typing-text-pulse 1.8s ease-in-out infinite;
+}
+
+/* Burbuja "escribiendo" al final del chat — entrada slide+fade */
+@keyframes typing-bubble-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.typing-bubble-enter {
+  animation: typing-bubble-in 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+
+/* ========== MODAL SURFACE (cristal 3D con blur — siempre oscuro, incluso dentro de .app-main) ========== */
+.modal-surface {
+  /* Re-ancla el texto a los valores oscuros: algunos modales se renderizan inline dentro de
+     .app-main (sin portal) y heredarían el --ink claro del contenido si no se re-declara aquí. */
+  --ink: #f0ede8;
+  --ink-sub: #9b9490;
+  --ink-muted: #5c5854;
+  color: var(--ink);
+  background: var(--glass-fill), rgba(17, 16, 9, 0.88);
+  border: 1px solid rgba(240, 237, 232, 0.08);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+html.fx-off .modal-surface {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--glass-fill), rgba(17, 16, 9, 0.97);
+}
+
+/* ===== Videollamada: barra de controles (profesional, 1 sola fila) ===== */
+.gozz-control-bar.lk-control-bar{
+  position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
+  width:max-content; max-width:calc(100vw - 20px);
+  flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden; align-items:center;
+  gap:6px; padding:8px;
+  border:1px solid rgba(255,255,255,.08); border-radius:16px;
+  background:rgba(17,18,24,.72);
+  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:0 16px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+  z-index:40; scrollbar-width:none;
+}
+.gozz-control-bar::-webkit-scrollbar{ display:none; }
+.gozz-control-bar .lk-button{
+  height:46px; padding:0 14px; border-radius:12px;
+  font-size:13px; font-weight:600; color:#e9eaf2;
+  background:rgba(255,255,255,.06); border:1px solid transparent;
+  display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+  transition:background .15s ease, transform .1s ease, border-color .15s ease;
+}
+.gozz-control-bar .lk-button:hover{ background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.10); }
+.gozz-control-bar .lk-button:active{ transform:translateY(1px); }
+.gozz-control-bar .lk-button > svg, .gozz-control-bar .lk-button .lk-icon{ width:19px; height:19px; flex:none; }
+.gozz-control-bar .lk-button-group{ display:flex; align-items:center; gap:2px; }
+.gozz-control-bar .lk-button-group-menu .lk-button{ padding:0 8px; }
+.gozz-control-bar .gozz-active{ background:#2563eb !important; color:#fff !important; }
+.gozz-hand-btn.gozz-raised{ background:#f5b400 !important; color:#1a1a1a !important; }
+.gozz-control-bar .gozz-leave{ background:rgba(239,68,68,.14) !important; color:#ff7a7a !important; }
+.gozz-control-bar .gozz-leave:hover{ background:rgba(239,68,68,.24) !important; }
+
+/* ===== Camaras: grid adaptativo que llena TODO el espacio ===== */
+.gozz-stage{ padding:16px; }
+.gozz-grid{ display:grid; gap:12px; height:100%; width:100%; grid-auto-rows:1fr; }
+.gozz-cell{ min-width:0; min-height:0; }
+.gozz-cell > .lk-participant-tile{
+  height:100% !important; width:100% !important; aspect-ratio:auto !important;
+  border-radius:18px; overflow:hidden; background:#13131b;
+  box-shadow:0 8px 28px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.05);
+}
+.gozz-cell .lk-participant-tile video{ height:100% !important; width:100% !important; object-fit:cover; border-radius:18px; }
+.gozz-cell .lk-participant-tile[data-lk-speaking="true"]{ box-shadow:0 0 0 2.5px #e8581a, 0 8px 28px rgba(0,0,0,.4); }
+
+/* Foco: pantalla compartida como protagonista + tira de camaras */
+.gozz-focus{ display:flex; flex-direction:column; height:100%; width:100%; gap:12px; }
+.gozz-focus-main{ flex:1; min-height:0; border-radius:18px; overflow:hidden; background:#000; border:1px solid rgba(255,255,255,.08); }
+.gozz-screen-video{ height:100%; width:100%; object-fit:contain; background:#000; }
+.gozz-share-label{
+  position:absolute; left:12px; bottom:12px; display:inline-flex; align-items:center; gap:7px;
+  padding:5px 11px; border-radius:10px; background:rgba(10,10,14,.66);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  color:#fff; font-size:12.5px; font-weight:600; box-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+.gozz-focus-strip{ height:128px; flex:none; display:flex; gap:12px; overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; }
+.gozz-focus-strip .gozz-thumb{ height:100%; aspect-ratio:16/9; flex:none; }
+.gozz-focus-strip .gozz-thumb > .lk-participant-tile{
+  height:100% !important; width:100% !important; aspect-ratio:auto !important;
+  border-radius:14px; overflow:hidden; background:#13131b; border:1px solid rgba(255,255,255,.05);
+}
+.gozz-focus-strip .gozz-thumb .lk-participant-tile video{ height:100% !important; width:100% !important; object-fit:cover; border-radius:14px; }
+.gozz-focus-strip .gozz-thumb .lk-participant-tile[data-lk-speaking="true"]{ box-shadow:0 0 0 2px #e8581a; }
+.gozz-stage .lk-participant-metadata{ left:12px; bottom:12px; right:auto; }
+.gozz-stage .lk-participant-metadata-item{
+  background:rgba(10,10,14,.62); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border-radius:9px; padding:4px 10px; font-size:12.5px; font-weight:600; color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+
+/* ===== Chat: emoji picker ===== */
+.gozz-emoji-pop{
+  position:absolute; bottom:calc(100% + 6px); left:10px; right:10px;
+  background:#15151f; border:1px solid rgba(255,255,255,.1); border-radius:14px;
+  padding:8px; display:grid; grid-template-columns:repeat(8, 1fr); gap:2px;
+  box-shadow:0 12px 36px rgba(0,0,0,.5); z-index:5; max-height:190px; overflow-y:auto;
+}
+.gozz-emoji{ height:30px; border-radius:8px; font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center; }
+.gozz-emoji:hover{ background:rgba(255,255,255,.12); }
+.gozz-badge{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:9999px; background:#ff4d4d; color:#fff; font-size:10px; font-weight:800; line-height:1; margin-left:2px; }
+
+/* ===== Mini widget / Picture-in-Picture (look elite) ===== */
+.gozz-mini{ background:linear-gradient(165deg,#16161f 0%,#0b0b12 100%); }
+.gozz-mini-head{ background:rgba(255,255,255,.045); border-bottom:1px solid rgba(255,255,255,.06); }
+.gozz-live-dot{ width:7px; height:7px; border-radius:9999px; background:#34d399; animation:gozzPulse 1.8s infinite; }
+@keyframes gozzPulse{ 0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)} 70%{box-shadow:0 0 0 6px rgba(52,211,153,0)} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0)} }
+.gozz-mini-controls{ background:linear-gradient(180deg, rgba(10,10,16,.35), rgba(10,10,16,.92)); border-top:1px solid rgba(255,255,255,.06); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+.gozz-mini-primary{ height:100% !important; width:100% !important; }
+.gozz-mini .lk-participant-tile{ border-radius:0; }
+.gozz-mini-primary .lk-participant-metadata{ transform:scale(.82); transform-origin:bottom left; }
+
+/* Botón de "solicitud pendiente" (cambio de monto / pago) — llama la atención con un pulso
+   ámbar/naranja (anillo que titila + leve escala), estilo contador de notificaciones. */
+@keyframes solicitudPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(245,158,11,.6);  transform: scale(1); }
+  70%  { box-shadow: 0 0 0 9px rgba(245,158,11,0); transform: scale(1.05); }
+  100% { box-shadow: 0 0 0 0 rgba(245,158,11,0);   transform: scale(1); }
+}
+.solicitud-pendiente-btn { animation: solicitudPulse 1.5s ease-out infinite; }
+
+
+/* ==========================================================================================
+   CAPA 2026 — cristal 3D, aurora, botones animados, motion global
+   (se apoya en la identidad de sandrogozz.com: carbón cálido + naranja #e8581a)
+   ========================================================================================== */
+
+/* --- Escena de fondo ---------------------------------------------------------------------- */
+.scene-host {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora-mesh {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(38% 42% at 18% 22%, rgba(232, 88, 26, 0.20), transparent 70%),
+    radial-gradient(34% 38% at 82% 18%, rgba(255, 154, 77, 0.11), transparent 70%),
+    radial-gradient(40% 44% at 70% 88%, rgba(184, 70, 15, 0.18), transparent 70%),
+    radial-gradient(30% 34% at 8% 84%, rgba(232, 88, 26, 0.10), transparent 70%);
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate3d(3%, -2%, 0) scale(1.06) rotate(2deg); }
+  100% { transform: translate3d(-3%, 3%, 0) scale(1.03) rotate(-2deg); }
+}
+/* La escena va detrás de todo (z-index negativo): sobre el fondo de <html>, bajo el contenido. */
+html.fx-off .aurora-mesh { animation: none; }
+
+/* --- Cristal 3D --------------------------------------------------------------------------- */
+:root {
+  --glass-fill: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.022) 45%, rgba(232, 88, 26, 0.035));
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    inset 0 -24px 44px -34px rgba(232, 88, 26, 0.22),
+    0 34px 70px -34px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(240, 237, 232, 0.06);
+}
+:where(.glass-3d) { position: relative; } /* :where → especificidad 0: .fixed/.absolute/.sticky de Tailwind siempre ganan */
+.glass-3d,
+html.dark .glass,
+html.dark .glass-strong,
+html.dark .glass-light,
+html.dark .glass-panel {
+  background: var(--glass-fill), rgba(17, 16, 9, 0.78);
+  border: 1px solid rgba(240, 237, 232, 0.07);
+  box-shadow: var(--glass-shadow);
+}
+/* El desenfoque de fondo es caro de pintar: solo lo llevan las superficies que flotan sobre
+   contenido (dock, navbar, menús, modales). Las tarjetas de página son cristal "plano". */
+.glass-blur,
+html.dark .glass-panel,
+html.dark .glass-strong {
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+html.fx-off .glass-blur,
+html.fx-off.dark .glass-panel,
+html.fx-off.dark .glass-strong {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--glass-fill), rgba(17, 16, 9, 0.94);
+}
+html.dark .glass-topbar {
+  background: linear-gradient(180deg, rgba(17, 16, 9, 0.78), rgba(12, 12, 12, 0.55));
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border-bottom: 1px solid rgba(232, 88, 26, 0.14);
+}
+/* Borde con degradado (naranja → transparente) y brillo que sigue al cursor. */
+.glass-3d::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, rgba(232, 88, 26, 0.55), rgba(232, 88, 26, 0.05) 38%, transparent 62%, rgba(255, 154, 77, 0.28));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.85;
+}
+.glass-3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 154, 77, 0.16), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.glass-3d:hover::after { opacity: 1; }
+
+/* Las superficies opacas del rediseño pasan a cristal ligero (sin blur: hay cientos de filas). */
+.bg-bg-darkcard { background-color: rgba(22, 19, 16, 0.72); }
+.bg-bg-darkcard\/70, .bg-bg-darkcard\/80, .bg-bg-darkcard\/90 { background-color: rgba(22, 19, 16, 0.74); }
+
+/* ========== HÍBRIDO: el contenido de página (.app-main, de AppShell) pasa a modo claro.
+   Sidebar, Topbar y .modal-surface viven FUERA de .app-main y no heredan nada de aquí. ========== */
+.app-main {
+  --ink: #1c1915;
+  --ink-sub: #6b645c;
+  --ink-muted: #8a8378;
+  --line: rgba(20, 18, 15, 0.08);
+  --line-soft: rgba(20, 18, 15, 0.04);
+  --bg-dark: #f6f4f1;
+  --bg-dark-card: #ffffff;
+  --content-fill: #ffffff;
+  --content-shadow: 0 20px 50px -24px rgba(20, 18, 15, 0.12), 0 1px 0 rgba(20, 18, 15, 0.04);
+  background: var(--bg-dark);
+  /* Texto SIN clase de color propia hereda de `body` (`color: var(--text)`, un token separado de
+     --ink que no cambia). Fijar `color` aquí da un valor claro-correcto por defecto a todo lo que
+     esté dentro de .app-main y no pida explícitamente otro color. */
+  color: var(--ink);
+  color-scheme: light;
+}
+.app-main .glass-3d,
+.app-main .glass-blur,
+html.fx-off .app-main .glass-blur {
+  background: var(--content-fill);
+  border-color: var(--line);
+  box-shadow: var(--content-shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.app-main .glass-3d::before { opacity: 0.35; } /* borde degradado más sutil sobre fondo claro */
+.app-main .glass-3d::after { display: none; } /* el brillo que sigue al cursor era para fondo oscuro */
+.app-main .bg-bg-darkcard,
+.app-main .bg-bg-darkcard\/70,
+.app-main .bg-bg-darkcard\/80,
+.app-main .bg-bg-darkcard\/90 {
+  background-color: var(--content-fill);
+}
+
+/* --- Botones con gradiente animado ---------------------------------------------------------- */
+@keyframes gradient-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes sheen-sweep {
+  0%   { transform: translateX(-130%) skewX(-18deg); }
+  55%, 100% { transform: translateX(230%) skewX(-18deg); }
+}
+@keyframes ring-pulse {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 0 0 rgba(232, 88, 26, 0.45), 0 10px 34px -8px rgba(232, 88, 26, 0.6); }
+  50%      { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 0 7px rgba(232, 88, 26, 0), 0 14px 44px -8px rgba(232, 88, 26, 0.8); }
+}
+.btn-aurora,
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(120deg, #e8581a 0%, #ff8a3d 28%, #b8460f 55%, #ff6a1f 78%, #e8581a 100%) !important;
+  background-size: 320% 320% !important;
+  animation: gradient-flow 9s ease-in-out infinite;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 10px 30px -8px rgba(232, 88, 26, 0.6);
+  border: 1px solid rgba(255, 190, 140, 0.35);
+  transition: transform 0.35s var(--ease-out), filter 0.35s var(--ease-out);
+}
+.btn-aurora::after,
+.shimmer-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 38%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  animation: sheen-sweep 4.2s ease-in-out infinite;
+}
+.btn-aurora:hover,
+.shimmer-btn:hover { transform: translateY(-2px) scale(1.015); filter: brightness(1.08); }
+.btn-aurora:active,
+.shimmer-btn:active { transform: translateY(0) scale(0.99); }
+html.fx-off .btn-aurora,
+html.fx-off .shimmer-btn { animation: none; }
+html.fx-off .btn-aurora::after,
+html.fx-off .shimmer-btn::after { display: none; }
+.shimmer-btn::before { display: none; }
+
+/* --- Iconos 3D --------------------------------------------------------------------------- */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-5px) rotate(2.5deg); }
+}
+.icon3d { display: inline-block; transition: transform 0.45s var(--ease-out); will-change: transform; }
+.icon3d-float { animation: float-y 5s ease-in-out infinite; }
+a:hover > .icon3d, button:hover > .icon3d, .group:hover .icon3d { transform: translateY(-3px) scale(1.14) rotate(-4deg); }
+html.fx-off .icon3d-float { animation: none; }
+
+/* --- Motion global: todo lo que se monta, entra con gracia ------------------------------------ */
+@keyframes rise-in {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+main [class*="rounded-2xl"],
+main [class*="rounded-xl2"],
+main [class*="rounded-3xl"],
+main .glass-3d {
+  animation: rise-in 0.7s var(--ease-out) both;
+}
+main [class*="rounded-2xl"]:nth-child(2), main [class*="rounded-xl2"]:nth-child(2), main [class*="rounded-3xl"]:nth-child(2) { animation-delay: 0.05s; }
+main [class*="rounded-2xl"]:nth-child(3), main [class*="rounded-xl2"]:nth-child(3), main [class*="rounded-3xl"]:nth-child(3) { animation-delay: 0.10s; }
+main [class*="rounded-2xl"]:nth-child(4), main [class*="rounded-xl2"]:nth-child(4), main [class*="rounded-3xl"]:nth-child(4) { animation-delay: 0.15s; }
+main [class*="rounded-2xl"]:nth-child(5), main [class*="rounded-xl2"]:nth-child(5), main [class*="rounded-3xl"]:nth-child(5) { animation-delay: 0.20s; }
+main [class*="rounded-2xl"]:nth-child(n+6), main [class*="rounded-xl2"]:nth-child(n+6), main [class*="rounded-3xl"]:nth-child(n+6) { animation-delay: 0.25s; }
+html.fx-off main [class*="rounded-2xl"],
+html.fx-off main [class*="rounded-xl2"],
+html.fx-off main [class*="rounded-3xl"],
+html.fx-off main .glass-3d { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  main [class*="rounded-2xl"], main [class*="rounded-xl2"], main [class*="rounded-3xl"], main .glass-3d,
+  .btn-aurora, .shimmer-btn, .icon3d-float, .aurora-mesh { animation: none !important; }
+}
+
+/* --- Texto ----------------------------------------------------------------------------------- */
+@keyframes text-shimmer {
+  to { background-position: 200% center; }
+}
+.text-shimmer {
+  background: linear-gradient(100deg, #f0ede8 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #f0ede8 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-shimmer 6s linear infinite;
+}
+/* El degradado claro (#f0ede8) de .text-shimmer es casi invisible sobre tarjetas blancas: dentro
+   de .app-main se reemplaza por un degradado oscuro/naranja, mismo efecto sobre fondo claro. */
+.app-main .text-shimmer {
+  background: linear-gradient(100deg, #1c1915 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #1c1915 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.text-orange-glow { text-shadow: 0 0 28px rgba(232, 88, 26, 0.55); }
+
+/* --- Selección y barras de desplazamiento con marca ------------------------------------------- */
+::selection { background: rgba(232, 88, 26, 0.4); color: #fff; }
+* { scrollbar-color: rgba(232, 88, 26, 0.35) transparent; scrollbar-width: thin; }
+
+/* --- Halo giratorio --------------------------------------------------------------------------- */
+@keyframes halo-spin { to { transform: rotate(360deg); } }
+.halo-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, transparent 0 70%, rgba(232, 88, 26, 0.85) 85%, transparent 100%);
+  animation: halo-spin 6s linear infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
+  pointer-events: none;
+}
+html.fx-off .halo-ring { animation: none; }
+
+/* Jerarquía de títulos de página heredados (h1 con `text-4xl font-black`…): mismo tamaño que los héroes de módulo.
+   Los que ya traen `text-[clamp(...)]` (panel, login, formularios, módulos de marketing) no se tocan. */
+main h1.font-display:not([class*="text-[clamp"]) {
+  font-size: clamp(30px, 3.6vw, 46px) !important;
+  line-height: 1.02 !important;
+  font-weight: 800 !important;
+}
