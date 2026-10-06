@@ -914,9 +914,9 @@ export default function OportunidadesPage() {
                 : `${totalFiltrado.toLocaleString("es")} casos · arrastra para cambiar etapa · doble click para detalle`}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {/* Alternador tablero ⇄ lista, que recuerda la elección — como en Contactos. */}
-            <div className="inline-flex rounded-xl bg-white/[0.04] p-1">
+            <div className="inline-flex rounded-xl bg-black/[0.04] p-1">
               {([["tablero", LayoutGrid, "Tablero"], ["lista", List, "Lista"]] as const).map(([v, Icono, etiqueta]) => (
                 <button
                   key={v}
