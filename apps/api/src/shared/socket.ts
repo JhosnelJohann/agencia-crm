@@ -1,6 +1,7 @@
 import { Server as HTTPServer } from "http";
 import { Server as IOServer, Socket } from "socket.io";
 import { verifyToken } from "./auth-middleware.js";
+import { isAllowedOrigin } from "./env.js";
 import { query } from "./db.js";
 
 let io: IOServer | null = null;
@@ -12,7 +13,10 @@ const activeCalls = new Map<string, { videollamadaId: string; title: string; ts:
 
 export function initSocket(httpServer: HTTPServer) {
   io = new IOServer(httpServer, {
-    cors: { origin: true, credentials: true },
+    // Solo orígenes propios: el handshake autentica por cookie, así que `origin: true` permitía que
+    // cualquier web abriera un socket con la sesión del usuario (cross-site WebSocket hijacking).
+    cors: { origin: (origin, cb) => cb(null, isAllowedOrigin(origin)), credentials: true },
+    allowRequest: (req, cb) => cb(null, isAllowedOrigin(req.headers.origin)),
     pingTimeout: 60000,
     pingInterval: 25000
   });

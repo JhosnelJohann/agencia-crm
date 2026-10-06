@@ -142,7 +142,7 @@ export function PushSubscriber() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.96 }}
           transition={{ type: "spring", stiffness: 280, damping: 26 }}
-          className="fixed bottom-5 right-5 z-[80] w-[350px] max-w-[calc(100vw-2rem)] rounded-3xl glass-3d glass-blur overflow-hidden"
+          className="fixed bottom-3 inset-x-3 sm:inset-x-auto sm:bottom-5 sm:right-5 z-[80] sm:w-[350px] rounded-2xl sm:rounded-3xl glass-3d glass-blur overflow-hidden"
         >
           <div className="h-1 gradient-orange" />
           <div className="p-4">
@@ -156,27 +156,28 @@ export function PushSubscriber() {
               </motion.div>
               <div className="flex-1 min-w-0">
                 <h4 className="font-display font-black text-[15px] leading-tight">Activa las notificaciones</h4>
-                <p className="text-[12.5px] text-ink-sub mt-0.5 leading-snug">No te pierdas mensajes, llamadas ni tareas, aunque tengas el CRM en otra pestaña.</p>
+                <p className="hidden sm:block text-[12.5px] text-ink-sub mt-0.5 leading-snug">No te pierdas mensajes, llamadas ni tareas, aunque tengas el CRM en otra pestaña.</p>
               </div>
               <button onClick={snooze} className="h-7 w-7 rounded-lg hover:bg-white/[0.04] text-ink-sub flex items-center justify-center shrink-0" title="Ahora no">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="flex items-center gap-3 mt-3 mb-3.5 text-[11px] text-ink-sub">
+            {/* En móvil se oculta: el aviso tapaba media pantalla. */}
+            <div className="hidden sm:flex items-center gap-3 mt-3 mb-3.5 text-[11px] text-ink-sub">
               <span className="inline-flex items-center gap-1"><MessageSquare className="h-3.5 w-3.5 text-brand-blue" strokeWidth={2} /> Mensajes</span>
               <span className="inline-flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-brand-green" strokeWidth={2} /> Llamadas</span>
               <span className="inline-flex items-center gap-1"><CheckSquare className="h-3.5 w-3.5 text-brand-orange" strokeWidth={2} /> Tareas</span>
             </div>
 
             {perm === "denied" && (
-              <div className="flex items-start gap-1.5 text-[11px] text-amber-400 bg-amber-500/10 rounded-lg px-2.5 py-1.5 mb-2.5">
+              <div className="flex items-start gap-1.5 text-[11px] text-amber-400 bg-amber-500/10 rounded-lg px-2.5 py-1.5 mt-3 sm:mt-0 mb-2.5">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" strokeWidth={2} />
                 <span>Las bloqueaste antes. Actívalas en el candado 🔒 de la barra de direcciones → Notificaciones → Permitir.</span>
               </div>
             )}
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-3 sm:mt-0">
               <button
                 onClick={activar}
                 className="flex-1 gradient-orange h-10 rounded-xl text-white font-ui text-[13px] font-bold uppercase tracking-wider shadow-glow hover:opacity-95 transition"

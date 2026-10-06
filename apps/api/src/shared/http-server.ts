@@ -8,7 +8,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { requireAuth } from "./auth-middleware.js";
-import { UPLOADS_DIR } from "./env.js";
+import { UPLOADS_DIR, isAllowedOrigin } from "./env.js";
 import { readUploadedFileBytes } from "../lib/storage.js";
 
 // Tabla chica local a esta ruta — a propósito NO se reutiliza la de drive-routes.ts (Drive queda
@@ -50,7 +50,12 @@ export function createHttpApp(): HttpApp {
   const httpServer = createServer(app);
 
   app.use(helmet({ crossOriginResourcePolicy: false, contentSecurityPolicy: false }));
-  app.use(cors({ origin: true, credentials: true }));
+  // /api/public/* (formularios, tracking UTM/pixel desde landings externas, webhooks): abierto a
+  // cualquier origen pero SIN credenciales. El resto (API privada con cookie de sesión): solo los
+  // orígenes de ALLOWED_ORIGINS — antes `origin: true` reflejaba cualquier web con credenciales.
+  const publicCors = cors({ origin: true, credentials: false });
+  const privateCors = cors({ origin: (origin, cb) => cb(null, isAllowedOrigin(origin)), credentials: true });
+  app.use((req, res, next) => (req.path.startsWith("/api/public/") ? publicCors : privateCors)(req, res, next));
   // `rawBody` solo para el webhook de Meta: la firma X-Hub-Signature-256 se calcula sobre los bytes EXACTOS.
   app.use(express.json({
     limit: "20mb",
