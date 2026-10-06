@@ -990,7 +990,7 @@ html.fx-off .glass-input {
   --ink-sub: #94a3b8;
   --ink-muted: #64748b;
   color: var(--ink);
-  background: var(--glass-fill), rgba(15, 23, 42, 0.88);
+  background: var(--glass-fill), rgba(15, 23, 42, 0.96);
   border: 1px solid rgba(226, 232, 240, 0.08);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(22px) saturate(160%);
@@ -1157,6 +1157,13 @@ html.dark .glass-panel,
 html.dark .glass-strong {
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+/* Superficies oscuras flotantes (dock, navbar, menús desplegables) sobre contenido CLARO: al 78 % se
+   transparentaba el texto de detrás, y un menú dentro del navbar ni siquiera desenfoca (un
+   backdrop-filter anidado no ve la página). Casi opacas para que se lean siempre. */
+.glass-3d.glass-blur:not(.app-main *),
+.app-main :is(.modal-surface, .dark-island) .glass-3d.glass-blur {
+  background: var(--glass-fill), rgba(15, 23, 42, 0.95);
 }
 html.fx-off .glass-blur,
 html.fx-off.dark .glass-panel,

@@ -66,7 +66,6 @@ export function ResumenTab({ op, tramites = [], onReload, pagos = [], totalPagad
         {/* Información del caso */}
         <Card icon={Briefcase} title="Información del caso">
           <TramitesField opId={op.id} principalId={op.tipo_tramite_id} tramites={tramites.length ? tramites : (op.tramite_nombre ? [{ tipo_tramite_id: op.tipo_tramite_id, nombre: op.tramite_nombre, es_principal: true, color: op.tramite_color }] : [])} onReload={onReload} />
-          <Info label="Formulario USCIS" value={op.formulario_uscis} />
           <PersonField opId={op.id} label="Preparador" field="preparador_id" userId={op.preparador_id} nombre={op.preparador_nombre} avatar={op.preparador_foto} onReload={onReload} />
           <PersonField opId={op.id} label="Vendedor" field="vendedor_id" userId={op.vendedor_id} nombre={op.vendedor_nombre} avatar={op.vendedor_foto} onReload={onReload} />
           <PersonField opId={op.id} label="Manager" field="manager_general_id" userId={op.manager_general_id} nombre={op.manager_general_nombre} avatar={op.manager_general_foto} onReload={onReload} />
