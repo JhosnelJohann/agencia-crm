@@ -28,7 +28,7 @@ const COLUMNS: { key: TareaRow["estado"]; label: string; color: string; icon: an
   { key: "pendiente",   label: "Pendiente",   color: "#5d8fa8", icon: Clock },
   { key: "en_progreso", label: "En progreso", color: "#e8581a", icon: Play },
   { key: "completada",  label: "Completada",  color: "#16b91a", icon: CheckSquare },
-  { key: "cancelada",   label: "Cancelada",   color: "#9b9490", icon: X }
+  { key: "cancelada",   label: "Cancelada",   color: "#94a3b8", icon: X }
 ];
 
 const ESTADOS = COLUMNS.map((c) => c.key);
@@ -170,7 +170,7 @@ function DraggableCard({ tarea, index, onOpen }: { tarea: TareaRow; index: numbe
 
 function MiniCard({ tarea, dragging }: { tarea: TareaRow; dragging?: boolean }) {
   const vencida = !!tarea.fecha_limite && tarea.estado !== "completada" && new Date(tarea.fecha_limite) < new Date();
-  const borderColor = tarea.color_prioridad || "#9b9490";
+  const borderColor = tarea.color_prioridad || "#94a3b8";
   const avatar = tarea.responsable_nombre && (
     tarea.responsable_foto ? (
       <img src={tarea.responsable_foto} className="h-5 w-5 rounded-full object-cover border border-bg-darkcard" alt="" />

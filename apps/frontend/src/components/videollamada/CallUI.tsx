@@ -220,7 +220,7 @@ function usePiP() {
         try { pip.document.head.appendChild(node.cloneNode(true)); } catch { /* ignore */ }
       });
       pip.document.body.style.margin = "0";
-      pip.document.body.style.background = "#0c0c0c";
+      pip.document.body.style.background = "#0b1120";
       pip.document.documentElement.classList.add("dark");
       pip.addEventListener("pagehide", () => setWin(null));
       setWin(pip);
@@ -302,7 +302,7 @@ function MiniStage() {
   // self-pip solo si el track propio es real (no placeholder) y no es el principal.
   const selfReal = selfT && selfT !== primary && isTrackReference(selfT) ? selfT : null;
   return (
-    <div className="relative h-full w-full bg-[#0c0c0c]">
+    <div className="relative h-full w-full bg-[#0b1120]">
       {primary && <ParticipantTile trackRef={primary} className="gozz-mini-primary" />}
       {primId && hands[primId] && <HandBadge />}
       {selfReal && (
@@ -499,7 +499,7 @@ export function CallUI({
         className="fixed bottom-5 right-5 z-[100] w-[330px] h-[252px] rounded-2xl p-[1.5px] bg-gradient-to-br from-brand-orange/70 via-fuchsia-500/40 to-sky-500/40 shadow-2xl shadow-black/60 cursor-grab active:cursor-grabbing"
         style={{ pointerEvents: "auto" }}
       >
-        <div className="h-full w-full rounded-[15px] overflow-hidden bg-[#0c0c0c]">
+        <div className="h-full w-full rounded-[15px] overflow-hidden bg-[#0b1120]">
           {content}
         </div>
       </motion.div>

@@ -5,55 +5,55 @@
   --brand-blue: #5d8fa8;
   --brand-green: #16b91a;
   --brand-red: #e30b0b;
-  --brand-neutral: #9b9490;
+  --brand-neutral: #94a3b8;
 
   --neon-orange: #e8581a;
   --neon-cyan: #f0a070;
   --neon-magenta: #e8581a;
   --neon-purple: #c96a3d;
   --neon-yellow: #f0b040;
-  --neon-blue: #9b9490;
+  --neon-blue: #94a3b8;
 
   /* La app es solo oscura: los tokens "light" apuntan a los oscuros. */
-  --bg-light: #0c0c0c;
-  --bg-canvas: #0c0c0c;
-  --bg-surface: #111009;
-  --bg-surface-2: #161310;
-  --bg-accent: #1c1915;
-  --fg-light: #f0ede8;
-  --border-subtle: rgba(240,237,232,0.07);
+  --bg-light: #0b1120;
+  --bg-canvas: #0b1120;
+  --bg-surface: #0f172a;
+  --bg-surface-2: #1e293b;
+  --bg-accent: #273449;
+  --fg-light: #e2e8f0;
+  --border-subtle: rgba(226, 232, 240,0.07);
 
-  --bg-dark: #0c0c0c;
-  --bg-dark-2: #111009;
-  --bg-dark-card: #161310;
-  --bg-sidebar: #0c0c0c;
-  --fg-dark: #f0ede8;
-  --border-dark: rgba(240,237,232,0.07);
-  --border-subtle-dark: rgba(240,237,232,0.07);
+  --bg-dark: #0b1120;
+  --bg-dark-2: #0f172a;
+  --bg-dark-card: #1e293b;
+  --bg-sidebar: #0b1120;
+  --fg-dark: #e2e8f0;
+  --border-dark: rgba(226, 232, 240,0.07);
+  --border-subtle-dark: rgba(226, 232, 240,0.07);
 
   /* Tokens por nombre (landing) */
-  --bg: #0c0c0c;
-  --bg-alt: #111009;
-  --surface: #161310;
-  --surface-2: #1c1915;
+  --bg: #0b1120;
+  --bg-alt: #0f172a;
+  --surface: #1e293b;
+  --surface-2: #273449;
   --accent: #e8581a;
   --accent-dim: rgba(232,88,26,0.10);
   --accent-line: rgba(232,88,26,0.25);
-  --text: #f0ede8;
-  --text-sub: #9b9490;
-  --text-muted: #5c5854;
-  --border: rgba(240,237,232,0.07);
+  --text: #e2e8f0;
+  --text-sub: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(226, 232, 240,0.07);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --font-barlow: "Inter";
   --font-dm: "Inter";
   --font-mono: "JetBrains Mono";
 
   /* ── Tokens de contenido (pueden "voltear" a modo claro dentro de .app-main) ── */
-  --ink: #f0ede8;
-  --ink-sub: #9b9490;
-  --ink-muted: #5c5854;
-  --line: rgba(240,237,232,0.07);
-  --line-soft: rgba(240,237,232,0.04);
+  --ink: #e2e8f0;
+  --ink-sub: #94a3b8;
+  --ink-muted: #64748b;
+  --line: rgba(226, 232, 240,0.07);
+  --line-soft: rgba(226, 232, 240,0.04);
   /* --bg-dark y --bg-dark-card ya existen arriba y sirven de base para Tailwind (bg.dark/darkcard) */
 }
 
@@ -203,7 +203,7 @@ html.dark .futuristic-texture {
 }
 
 html.dark .glass {
-  background: rgba(22, 19, 16, 0.72);
+  background: rgba(30, 41, 59, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
@@ -216,7 +216,7 @@ html.dark .glass {
 }
 
 html.dark .glass-strong {
-  background: rgba(17, 16, 9, 0.85);
+  background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -232,7 +232,7 @@ html.dark .glass-strong {
   box-shadow: 0 8px 32px rgba(16, 24, 40, 0.06);
 }
 html.dark .glass-light {
-  background: rgba(22, 19, 16, 0.65);
+  background: rgba(30, 41, 59, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
@@ -244,7 +244,7 @@ html.dark .glass-light {
   border-bottom: 1px solid rgba(16, 24, 40, 0.06);
 }
 html.dark .glass-topbar {
-  background: rgba(17, 16, 9, 0.6);
+  background: rgba(15, 23, 42, 0.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -256,7 +256,7 @@ html.dark .glass-topbar {
   box-shadow: 0 20px 48px rgba(16, 24, 40, 0.12);
 }
 html.dark .glass-panel {
-  background: rgba(17, 16, 9, 0.9);
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
 }
@@ -267,11 +267,11 @@ html.dark .glass-panel {
 }
 
 .gradient-aurora {
-  background: conic-gradient(from 180deg at 50% 50%, #e8581a 0deg, #e8581a 90deg, #c96a3d 180deg, #9b9490 270deg, #e8581a 360deg);
+  background: conic-gradient(from 180deg at 50% 50%, #e8581a 0deg, #e8581a 90deg, #c96a3d 180deg, #94a3b8 270deg, #e8581a 360deg);
 }
 
 .gradient-mesh-1 {
-  background-color: #111009;
+  background-color: #0f172a;
   background-image:
     radial-gradient(at 27% 37%, hsla(25, 100%, 52%, 0.45) 0, transparent 55%),
     radial-gradient(at 97% 21%, hsla(292, 100%, 57%, 0.35) 0, transparent 55%),
@@ -304,7 +304,7 @@ html.dark .glass-panel {
 }
 
 .text-gradient-ocean {
-  background: linear-gradient(135deg, #16b91a 0%, #9b9490 100%);
+  background: linear-gradient(135deg, #16b91a 0%, #94a3b8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -374,7 +374,7 @@ html.dark .glass-panel {
   content: "";
   position: absolute;
   inset: -50%;
-  background: conic-gradient(from 0deg at 50% 50%, #e8581a, #e8581a, #c96a3d, #9b9490, #16b91a, #e8581a);
+  background: conic-gradient(from 0deg at 50% 50%, #e8581a, #e8581a, #c96a3d, #94a3b8, #16b91a, #e8581a);
   filter: blur(90px);
   opacity: 0.35;
   animation: aurora-spin 20s linear infinite;
@@ -401,12 +401,12 @@ html.dark .glass-panel {
 
 /* ========== SKELETON ========== */
 .skeleton {
-  background: linear-gradient(90deg, #e5e5e0 0%, #f5f3ee 50%, #e5e5e0 100%);
+  background: linear-gradient(90deg, #e8edf3 0%, #f4f6f9 50%, #e8edf3 100%);
   background-size: 200% 100%;
   animation: shimmer 1.8s linear infinite;
 }
 html.dark .skeleton {
-  background: linear-gradient(90deg, #161310 0%, #1c1915 50%, #161310 100%);
+  background: linear-gradient(90deg, #1e293b 0%, #273449 50%, #1e293b 100%);
   background-size: 200% 100%;
 }
 
@@ -540,105 +540,105 @@ html.tab-hidden *::after {
 /* Solo dentro de contenedores light (.glass y .glass-strong). Los contenedores
    dark (sidebar, login hardcoded, hero del dashboard, videollamada) NO se tocan. */
 html:not(.dark) .glass .text-white\/20,
-html:not(.dark) .glass-strong .text-white\/20 { color: rgba(17, 16, 9, 0.45); }
+html:not(.dark) .glass-strong .text-white\/20 { color: rgba(15, 23, 42, 0.45); }
 html:not(.dark) .glass .text-white\/25,
-html:not(.dark) .glass-strong .text-white\/25 { color: rgba(17, 16, 9, 0.50); }
+html:not(.dark) .glass-strong .text-white\/25 { color: rgba(15, 23, 42, 0.50); }
 html:not(.dark) .glass .text-white\/30,
-html:not(.dark) .glass-strong .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
+html:not(.dark) .glass-strong .text-white\/30 { color: rgba(15, 23, 42, 0.55); }
 html:not(.dark) .glass .text-white\/40,
-html:not(.dark) .glass-strong .text-white\/40 { color: rgba(17, 16, 9, 0.62); }
+html:not(.dark) .glass-strong .text-white\/40 { color: rgba(15, 23, 42, 0.62); }
 html:not(.dark) .glass .text-white\/45,
-html:not(.dark) .glass-strong .text-white\/45 { color: rgba(17, 16, 9, 0.67); }
+html:not(.dark) .glass-strong .text-white\/45 { color: rgba(15, 23, 42, 0.67); }
 html:not(.dark) .glass .text-white\/50,
-html:not(.dark) .glass-strong .text-white\/50 { color: rgba(17, 16, 9, 0.70); }
+html:not(.dark) .glass-strong .text-white\/50 { color: rgba(15, 23, 42, 0.70); }
 html:not(.dark) .glass .text-white\/55,
-html:not(.dark) .glass-strong .text-white\/55 { color: rgba(17, 16, 9, 0.75); }
+html:not(.dark) .glass-strong .text-white\/55 { color: rgba(15, 23, 42, 0.75); }
 html:not(.dark) .glass .text-white\/60,
-html:not(.dark) .glass-strong .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
+html:not(.dark) .glass-strong .text-white\/60 { color: rgba(15, 23, 42, 0.78); }
 html:not(.dark) .glass .text-white\/65,
-html:not(.dark) .glass-strong .text-white\/65 { color: rgba(17, 16, 9, 0.82); }
+html:not(.dark) .glass-strong .text-white\/65 { color: rgba(15, 23, 42, 0.82); }
 html:not(.dark) .glass .text-white\/70,
-html:not(.dark) .glass-strong .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
+html:not(.dark) .glass-strong .text-white\/70 { color: rgba(15, 23, 42, 0.85); }
 html:not(.dark) .glass .text-white\/75,
-html:not(.dark) .glass-strong .text-white\/75 { color: rgba(17, 16, 9, 0.88); }
+html:not(.dark) .glass-strong .text-white\/75 { color: rgba(15, 23, 42, 0.88); }
 html:not(.dark) .glass .text-white\/80,
-html:not(.dark) .glass-strong .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
+html:not(.dark) .glass-strong .text-white\/80 { color: rgba(15, 23, 42, 0.90); }
 html:not(.dark) .glass .text-white\/85,
-html:not(.dark) .glass-strong .text-white\/85 { color: rgba(17, 16, 9, 0.92); }
+html:not(.dark) .glass-strong .text-white\/85 { color: rgba(15, 23, 42, 0.92); }
 html:not(.dark) .glass .text-white\/90,
-html:not(.dark) .glass-strong .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
+html:not(.dark) .glass-strong .text-white\/90 { color: rgba(15, 23, 42, 0.94); }
 html:not(.dark) .glass .text-white\/95,
-html:not(.dark) .glass-strong .text-white\/95 { color: rgba(17, 16, 9, 0.96); }
+html:not(.dark) .glass-strong .text-white\/95 { color: rgba(15, 23, 42, 0.96); }
 
 html:not(.dark) .glass .bg-white\/5,
-html:not(.dark) .glass-strong .bg-white\/5 { background-color: rgba(17, 16, 9, 0.05); }
+html:not(.dark) .glass-strong .bg-white\/5 { background-color: rgba(15, 23, 42, 0.05); }
 html:not(.dark) .glass .bg-white\/10,
-html:not(.dark) .glass-strong .bg-white\/10 { background-color: rgba(17, 16, 9, 0.08); }
+html:not(.dark) .glass-strong .bg-white\/10 { background-color: rgba(15, 23, 42, 0.08); }
 html:not(.dark) .glass .bg-white\/15,
-html:not(.dark) .glass-strong .bg-white\/15 { background-color: rgba(17, 16, 9, 0.10); }
+html:not(.dark) .glass-strong .bg-white\/15 { background-color: rgba(15, 23, 42, 0.10); }
 
 html:not(.dark) .glass .border-white\/5,
-html:not(.dark) .glass-strong .border-white\/5 { border-color: rgba(17, 16, 9, 0.08); }
+html:not(.dark) .glass-strong .border-white\/5 { border-color: rgba(15, 23, 42, 0.08); }
 html:not(.dark) .glass .border-white\/10,
-html:not(.dark) .glass-strong .border-white\/10 { border-color: rgba(17, 16, 9, 0.12); }
+html:not(.dark) .glass-strong .border-white\/10 { border-color: rgba(15, 23, 42, 0.12); }
 html:not(.dark) .glass .border-white\/15,
-html:not(.dark) .glass-strong .border-white\/15 { border-color: rgba(17, 16, 9, 0.15); }
+html:not(.dark) .glass-strong .border-white\/15 { border-color: rgba(15, 23, 42, 0.15); }
 html:not(.dark) .glass .border-white\/20,
-html:not(.dark) .glass-strong .border-white\/20 { border-color: rgba(17, 16, 9, 0.18); }
+html:not(.dark) .glass-strong .border-white\/20 { border-color: rgba(15, 23, 42, 0.18); }
 
 /* Text contrast overrides inside .glass / .glass-strong en light mode */
 html:not(.dark) .glass .text-white\/20,
-html:not(.dark) .glass-strong .text-white\/20 { color: rgba(17, 16, 9, 0.45); }
+html:not(.dark) .glass-strong .text-white\/20 { color: rgba(15, 23, 42, 0.45); }
 html:not(.dark) .glass .text-white\/25,
-html:not(.dark) .glass-strong .text-white\/25 { color: rgba(17, 16, 9, 0.50); }
+html:not(.dark) .glass-strong .text-white\/25 { color: rgba(15, 23, 42, 0.50); }
 html:not(.dark) .glass .text-white\/30,
-html:not(.dark) .glass-strong .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
+html:not(.dark) .glass-strong .text-white\/30 { color: rgba(15, 23, 42, 0.55); }
 html:not(.dark) .glass .text-white\/40,
-html:not(.dark) .glass-strong .text-white\/40 { color: rgba(17, 16, 9, 0.62); }
+html:not(.dark) .glass-strong .text-white\/40 { color: rgba(15, 23, 42, 0.62); }
 html:not(.dark) .glass .text-white\/45,
-html:not(.dark) .glass-strong .text-white\/45 { color: rgba(17, 16, 9, 0.67); }
+html:not(.dark) .glass-strong .text-white\/45 { color: rgba(15, 23, 42, 0.67); }
 html:not(.dark) .glass .text-white\/50,
-html:not(.dark) .glass-strong .text-white\/50 { color: rgba(17, 16, 9, 0.70); }
+html:not(.dark) .glass-strong .text-white\/50 { color: rgba(15, 23, 42, 0.70); }
 html:not(.dark) .glass .text-white\/55,
-html:not(.dark) .glass-strong .text-white\/55 { color: rgba(17, 16, 9, 0.75); }
+html:not(.dark) .glass-strong .text-white\/55 { color: rgba(15, 23, 42, 0.75); }
 html:not(.dark) .glass .text-white\/60,
-html:not(.dark) .glass-strong .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
+html:not(.dark) .glass-strong .text-white\/60 { color: rgba(15, 23, 42, 0.78); }
 html:not(.dark) .glass .text-white\/65,
-html:not(.dark) .glass-strong .text-white\/65 { color: rgba(17, 16, 9, 0.82); }
+html:not(.dark) .glass-strong .text-white\/65 { color: rgba(15, 23, 42, 0.82); }
 html:not(.dark) .glass .text-white\/70,
-html:not(.dark) .glass-strong .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
+html:not(.dark) .glass-strong .text-white\/70 { color: rgba(15, 23, 42, 0.85); }
 html:not(.dark) .glass .text-white\/75,
-html:not(.dark) .glass-strong .text-white\/75 { color: rgba(17, 16, 9, 0.88); }
+html:not(.dark) .glass-strong .text-white\/75 { color: rgba(15, 23, 42, 0.88); }
 html:not(.dark) .glass .text-white\/80,
-html:not(.dark) .glass-strong .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
+html:not(.dark) .glass-strong .text-white\/80 { color: rgba(15, 23, 42, 0.90); }
 html:not(.dark) .glass .text-white\/85,
-html:not(.dark) .glass-strong .text-white\/85 { color: rgba(17, 16, 9, 0.92); }
+html:not(.dark) .glass-strong .text-white\/85 { color: rgba(15, 23, 42, 0.92); }
 html:not(.dark) .glass .text-white\/90,
-html:not(.dark) .glass-strong .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
+html:not(.dark) .glass-strong .text-white\/90 { color: rgba(15, 23, 42, 0.94); }
 html:not(.dark) .glass .text-white\/95,
-html:not(.dark) .glass-strong .text-white\/95 { color: rgba(17, 16, 9, 0.96); }
+html:not(.dark) .glass-strong .text-white\/95 { color: rgba(15, 23, 42, 0.96); }
 
 /* ========== LIGHT-CONTRAST UTILITY ==========
    Aplica esta clase al contenedor de una sección (ej. <section className="light-contrast">)
    cuando es un panel sobre fondo claro pero internamente usa text-white/XX heredado.
    Reescribe todas las utilidades blancas a slate equivalente. */
-html:not(.dark) .light-contrast .text-white { color: rgba(17, 16, 9, 0.95); }
-html:not(.dark) .light-contrast .text-white\/30 { color: rgba(17, 16, 9, 0.55); }
-html:not(.dark) .light-contrast .text-white\/40 { color: rgba(17, 16, 9, 0.65); }
-html:not(.dark) .light-contrast .text-white\/50 { color: rgba(17, 16, 9, 0.72); }
-html:not(.dark) .light-contrast .text-white\/60 { color: rgba(17, 16, 9, 0.78); }
-html:not(.dark) .light-contrast .text-white\/70 { color: rgba(17, 16, 9, 0.85); }
-html:not(.dark) .light-contrast .text-white\/80 { color: rgba(17, 16, 9, 0.90); }
-html:not(.dark) .light-contrast .text-white\/90 { color: rgba(17, 16, 9, 0.94); }
-html:not(.dark) .light-contrast .border-white\/5 { border-color: rgba(17, 16, 9, 0.06); }
-html:not(.dark) .light-contrast .border-white\/10 { border-color: rgba(17, 16, 9, 0.12); }
-html:not(.dark) .light-contrast .border-white\/15 { border-color: rgba(17, 16, 9, 0.15); }
-html:not(.dark) .light-contrast .border-white\/20 { border-color: rgba(17, 16, 9, 0.20); }
-html:not(.dark) .light-contrast .bg-white\/5 { background-color: rgba(17, 16, 9, 0.04); }
-html:not(.dark) .light-contrast .bg-white\/10 { background-color: rgba(17, 16, 9, 0.08); }
-html:not(.dark) .light-contrast .bg-white\/\[0\.02\] { background-color: rgba(17, 16, 9, 0.02); }
-html:not(.dark) .light-contrast .bg-white\/\[0\.03\] { background-color: rgba(17, 16, 9, 0.03); }
-html:not(.dark) .light-contrast .bg-white\/\[0\.04\] { background-color: rgba(17, 16, 9, 0.04); }
+html:not(.dark) .light-contrast .text-white { color: rgba(15, 23, 42, 0.95); }
+html:not(.dark) .light-contrast .text-white\/30 { color: rgba(15, 23, 42, 0.55); }
+html:not(.dark) .light-contrast .text-white\/40 { color: rgba(15, 23, 42, 0.65); }
+html:not(.dark) .light-contrast .text-white\/50 { color: rgba(15, 23, 42, 0.72); }
+html:not(.dark) .light-contrast .text-white\/60 { color: rgba(15, 23, 42, 0.78); }
+html:not(.dark) .light-contrast .text-white\/70 { color: rgba(15, 23, 42, 0.85); }
+html:not(.dark) .light-contrast .text-white\/80 { color: rgba(15, 23, 42, 0.90); }
+html:not(.dark) .light-contrast .text-white\/90 { color: rgba(15, 23, 42, 0.94); }
+html:not(.dark) .light-contrast .border-white\/5 { border-color: rgba(15, 23, 42, 0.06); }
+html:not(.dark) .light-contrast .border-white\/10 { border-color: rgba(15, 23, 42, 0.12); }
+html:not(.dark) .light-contrast .border-white\/15 { border-color: rgba(15, 23, 42, 0.15); }
+html:not(.dark) .light-contrast .border-white\/20 { border-color: rgba(15, 23, 42, 0.20); }
+html:not(.dark) .light-contrast .bg-white\/5 { background-color: rgba(15, 23, 42, 0.04); }
+html:not(.dark) .light-contrast .bg-white\/10 { background-color: rgba(15, 23, 42, 0.08); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.02\] { background-color: rgba(15, 23, 42, 0.02); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.03\] { background-color: rgba(15, 23, 42, 0.03); }
+html:not(.dark) .light-contrast .bg-white\/\[0\.04\] { background-color: rgba(15, 23, 42, 0.04); }
 
 /* ========== DOC VIEWER (mammoth output) ========== */
 /* Selección naranja marca en toda la app */
@@ -774,13 +774,13 @@ html.dark .doc-prose hr { border-color: rgba(255, 255, 255, 0.10); }
    como un remolino gigante. Un SVG en mosaico se ve idéntico en PC y teléfono porque el tamaño del
    tile es fijo y no depende del contenedor. Motivo: lunas + destellos de marca a muy baja opacidad. */
 .chat-bg {
-  background-color: #0e0c0a;
+  background-color: #0b1120;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M100 26a12 12 0 1 1-8.5-11.5A9 9 0 0 0 100 26z' fill='none' stroke='%23e8581a' stroke-width='1.6' opacity='0.13'/%3E%3Cpath d='M34 92l1.7 4 4 1.7-4 1.7-1.7 4-1.7-4-4-1.7 4-1.7z' fill='%23e8581a' opacity='0.12'/%3E%3Ccircle cx='70' cy='58' r='1.6' fill='%23e8581a' opacity='0.11'/%3E%3Ccircle cx='18' cy='38' r='1.2' fill='%23e8581a' opacity='0.09'/%3E%3Ccircle cx='118' cy='102' r='1.2' fill='%23e8581a' opacity='0.09'/%3E%3Cpath d='M50 15a7 7 0 1 1-5-6.6A5.4 5.4 0 0 0 50 15z' fill='none' stroke='%23e8581a' stroke-width='1.3' opacity='0.10'/%3E%3C/svg%3E");
   background-size: 140px;
   background-repeat: repeat;
 }
 html.dark .chat-bg {
-  background-color: #0e0c0a;
+  background-color: #0b1120;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M100 26a12 12 0 1 1-8.5-11.5A9 9 0 0 0 100 26z' fill='none' stroke='%23f08a5a' stroke-width='1.6' opacity='0.16'/%3E%3Cpath d='M34 92l1.7 4 4 1.7-4 1.7-1.7 4-1.7-4-4-1.7 4-1.7z' fill='%23f08a5a' opacity='0.15'/%3E%3Ccircle cx='70' cy='58' r='1.6' fill='%23f08a5a' opacity='0.13'/%3E%3Ccircle cx='18' cy='38' r='1.2' fill='%23f08a5a' opacity='0.11'/%3E%3Ccircle cx='118' cy='102' r='1.2' fill='%23f08a5a' opacity='0.11'/%3E%3Cpath d='M50 15a7 7 0 1 1-5-6.6A5.4 5.4 0 0 0 50 15z' fill='none' stroke='%23f08a5a' stroke-width='1.3' opacity='0.13'/%3E%3C/svg%3E");
   background-size: 140px;
   background-repeat: repeat;
@@ -797,15 +797,15 @@ html.dark .chat-bg {
 
 /* Sidebar / paneles laterales — chrome único, puede llevar blur */
 .glass-sidebar {
-  background: linear-gradient(180deg, rgba(17, 16, 9, 0.82), rgba(12, 12, 12, 0.68));
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(11, 17, 32, 0.68));
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-right: 1px solid rgba(240, 237, 232, 0.07);
+  border-right: 1px solid rgba(226, 232, 240, 0.07);
 }
 html.fx-off .glass-sidebar {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  background: rgba(17, 16, 9, 0.94);
+  background: rgba(15, 23, 42, 0.94);
 }
 
 /* Item del sidebar (chat de la lista) — se repite por fila: cristal plano, sin blur */
@@ -813,7 +813,7 @@ html.fx-off .glass-sidebar {
   transition: background-color .2s ease, transform .2s ease, border-color .2s ease;
 }
 .glass-sidebar-item:hover {
-  background: rgba(240, 237, 232, 0.04);
+  background: rgba(226, 232, 240, 0.04);
   transform: translateX(2px);
 }
 .glass-sidebar-item-active {
@@ -824,7 +824,7 @@ html.fx-off .glass-sidebar {
 
 /* Header del chat (parte de arriba con avatar + nombre + botón videollamada) — chrome único */
 .glass-header {
-  background: linear-gradient(180deg, rgba(17, 16, 9, 0.80), rgba(12, 12, 12, 0.60));
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.80), rgba(11, 17, 32, 0.60));
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-bottom: 1px solid rgba(232, 88, 26, 0.12);
@@ -832,28 +832,28 @@ html.fx-off .glass-sidebar {
 html.fx-off .glass-header {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  background: rgba(17, 16, 9, 0.95);
+  background: rgba(15, 23, 42, 0.95);
 }
 
 /* Composer (caja de escribir abajo) — chrome único */
 .glass-composer {
-  background: linear-gradient(0deg, rgba(17, 16, 9, 0.82), rgba(12, 12, 12, 0.62));
+  background: linear-gradient(0deg, rgba(15, 23, 42, 0.82), rgba(11, 17, 32, 0.62));
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-top: 1px solid rgba(240, 237, 232, 0.07);
+  border-top: 1px solid rgba(226, 232, 240, 0.07);
 }
 html.fx-off .glass-composer {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  background: rgba(17, 16, 9, 0.95);
+  background: rgba(15, 23, 42, 0.95);
 }
 
 /* Input pill del composer y la búsqueda del sidebar */
 .glass-input {
-  background: rgba(240, 237, 232, 0.05);
+  background: rgba(226, 232, 240, 0.05);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  border: 1px solid rgba(240, 237, 232, 0.09);
+  border: 1px solid rgba(226, 232, 240, 0.09);
   transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 html.fx-off .glass-input {
@@ -861,7 +861,7 @@ html.fx-off .glass-input {
   -webkit-backdrop-filter: none;
 }
 .glass-input:focus-within {
-  background: rgba(240, 237, 232, 0.08);
+  background: rgba(226, 232, 240, 0.08);
   border-color: rgba(232,88,26, 0.5);
   box-shadow: 0 0 0 4px rgba(232,88,26, 0.15);
 }
@@ -926,8 +926,8 @@ html.fx-off .glass-input {
 /* Recibidas: cristal cálido plano, consistente con --glass-fill del resto de la app */
 .glass-bubble-other {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015) 55%), rgba(28, 25, 21, 0.92);
-  border: 1px solid rgba(240, 237, 232, 0.09);
-  color: rgba(240, 237, 232, 0.94);
+  border: 1px solid rgba(226, 232, 240, 0.09);
+  color: rgba(226, 232, 240, 0.94);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
@@ -971,27 +971,27 @@ html.fx-off .glass-input {
    `.dark-island` además reactiva las variantes `dark:` (ver darkMode en tailwind.config.ts). */
 .modal-surface,
 .dark-island {
-  --line: rgba(240,237,232,0.07);
-  --line-soft: rgba(240,237,232,0.04);
-  --bg-dark: #0c0c0c;
-  --bg-dark-card: #161310;
-  --bg-light: #0c0c0c;
-  --bg-canvas: #0c0c0c;
-  --bg-surface: #111009;
-  --bg-surface-2: #161310;
-  --bg-accent: #1c1915;
-  --content-fill: #161310;
+  --line: rgba(226, 232, 240,0.07);
+  --line-soft: rgba(226, 232, 240,0.04);
+  --bg-dark: #0b1120;
+  --bg-dark-card: #1e293b;
+  --bg-light: #0b1120;
+  --bg-canvas: #0b1120;
+  --bg-surface: #0f172a;
+  --bg-surface-2: #1e293b;
+  --bg-accent: #273449;
+  --content-fill: #1e293b;
 }
-.dark-island { --ink: #f0ede8; --ink-sub: #9b9490; --ink-muted: #5c5854; color: var(--ink); }
+.dark-island { --ink: #e2e8f0; --ink-sub: #94a3b8; --ink-muted: #64748b; color: var(--ink); }
 .modal-surface {
   /* Re-ancla el texto a los valores oscuros: algunos modales se renderizan inline dentro de
      .app-main (sin portal) y heredarían el --ink claro del contenido si no se re-declara aquí. */
-  --ink: #f0ede8;
-  --ink-sub: #9b9490;
-  --ink-muted: #5c5854;
+  --ink: #e2e8f0;
+  --ink-sub: #94a3b8;
+  --ink-muted: #64748b;
   color: var(--ink);
-  background: var(--glass-fill), rgba(17, 16, 9, 0.88);
-  border: 1px solid rgba(240, 237, 232, 0.08);
+  background: var(--glass-fill), rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(226, 232, 240, 0.08);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
@@ -999,7 +999,7 @@ html.fx-off .glass-input {
 html.fx-off .modal-surface {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  background: var(--glass-fill), rgba(17, 16, 9, 0.97);
+  background: var(--glass-fill), rgba(15, 23, 42, 0.97);
 }
 
 /* ===== Videollamada: barra de controles (profesional, 1 sola fila) ===== */
@@ -1138,7 +1138,7 @@ html.fx-off .aurora-mesh { animation: none; }
     inset 0 1px 0 rgba(255, 255, 255, 0.13),
     inset 0 -24px 44px -34px rgba(232, 88, 26, 0.22),
     0 34px 70px -34px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(240, 237, 232, 0.06);
+    0 0 0 1px rgba(226, 232, 240, 0.06);
 }
 :where(.glass-3d) { position: relative; } /* :where → especificidad 0: .fixed/.absolute/.sticky de Tailwind siempre ganan */
 .glass-3d,
@@ -1146,8 +1146,8 @@ html.dark .glass,
 html.dark .glass-strong,
 html.dark .glass-light,
 html.dark .glass-panel {
-  background: var(--glass-fill), rgba(17, 16, 9, 0.78);
-  border: 1px solid rgba(240, 237, 232, 0.07);
+  background: var(--glass-fill), rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(226, 232, 240, 0.07);
   box-shadow: var(--glass-shadow);
 }
 /* El desenfoque de fondo es caro de pintar: solo lo llevan las superficies que flotan sobre
@@ -1163,10 +1163,10 @@ html.fx-off.dark .glass-panel,
 html.fx-off.dark .glass-strong {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  background: var(--glass-fill), rgba(17, 16, 9, 0.94);
+  background: var(--glass-fill), rgba(15, 23, 42, 0.94);
 }
 html.dark .glass-topbar {
-  background: linear-gradient(180deg, rgba(17, 16, 9, 0.78), rgba(12, 12, 12, 0.55));
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(11, 17, 32, 0.55));
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   border-bottom: 1px solid rgba(232, 88, 26, 0.14);
@@ -1199,27 +1199,29 @@ html.dark .glass-topbar {
 .glass-3d:hover::after { opacity: 1; }
 
 /* Las superficies opacas del rediseño pasan a cristal ligero (sin blur: hay cientos de filas). */
-.bg-bg-darkcard { background-color: rgba(22, 19, 16, 0.72); }
-.bg-bg-darkcard\/70, .bg-bg-darkcard\/80, .bg-bg-darkcard\/90 { background-color: rgba(22, 19, 16, 0.74); }
+.bg-bg-darkcard { background-color: rgba(30, 41, 59, 0.72); }
+.bg-bg-darkcard\/70, .bg-bg-darkcard\/80, .bg-bg-darkcard\/90 { background-color: rgba(30, 41, 59, 0.74); }
 
 /* ========== HÍBRIDO: el contenido de página (.app-main, de AppShell) pasa a modo claro.
    Sidebar, Topbar y .modal-surface viven FUERA de .app-main y no heredan nada de aquí. ========== */
 .app-main {
-  --ink: #1c1915;
-  --ink-sub: #6b645c;
-  --ink-muted: #8a8378;
-  --line: rgba(20, 18, 15, 0.08);
-  --line-soft: rgba(20, 18, 15, 0.04);
-  --bg-dark: #f6f4f1;
+  /* Gris perla frío + texto pizarra (combina con los controles slate). Contraste AA sobre #fff:
+     ink 17.9:1 · ink-sub 7.6:1 · ink-muted 4.8:1. */
+  --ink: #0f172a;
+  --ink-sub: #475569;
+  --ink-muted: #64748b;
+  --line: rgba(15, 23, 42, 0.09);
+  --line-soft: rgba(15, 23, 42, 0.05);
+  --bg-dark: #f4f6f9;
   --bg-dark-card: #ffffff;
   /* bg.light/canvas/surface/surface-2/accent de Tailwind (antes hex carbón fijos, p. ej. el panel de Correo). */
-  --bg-light: #f6f4f1;
-  --bg-canvas: #f6f4f1;
+  --bg-light: #f4f6f9;
+  --bg-canvas: #f4f6f9;
   --bg-surface: #ffffff;
-  --bg-surface-2: #faf9f7;
-  --bg-accent: #efece7;
+  --bg-surface-2: #f8fafc;
+  --bg-accent: #eef2f6;
   --content-fill: #ffffff;
-  --content-shadow: 0 20px 50px -24px rgba(20, 18, 15, 0.12), 0 1px 0 rgba(20, 18, 15, 0.04);
+  --content-shadow: 0 12px 32px -18px rgba(15, 23, 42, 0.14), 0 1px 2px rgba(15, 23, 42, 0.05);
   background: var(--bg-dark);
   /* Texto SIN clase de color propia hereda de `body` (`color: var(--text)`, un token separado de
      --ink que no cambia). Fijar `color` aquí da un valor claro-correcto por defecto a todo lo que
@@ -1256,9 +1258,24 @@ html.dark .app-main :is(.glass, .glass-strong, .glass-light, .glass-panel):not(:
   -webkit-backdrop-filter: none;
 }
 html.dark .app-main .skeleton:not(:is(.modal-surface, .dark-island) *) {
-  background: linear-gradient(90deg, #ebe8e3 0%, #f6f4f1 50%, #ebe8e3 100%);
+  background: linear-gradient(90deg, #e8edf3 0%, #f4f6f9 50%, #e8edf3 100%);
   background-size: 200% 100%;
 }
+/* Tablas y formularios del área de trabajo: lectura cómoda. `:where()` deja especificidad 0 para
+   que cualquier utilidad Tailwind del componente (hover:bg-…, focus:ring-…) siga mandando. */
+:where(.app-main) :where(table thead th) {
+  background: #f8fafc;
+  color: var(--ink-sub);
+}
+:where(.app-main) :where(table tbody tr:nth-child(even)) {
+  background: rgba(15, 23, 42, 0.018);
+}
+:where(.app-main) :where(input, select, textarea):focus-visible {
+  outline: 2px solid rgba(232, 88, 26, 0.55);
+  outline-offset: 1px;
+}
+:where(.modal-surface, .dark-island) :where(table thead th) { background: transparent; }
+:where(.modal-surface, .dark-island) :where(table tbody tr:nth-child(even)) { background: transparent; }
 
 /* --- Botones con gradiente animado ---------------------------------------------------------- */
 @keyframes gradient-flow {
@@ -1346,17 +1363,17 @@ html.fx-off main .glass-3d { animation: none; }
   to { background-position: 200% center; }
 }
 .text-shimmer {
-  background: linear-gradient(100deg, #f0ede8 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #f0ede8 80%);
+  background: linear-gradient(100deg, #e2e8f0 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #e2e8f0 80%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: text-shimmer 6s linear infinite;
 }
-/* El degradado claro (#f0ede8) de .text-shimmer es casi invisible sobre tarjetas blancas: dentro
+/* El degradado claro (#e2e8f0) de .text-shimmer es casi invisible sobre tarjetas blancas: dentro
    de .app-main se reemplaza por un degradado oscuro/naranja, mismo efecto sobre fondo claro. */
 .app-main .text-shimmer {
-  background: linear-gradient(100deg, #1c1915 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #1c1915 80%);
+  background: linear-gradient(100deg, #0f172a 20%, #ff8a3d 40%, #e8581a 50%, #ff8a3d 60%, #0f172a 80%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;

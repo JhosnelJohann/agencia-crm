@@ -24,11 +24,11 @@ const COLS: { key: ColumnaTablero; color: string; Icon: any }[] = [
   { key: "semana", color: "#5d8fa8", Icon: Calendar },
   { key: "proxima", color: "#c96a3d", Icon: CalendarClock },
   { key: "adelante", color: "#e8581a", Icon: CalendarDays },
-  { key: "sin", color: "#9b9490", Icon: CalendarX2 },
+  { key: "sin", color: "#94a3b8", Icon: CalendarX2 },
   { key: "completada", color: "#16A34A", Icon: CheckCircle2 },
   // Al final, despues de Completadas y con el mismo tratamiento apagado. Hasta ahora esta vista
   // no tenia donde poner una cancelada, asi que al cancelarla desaparecia de la pantalla.
-  { key: "cancelada", color: "#9b9490", Icon: XCircle },
+  { key: "cancelada", color: "#94a3b8", Icon: XCircle },
 ];
 
 /** Las etiquetas salen de `ETIQUETA_COLUMNA`, no de aqui: la regla de soltar tiene que poder
@@ -278,7 +278,7 @@ function TarjetaFecha({ tarea, onToggleDone, arrastrando }: {
   tarea: TareaRow; onToggleDone?: (t: TareaRow) => void; arrastrando?: boolean;
 }) {
   const vencida = !!tarea.fecha_limite && tarea.estado !== "completada" && new Date(tarea.fecha_limite) < new Date();
-  const borderColor = tarea.color_prioridad || "#9b9490";
+  const borderColor = tarea.color_prioridad || "#94a3b8";
   return (
     <div
       className={cn(

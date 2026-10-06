@@ -61,7 +61,7 @@ function StageEditorModal({ stage, onClose, onSaved }: { stage: Partial<Pipeline
   const [form, setForm] = useState({
     key: stage?.key || "",
     label: stage?.label || "",
-    color: stage?.color || "#9b9490",
+    color: stage?.color || "#94a3b8",
     es_terminal: stage?.es_terminal || false,
     es_ganado: stage?.es_ganado || false,
     campos_obligatorios: (stage?.campos_obligatorios as string[]) || [],

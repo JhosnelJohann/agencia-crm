@@ -756,7 +756,7 @@ export function VideoRoom({ videollamadaId, selfUserId, iniciadaPor, roomName, d
               animate={{ x: 0, opacity: 1, filter: "blur(0)" }}
               exit={{ x: 360, opacity: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
-              className="relative w-[340px] shrink-0 border-l border-white/10 bg-[#0c0c0c] flex flex-col"
+              className="relative w-[340px] shrink-0 border-l border-white/10 bg-[#0b1120] flex flex-col"
             >
               <div className="absolute inset-0 opacity-35 pointer-events-none"
                 style={{ backgroundImage: "radial-gradient(ellipse at 80% 0%, rgba(232,88,26,0.18), transparent 55%), radial-gradient(ellipse at 20% 100%, rgba(33,150,201,0.15), transparent 55%)" }} />
@@ -1184,7 +1184,7 @@ function InviteMembersModal({
           exit={{ scale: 0.94, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 26 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-lg max-h-[82vh] rounded-3xl bg-[#161310] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.55)] overflow-hidden flex flex-col"
+          className="relative w-full max-w-lg max-h-[82vh] rounded-3xl bg-[#1e293b] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.55)] overflow-hidden flex flex-col"
         >
           <div className="absolute inset-0 pointer-events-none opacity-40"
             style={{ backgroundImage: "radial-gradient(ellipse at 20% 10%, rgba(232,88,26,0.18), transparent 55%), radial-gradient(ellipse at 80% 90%, rgba(131,56,236,0.18), transparent 55%)" }} />
@@ -1241,7 +1241,7 @@ function InviteMembersModal({
                           ? <img src={c.foto_perfil_url} alt={c.nombre} className="h-full w-full object-cover" />
                           : initialsOf(c.nombre)}
                       </div>
-                      {c.online && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 border-2 border-[#161310]" />}
+                      {c.online && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 border-2 border-[#1e293b]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-inter font-semibold text-white truncate">{c.nombre}</div>
@@ -1424,7 +1424,7 @@ function ScreenShareHUD({ stream, onStop }: { stream: MediaStream; onStop: () =>
         layout
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
         className={
-          "relative rounded-2xl overflow-hidden bg-[#0c0c0c] border border-emerald-400/40 shadow-[0_20px_60px_rgba(0,0,0,0.55)] " +
+          "relative rounded-2xl overflow-hidden bg-[#0b1120] border border-emerald-400/40 shadow-[0_20px_60px_rgba(0,0,0,0.55)] " +
           (minimized ? "w-[240px]" : "w-[320px] sm:w-[380px]")
         }
       >
@@ -1520,7 +1520,7 @@ function PeerTile({
       {stream && camOn ? (
         <PeerVideo stream={stream} muted={muted} mirrored={mirrored} />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#14141c] to-[#0c0c0c]">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#14141c] to-[#0b1120]">
           {photo ? (
             <img src={photo} alt={name} className="h-28 w-28 rounded-full object-cover ring-4 ring-white/10" />
           ) : (

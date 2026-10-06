@@ -75,7 +75,7 @@ export function CambioEtapaModal({
 
   const activas = useMemo(() => (stages || []).filter((s) => s.activa !== false), [stages]);
   const label = (key: string) => activas.find((s) => s.key === key)?.label || key;
-  const color = (key: string) => activas.find((s) => s.key === key)?.color || "#9b9490";
+  const color = (key: string) => activas.find((s) => s.key === key)?.color || "#94a3b8";
 
   /** Solo se manda lo que de verdad cambia: una fila que sigue en su etapa no es un cambio. */
   const cambios = useMemo(
@@ -213,7 +213,7 @@ export function CambioEtapaModal({
                         <td className="px-3 py-2">
                           {o.tramite_nombre ? (
                             <span className="inline-flex items-center gap-1.5">
-                              <span className="h-2 w-2 rounded-full shrink-0" style={{ background: o.tramite_color || "#9b9490" }} />
+                              <span className="h-2 w-2 rounded-full shrink-0" style={{ background: o.tramite_color || "#94a3b8" }} />
                               <span className="truncate max-w-[120px]">{o.tramite_nombre}</span>
                             </span>
                           ) : <span className="text-[11px] italic text-ink-sub">sin trámite</span>}

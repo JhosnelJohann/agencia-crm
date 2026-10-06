@@ -10,7 +10,7 @@ const SECTIONS = [
   { href: "/configuracion/pipeline", label: "Pipeline & Automations", desc: "Etapas, colores, disparadores y campos obligatorios", Icon: Cog, color: "#c96a3d" },
   { href: "/configuracion/notificaciones", label: "Notificaciones", desc: "Preferencias de alertas", Icon: Bell, color: "#e30b0b" },
   { href: "/configuracion/api-keys", label: "API Keys", desc: "Llaves públicas para integraciones externas", Icon: KeyRound, color: "#5d8fa8" },
-  { href: "/configuracion/seguridad", label: "Seguridad", desc: "Auditoría y sesiones activas", Icon: ShieldCheck, color: "#9b9490" }
+  { href: "/configuracion/seguridad", label: "Seguridad", desc: "Auditoría y sesiones activas", Icon: ShieldCheck, color: "#94a3b8" }
 ];
 
 // La "Papelera / Archivos sin identificar" se movió al modal de papelera del Drive (Fase B3) — ya no está acá.

@@ -38,11 +38,18 @@ El puerto 22 saliente puede estar bloqueado por el ISP (Venezuela): ProtonVPN fu
 
 ## Identidad visual (tomada de sandrogozz.com, NO idéntica al CRM de inmigración)
 
-- **Híbrido claro/oscuro (desde 2026-10-04):** el dock, el navbar y los modales (`.modal-surface`) siguen
-  carbón cálido `#0c0c0c / #111009 / #161310 / #1c1915` con acento **naranja `#e8581a`** (gradiente a `#b8460f`).
-  El CONTENIDO de página (dentro de `.app-main`, el `<main>` de `AppShell.tsx`) ahora es **claro** (perla
-  `#f6f4f1` de fondo, tarjetas blancas, texto `#1c1915`). Mecanismo: `tailwind.config.ts` define `ink`/`bg.dark`/
-  `bg.darkcard`/`line` como `var(--token)` en vez de hex fijo; `globals.css` declara esos tokens oscuros en
+- **Híbrido corporativo pizarra/perla (desde 2026-10-05, antes carbón cálido):** dock, navbar y modales
+  (`.modal-surface`) en **azul pizarra** `#0b1120 / #0f172a / #1e293b / #273449`, texto `#e2e8f0 / #94a3b8`,
+  con acento **naranja `#e8581a`** (gradiente a `#b8460f`) como ÚNICO color de marca. El CONTENIDO de página
+  (dentro de `.app-main`, el `<main>` de `AppShell.tsx`) es **claro**: gris perla frío `#f4f6f9`, tarjetas
+  blancas, texto `#0f172a / #475569 / #64748b` (AA sobre blanco). Tablas con cabecera `#f8fafc` y filas cebra;
+  inputs con anillo de foco naranja. Mecanismo: `tailwind.config.ts` define `ink`/`bg.dark`/
+  `bg.darkcard`/`bg.light|canvas|surface|surface-2|accent`/`line` como `var(--token)` en vez de hex fijo, y
+  **`darkMode` es una variante propia: `dark:` solo rige fuera de `.app-main` y dentro de las islas oscuras
+  (`.modal-surface`, `.dark-island`)** — `<html>` lleva siempre `.dark`, así que sin esto las utilidades `dark:`
+  pintaban blanco sobre blanco en el contenido. Chat y WhatsApp son `.dark-island` (burbujas diseñadas para
+  oscuro). Las clases legacy `.glass*`/`.skeleton` se voltean a tarjeta blanca dentro de `.app-main`.
+  `globals.css` declara los tokens oscuros en
   `:root` (para dock/navbar/fuera de `.app-main`) y los vuelve a declarar claros dentro de `.app-main` — así
   `.glass-3d`/`.glass-blur` dentro de `.app-main` salen como tarjeta blanca con sombra suave (sin blur), y
   `.modal-surface` se re-ancla a los valores oscuros aunque esté anidado dentro de `.app-main`. `Scene3D`/aurora
@@ -50,11 +57,11 @@ El puerto 22 saliente puede estar bloqueado por el ISP (Venezuela): ProtonVPN fu
   ⚠️ Cualquier elemento SIN su propia clase de color hereda `color` del ancestro más cercano que lo defina:
   `.app-main` y `.modal-surface` ahora fijan `color: var(--ink)` explícitamente para evitar que algo herede el
   `color: var(--text)` del `body` (que nunca cambia) y quede invisible.
-  ⚠️ Deuda conocida: quedan ~96 usos del patrón viejo `text-X dark:text-Y` (gris claro fijo, pensado para fondo
-  oscuro) sin convertir a los tokens `text-ink`/`text-ink-sub`/`text-ink-muted` — sobre todo en el módulo **Chat**
-  (65, complicado porque las burbujas de mensaje tienen su propio fondo de color y NO deben tocarse, solo el
-  "chrome" del chat sí) y en `app/view/page.tsx` (visor de documentos/hojas con su propio modo "nativo", revisar
-  con cuidado antes de tocar).
+  ⚠️ Deuda conocida: el patrón `text-X dark:text-Y` ya NO rompe el contenido (la variante `dark:` no aplica en
+  `.app-main`), pero el código nuevo debe usar los tokens `text-ink`/`text-ink-sub`/`text-ink-muted`/`border-line`.
+  Quedan clases blancas SIN prefijo (`text-white/70`, `bg-white/[0.04]`) pensadas para oscuro: revisar con
+  contraste al tocar cada pantalla. `app/view/page.tsx` (visor con modo "nativo") sigue pendiente de revisión.
+  Videollamadas (`components/videollamada`) quedan oscuras a propósito.
 - Tipografía autoalojada (`@fontsource`): **Inter** (titulares y cuerpo, pesos 400–800) + **JetBrains Mono**
   para cifras. *(Hasta 2026-10-04 era Barlow Condensed + DM Sans; cambiado a pedido explícito de Sandro.)*
 - Marca: wordmark **GOZZ.** + isotipo "G." (`MoonMark`/`BrandMark`). Voz: español, "tú", directa

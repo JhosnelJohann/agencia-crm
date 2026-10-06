@@ -65,7 +65,7 @@ export function TaskCard({
   const done = tarea.estado === "completada";
   const enProgreso = tarea.estado === "en_progreso";
   const vencida = tarea.fecha_limite && !done && new Date(tarea.fecha_limite) < new Date();
-  const borderColor = tarea.color_prioridad || "#9b9490";
+  const borderColor = tarea.color_prioridad || "#94a3b8";
 
   const checklistTotal = tarea.checklist?.length || 0;
   const checklistDone = tarea.checklist?.filter((c) => c.hecho).length || 0;

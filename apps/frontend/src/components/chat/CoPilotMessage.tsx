@@ -39,7 +39,7 @@ export function CoPilotMessage({ contenido, createdAt }: Props) {
     >
       <div
         className={cn(
-          "relative rounded-2xl rounded-bl-[6px] bg-[#1c1915] text-white/90",
+          "relative rounded-2xl rounded-bl-[6px] bg-[#273449] text-white/90",
           "border border-violet-500/20",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_14px_rgba(0,0,0,0.35)]",
           "overflow-hidden"
@@ -344,7 +344,7 @@ export function CoPilotThinking({ kind = "texto", startedAt }: CoPilotThinkingPr
         {/* Bubble */}
         <div
           className={cn(
-            "relative rounded-2xl rounded-bl-[6px] bg-[#1c1915]",
+            "relative rounded-2xl rounded-bl-[6px] bg-[#273449]",
             "border border-violet-500/20",
             "shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_14px_rgba(0,0,0,0.35)]",
             "overflow-hidden min-w-[280px]"

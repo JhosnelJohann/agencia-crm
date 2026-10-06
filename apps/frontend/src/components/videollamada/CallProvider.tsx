@@ -215,7 +215,7 @@ export function CallProvider({ children }: { children: React.ReactNode }) {
           onDisconnected={() => { endLocal(); }}
           onError={(e) => { console.error("[LiveKit] error:", e); setErr(e?.message || String(e)); }}
           data-lk-theme="default"
-          style={{ position: "fixed", inset: 0, zIndex: mode === "full" ? 110 : 100, pointerEvents: mode === "full" ? "auto" : "none", background: mode === "full" ? "#0c0c0c" : "transparent", height: "100dvh" }}
+          style={{ position: "fixed", inset: 0, zIndex: mode === "full" ? 110 : 100, pointerEvents: mode === "full" ? "auto" : "none", background: mode === "full" ? "#0b1120" : "transparent", height: "100dvh" }}
         >
           <RoomAudioRenderer />
           <CallUI

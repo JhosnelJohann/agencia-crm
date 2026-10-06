@@ -14,7 +14,7 @@ export function MoonMark({ size = 40, className, animated = false }: MoonMarkPro
       <defs>
         <linearGradient id="gz-bg" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2a1a12" />
-          <stop offset="1" stopColor="#0c0c0c" />
+          <stop offset="1" stopColor="#0b1120" />
         </linearGradient>
         <linearGradient id="gz-g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#ffb37a" />
@@ -24,7 +24,7 @@ export function MoonMark({ size = 40, className, animated = false }: MoonMarkPro
       </defs>
       <rect x="1" y="1" width="62" height="62" rx="17" fill="url(#gz-bg)" stroke="rgba(232,88,26,0.45)" strokeWidth="1.5" />
       <text x="30" y="44" fontFamily="var(--font-barlow), Arial, sans-serif" fontWeight="800" fontSize="40" fill="url(#gz-g)" textAnchor="middle">G</text>
-      <circle cx="47.5" cy="44" r="4.2" fill="#f0ede8" />
+      <circle cx="47.5" cy="44" r="4.2" fill="#e2e8f0" />
     </svg>
   );
   if (!animated) return svg;

@@ -960,7 +960,7 @@ function CallSummaryCard({ payload, createdAt }: { payload: CallSummaryPayload; 
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
       className="my-3 flex justify-center"
     >
-      <div className="relative w-full max-w-[520px] rounded-3xl bg-white dark:bg-[#161310] border border-slate-200 dark:border-white/10 shadow-[0_10px_40px_rgba(15,23,42,0.08)] overflow-hidden">
+      <div className="relative w-full max-w-[520px] rounded-3xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/10 shadow-[0_10px_40px_rgba(15,23,42,0.08)] overflow-hidden">
         {/* Gradient decorative top */}
         <div className="relative px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-start gap-3">
           <div className="absolute inset-0 opacity-40 pointer-events-none"

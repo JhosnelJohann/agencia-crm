@@ -50,7 +50,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
     { id: "red", label: "Redes sociales", subtitle: "Marcas y redes en Metricool", icon: Users, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/redes") },
     { id: "cha", label: "Chat interno", subtitle: "Mensajes del equipo", icon: MessageSquare, iconColor: "#06BCC1", section: "Navegar", onSelect: () => go("/chat") },
     { id: "rep", label: "Reportes", subtitle: "Análisis y métricas", icon: BarChart3, iconColor: "#b8460f", section: "Navegar", onSelect: () => go("/reportes") },
-    { id: "con2", label: "Configuración", subtitle: "Panel admin", icon: Settings, iconColor: "#9b9490", section: "Navegar", onSelect: () => go("/configuracion") },
+    { id: "con2", label: "Configuración", subtitle: "Panel admin", icon: Settings, iconColor: "#94a3b8", section: "Navegar", onSelect: () => go("/configuracion") },
     { id: "api", label: "API Keys", subtitle: "Integraciones externas", icon: KeyRound, iconColor: "#0EA5E9", section: "Admin", onSelect: () => go("/configuracion/api-keys") },
     { id: "usr", label: "Gestión de usuarios", subtitle: "Equipo y roles", icon: UserPlus, iconColor: "#EC4899", section: "Admin", onSelect: () => go("/configuracion/usuarios") },
   ];

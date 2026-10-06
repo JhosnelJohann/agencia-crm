@@ -87,7 +87,7 @@ export default function ServiciosPage() {
       descripcion: t.descripcion || "",
       valor_base: String(t.valor_base),
       sla_dias: String(t.sla_dias),
-      color: t.color || "#9b9490",
+      color: t.color || "#94a3b8",
       puntaje_vendedor: String(t.puntaje_vendedor ?? 0),
       puntaje_preparador: String(t.puntaje_preparador ?? 0),
       puntaje_manager_general: String((t as any).puntaje_manager_general ?? 0),
@@ -203,7 +203,7 @@ export default function ServiciosPage() {
                 </div>
               )
               : servicios.map((t, i) => {
-                const color = t.color || "#9b9490";
+                const color = t.color || "#94a3b8";
                 return (
                   <motion.div
                     key={t.id}

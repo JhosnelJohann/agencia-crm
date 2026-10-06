@@ -74,7 +74,7 @@ export default function TareasChatPage() {
                 >
                   <div
                     className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 text-white"
-                    style={{ backgroundColor: PRIORIDAD_COLOR[r.prioridad] || "#9b9490" }}
+                    style={{ backgroundColor: PRIORIDAD_COLOR[r.prioridad] || "#94a3b8" }}
                   >
                     <MessageSquareMore className="h-5 w-5" strokeWidth={2} />
                   </div>

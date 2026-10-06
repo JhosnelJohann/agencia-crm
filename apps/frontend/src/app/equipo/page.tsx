@@ -101,7 +101,7 @@ export default function EquipoPage() {
                         </div>
                       </div>
                       {u.online && (
-                        <div className="absolute bottom-1 right-1 h-5 w-5 rounded-full bg-green-400 border-2 border-[#0c0c0c] animate-pulse" />
+                        <div className="absolute bottom-1 right-1 h-5 w-5 rounded-full bg-green-400 border-2 border-[#0b1120] animate-pulse" />
                       )}
                     </div>
                     <div className="font-display font-black text-base mb-1 truncate max-w-full">{u.nombre}</div>

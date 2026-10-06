@@ -168,7 +168,7 @@ export default function PerfilEquipoPage() {
                 </div>
                 {canEdit && <ProfilePhotoUploader userId={u.id} nombre={u.nombre} currentUrl={u.foto_perfil_url} isOwner={isOwner} onUploaded={(url) => setU({ ...u, foto_perfil_url: url })} />}
                 {u.online && (
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-[#0c0c0c]/80 backdrop-blur-md rounded-full px-2.5 py-1 text-[12px] font-ui uppercase tracking-wider text-green-400 border border-green-400/30">
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-[#0b1120]/80 backdrop-blur-md rounded-full px-2.5 py-1 text-[12px] font-ui uppercase tracking-wider text-green-400 border border-green-400/30">
                     <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
                     En línea
                   </div>

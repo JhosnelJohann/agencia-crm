@@ -185,7 +185,7 @@ function DockContent({ pathname, expanded, badges, user, onNavigate, headerExtra
                     <span className="relative shrink-0 w-[34px] flex items-center justify-center">
                       <Icon3D name={item.icon} size={active ? 32 : 28} float={active} />
                       {n > 0 && !expanded && (
-                        <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-brand-red text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0c0c0c]">
+                        <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-brand-red text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0b1120]">
                           {n > 99 ? "99+" : n}
                         </span>
                       )}

@@ -247,7 +247,7 @@ export function ChatAudioRecorder({ onSend, onCancel, disabled }: Props) {
         {showMicMenu && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setShowMicMenu(false)} />
-            <div className="absolute bottom-12 right-0 z-50 w-64 max-h-72 overflow-auto rounded-xl bg-white dark:bg-[#161310] border border-neutral-200 dark:border-white/10 shadow-xl py-1.5">
+            <div className="absolute bottom-12 right-0 z-50 w-64 max-h-72 overflow-auto rounded-xl bg-white dark:bg-[#1e293b] border border-neutral-200 dark:border-white/10 shadow-xl py-1.5">
               <div className="px-3 py-1.5 text-[12px] font-ui uppercase tracking-wider text-ink-sub">Micrófono</div>
               <button
                 type="button"
@@ -292,7 +292,7 @@ export function ChatAudioRecorder({ onSend, onCancel, disabled }: Props) {
             "rounded-2xl border shadow-[0_10px_40px_rgba(15,23,42,0.18)] px-4 py-3 flex items-center gap-3 backdrop-blur-xl",
             state === "recording"
               ? "bg-gradient-to-br from-[#1E0B18] via-[#2A0F20] to-[#160818] border-red-500/30 text-white"
-              : "bg-white dark:bg-[#161310] border-slate-200 dark:border-white/10"
+              : "bg-white dark:bg-[#1e293b] border-slate-200 dark:border-white/10"
           )}
         >
           {state === "requesting" && (

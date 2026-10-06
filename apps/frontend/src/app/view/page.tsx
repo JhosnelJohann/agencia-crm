@@ -99,7 +99,7 @@ function ViewerPageInner() {
   const canOfficeView = ["word", "excel", "ppt"].includes(kind);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#111009] text-slate-900 dark:text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-white flex flex-col">
       {/* Backdrop ambient para PDF/doc */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
@@ -112,7 +112,7 @@ function ViewerPageInner() {
       <motion.header
         initial={{ y: -12, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 320, damping: 26 }}
-        className="relative z-20 sticky top-0 backdrop-blur-xl bg-white/80 dark:bg-[#111009]/80 border-b border-slate-200 dark:border-white/10"
+        className="relative z-20 sticky top-0 backdrop-blur-xl bg-white/80 dark:bg-[#0f172a]/80 border-b border-slate-200 dark:border-white/10"
       >
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex items-center gap-3">
           <button onClick={() => window.close()}
@@ -174,7 +174,7 @@ function ViewerPageInner() {
       <motion.main
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 24, delay: 0.08 }}
-        className={cn("relative flex-1 flex min-h-0", fullscreen && "fixed inset-0 z-[100] bg-white dark:bg-[#111009]")}
+        className={cn("relative flex-1 flex min-h-0", fullscreen && "fixed inset-0 z-[100] bg-white dark:bg-[#0f172a]")}
       >
         {fullscreen && (
           <button onClick={() => setFullscreen(false)}
@@ -183,7 +183,7 @@ function ViewerPageInner() {
           </button>
         )}
         <div className="max-w-[1600px] w-full mx-auto px-4 lg:px-6 py-6 flex-1 flex">
-          <div className="flex-1 rounded-3xl bg-white dark:bg-[#161310] border border-slate-200 dark:border-white/10 shadow-[0_10px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_10px_50px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col">
+          <div className="flex-1 rounded-3xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/10 shadow-[0_10px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_10px_50px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col">
             {!absoluteUrl ? (
               <div className="flex-1 flex items-center justify-center p-10 text-center">
                 <div>
@@ -303,12 +303,12 @@ function WordViewer({ url, name }: { url: string; name: string }) {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-auto selection-doc bg-slate-50 dark:bg-[#111009]">
+        <div className="flex-1 overflow-auto selection-doc bg-slate-50 dark:bg-[#0f172a]">
           <motion.article
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
             ref={contentRef}
-            className="doc-prose mx-auto my-8 max-w-[860px] bg-white dark:bg-[#161310] border border-slate-200 dark:border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(15,23,42,0.08)] p-12 md:p-16 text-slate-900 dark:text-white/90 leading-relaxed cursor-text"
+            className="doc-prose mx-auto my-8 max-w-[860px] bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(15,23,42,0.08)] p-12 md:p-16 text-slate-900 dark:text-white/90 leading-relaxed cursor-text"
             dangerouslySetInnerHTML={{ __html: html || "" }}
           />
         </div>
@@ -495,7 +495,7 @@ function FallbackViewer({ name, url, kind }: { name: string; url: string; kind: 
 export default function Page() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#111009]">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0f172a]">
         <Loader2 className="h-8 w-8 animate-spin text-brand-orange" />
       </div>
     }>

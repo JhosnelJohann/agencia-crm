@@ -9,7 +9,7 @@ const RED = { bg: "bg-brand-red/10", text: "text-brand-red" };
 const BLUE = { bg: "bg-brand-blue/10", text: "text-brand-blue" };
 
 export const ETAPAS = [
-  { key: "nuevo",       label: "Nuevo lead",        color: "#9b9490", ...NEUTRAL },
+  { key: "nuevo",       label: "Nuevo lead",        color: "#94a3b8", ...NEUTRAL },
   { key: "contactado",  label: "Contactado",        color: "#5d8fa8", ...BLUE },
   { key: "reunion",     label: "Reunión agendada",  color: "#c96a3d", ...ORANGE },
   { key: "propuesta",   label: "Propuesta enviada", color: "#e8581a", ...ORANGE },

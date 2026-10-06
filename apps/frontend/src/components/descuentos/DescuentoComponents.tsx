@@ -28,7 +28,7 @@ export function DescuentoRow({ d, onReload }: { d: any; onReload: () => void }) 
   };
 
   // Estados en femenino desde la 0065: la tabla de descuentos ya no tiene vocabulario propio.
-  const estadoColor = { pendiente: "#f0b040", aprobada: "#16b91a", rechazada: "#e30b0b", ejecutada: "#1E88E5" }[d.estado as string] || "#9b9490";
+  const estadoColor = { pendiente: "#f0b040", aprobada: "#16b91a", rechazada: "#e30b0b", ejecutada: "#1E88E5" }[d.estado as string] || "#94a3b8";
   const Icon = d.estado === "pendiente" ? Clock : d.estado === "rechazada" ? Ban : CheckCircle2;
   const display = d.monto ? `$${Number(d.monto).toFixed(2)}` : `${Number(d.porcentaje).toFixed(1)}%`;
 

@@ -16,7 +16,7 @@ const PROVIDERS = [
   { key: "icloud", label: "iCloud", logo: "logos:apple", host: "imap.mail.me.com", smtpHost: "smtp.mail.me.com", imap: 993, smtp: 587, smtpSsl: false, brand: "#000000" },
   { key: "yahoo", label: "Yahoo Mail", logo: "logos:yahoo", host: "imap.mail.yahoo.com", smtpHost: "smtp.mail.yahoo.com", imap: 993, smtp: 465, smtpSsl: true, brand: "#6001D2" },
   { key: "zoho", label: "Zoho Mail", logo: "logos:zoho", host: "imap.zoho.com", smtpHost: "smtp.zoho.com", imap: 993, smtp: 465, smtpSsl: true, brand: "#C8202F" },
-  { key: "custom", label: "Personalizado (IMAP/SMTP)", logo: "mdi:server-network", host: "", imap: 993, smtp: 465, smtpSsl: true, brand: "#9b9490" },
+  { key: "custom", label: "Personalizado (IMAP/SMTP)", logo: "mdi:server-network", host: "", imap: 993, smtp: 465, smtpSsl: true, brand: "#94a3b8" },
 ];
 
 interface Props {

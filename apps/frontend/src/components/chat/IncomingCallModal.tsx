@@ -212,7 +212,7 @@ export function IncomingCallModal() {
             {/* Avatar 220px con anillo conic rotando */}
             <div className="relative h-[220px] w-[220px] rounded-full p-[4px] bg-[conic-gradient(from_var(--a,0deg),#e8581a,#f0b040,#e8581a,#c96a3d,#e8581a)] shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
               style={{ animation: "spin-slow 8s linear infinite" }}>
-              <div className="h-full w-full rounded-full overflow-hidden bg-[#0c0c0c] flex items-center justify-center text-white text-6xl font-inter font-black">
+              <div className="h-full w-full rounded-full overflow-hidden bg-[#0b1120] flex items-center justify-center text-white text-6xl font-inter font-black">
                 {call.from.foto_perfil_url ? (
                   <img src={call.from.foto_perfil_url} alt={call.from.nombre} className="h-full w-full object-cover" />
                 ) : (
@@ -226,10 +226,10 @@ export function IncomingCallModal() {
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
               className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-2"
             >
-              <div className="h-9 w-9 rounded-full bg-[#161310] border border-white/15 shadow-lg flex items-center justify-center">
+              <div className="h-9 w-9 rounded-full bg-[#1e293b] border border-white/15 shadow-lg flex items-center justify-center">
                 <Video className="h-4 w-4 text-brand-orange" strokeWidth={2.2} />
               </div>
-              <div className="h-9 w-9 rounded-full bg-[#161310] border border-white/15 shadow-lg flex items-center justify-center">
+              <div className="h-9 w-9 rounded-full bg-[#1e293b] border border-white/15 shadow-lg flex items-center justify-center">
                 <Mic className="h-4 w-4 text-emerald-400" strokeWidth={2.2} />
               </div>
             </motion.div>
@@ -238,7 +238,7 @@ export function IncomingCallModal() {
             {call.tipo === "grupo" && call.otrosMiembros && call.otrosMiembros.length > 0 && (
               <div className="absolute -bottom-4 -right-4 flex -space-x-3 z-10">
                 {call.otrosMiembros.slice(0, 3).map((m) => (
-                  <div key={m.id} className="h-12 w-12 rounded-full overflow-hidden border-4 border-[#0c0c0c] bg-gradient-to-br from-brand-orange to-neon-magenta flex items-center justify-center text-white text-[10px] font-inter font-bold shadow-lg">
+                  <div key={m.id} className="h-12 w-12 rounded-full overflow-hidden border-4 border-[#0b1120] bg-gradient-to-br from-brand-orange to-neon-magenta flex items-center justify-center text-white text-[10px] font-inter font-bold shadow-lg">
                     {m.foto_perfil_url ? <img src={m.foto_perfil_url} alt={m.nombre} className="h-full w-full object-cover" /> : initialsOf(m.nombre)}
                   </div>
                 ))}

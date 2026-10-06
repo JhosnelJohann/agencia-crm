@@ -35,10 +35,10 @@ const ESTATUS_OPTS = [
   { value: "permiso_trabajo", label: "Permiso de trabajo", color: "#f0b040" },
   { value: "tps", label: "TPS", color: "#c96a3d" },
   { value: "daca", label: "DACA", color: "#16b91a" },
-  { value: "visa_u", label: "Visa U", color: "#9b9490" },
+  { value: "visa_u", label: "Visa U", color: "#94a3b8" },
   { value: "visa_t", label: "Visa T", color: "#FB5607" },
   { value: "indocumentado", label: "Indocumentado", color: "#e30b0b" },
-  { value: "otros", label: "Otros", color: "#9b9490" }
+  { value: "otros", label: "Otros", color: "#94a3b8" }
 ];
 
 const CIUDADANO_OPTS = [

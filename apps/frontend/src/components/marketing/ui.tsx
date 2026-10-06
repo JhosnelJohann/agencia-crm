@@ -151,10 +151,10 @@ export function AreaChart({ data, a, b, labelA, labelB }: {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[190px]" role="img" aria-label={`${labelA}${labelB ? " y " + labelB : ""} por día`}>
         <defs>
           <linearGradient id={`ga-${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e8581a" stopOpacity="0.55" /><stop offset="1" stopColor="#e8581a" stopOpacity="0" /></linearGradient>
-          <linearGradient id={`gb-${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f0ede8" stopOpacity="0.28" /><stop offset="1" stopColor="#f0ede8" stopOpacity="0" /></linearGradient>
+          <linearGradient id={`gb-${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e2e8f0" stopOpacity="0.28" /><stop offset="1" stopColor="#e2e8f0" stopOpacity="0" /></linearGradient>
         </defs>
-        {[0.25, 0.5, 0.75].map((t) => <line key={t} x1={P} x2={W - P} y1={H - P - t * (H - P * 2 - 10)} y2={H - P - t * (H - P * 2 - 10)} stroke="rgba(240,237,232,0.06)" />)}
-        {b && <><path d={area(b)} fill={`url(#gb-${uid})`} /><motion.path d={line(b)} fill="none" stroke="#f0ede8" strokeOpacity="0.7" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: EASE }} /></>}
+        {[0.25, 0.5, 0.75].map((t) => <line key={t} x1={P} x2={W - P} y1={H - P - t * (H - P * 2 - 10)} y2={H - P - t * (H - P * 2 - 10)} stroke="rgba(226, 232, 240,0.06)" />)}
+        {b && <><path d={area(b)} fill={`url(#gb-${uid})`} /><motion.path d={line(b)} fill="none" stroke="#e2e8f0" strokeOpacity="0.7" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: EASE }} /></>}
         <path d={area(a)} fill={`url(#ga-${uid})`} />
         <motion.path d={line(a)} fill="none" stroke="#e8581a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 0 8px rgba(232,88,26,0.7))" }} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: EASE, delay: 0.1 }} />
         {data.map((d, i) => (Number(d[a]) > 0 ? <circle key={i} cx={x(i)} cy={y(Number(d[a]))} r="3.2" fill="#e8581a" /> : null))}

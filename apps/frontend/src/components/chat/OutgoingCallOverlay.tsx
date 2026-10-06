@@ -62,7 +62,7 @@ export function OutgoingCallOverlay({ open, target, status, onCancel }: Props) {
               }}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#111009]/60 via-transparent to-[#1a0f20]/70" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a]/60 via-transparent to-[#1a0f20]/70" />
 
           {/* Card */}
           <motion.div
@@ -112,7 +112,7 @@ export function OutgoingCallOverlay({ open, target, status, onCancel }: Props) {
                 )}
                 <div className="relative h-32 w-32 rounded-full p-[3px] bg-[conic-gradient(from_var(--a,0deg),#e8581a,#e8581a,#c96a3d,#e8581a)] shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
                   style={{ animation: isRinging ? "spin-slow 6s linear infinite" : undefined }}>
-                  <div className="h-full w-full rounded-full overflow-hidden bg-[#0c0c0c] flex items-center justify-center text-white text-3xl font-inter font-black">
+                  <div className="h-full w-full rounded-full overflow-hidden bg-[#0b1120] flex items-center justify-center text-white text-3xl font-inter font-black">
                     {target.foto_perfil_url ? (
                       <img src={target.foto_perfil_url} alt={target.nombre} className="h-full w-full object-cover" />
                     ) : (

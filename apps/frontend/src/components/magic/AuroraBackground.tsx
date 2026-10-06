@@ -7,7 +7,7 @@ export function AuroraBackground({ className, intensity = 1 }: { className?: str
       <div
         className="absolute inset-[-50%] animate-[aurora-spin_44s_linear_infinite] [will-change:transform]"
         style={{
-          background: "conic-gradient(from 0deg at 50% 50%, #e8581a, #e8581a, #c96a3d, #9b9490, #16b91a, #e8581a)",
+          background: "conic-gradient(from 0deg at 50% 50%, #e8581a, #e8581a, #c96a3d, #94a3b8, #16b91a, #e8581a)",
           filter: `blur(64px)`,
           opacity: 0.35 * intensity
         }}
@@ -15,7 +15,7 @@ export function AuroraBackground({ className, intensity = 1 }: { className?: str
       <div
         className="absolute inset-[-50%] [will-change:transform]"
         style={{
-          background: "conic-gradient(from 180deg at 50% 50%, #e8581a, #FFBE0B, #e8581a, #c96a3d, #9b9490, #e8581a)",
+          background: "conic-gradient(from 180deg at 50% 50%, #e8581a, #FFBE0B, #e8581a, #c96a3d, #94a3b8, #e8581a)",
           filter: `blur(84px)`,
           opacity: 0.2 * intensity,
           animation: "aurora-spin 60s linear infinite reverse"

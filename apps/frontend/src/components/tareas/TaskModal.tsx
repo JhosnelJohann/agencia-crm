@@ -261,7 +261,7 @@ export function TaskModal({ open, onClose, onSaved, tareaId: initialTareaId, pre
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, tareaId]);
 
-  const borderColor = useMemo(() => PRIORIDADES.find((p) => p.v === form.prioridad)?.color || "#9b9490", [form.prioridad]);
+  const borderColor = useMemo(() => PRIORIDADES.find((p) => p.v === form.prioridad)?.color || "#94a3b8", [form.prioridad]);
 
   // ── De quién es esta tarea ────────────────────────────────────────────────────────────────
   // Se calcula, no se guarda: si el contacto viviera en `form` habría que acordarse de

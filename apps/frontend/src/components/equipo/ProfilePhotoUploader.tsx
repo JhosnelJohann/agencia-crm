@@ -41,7 +41,7 @@ export function ProfilePhotoUploader({ userId, onUploaded, isOwner }: Props) {
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-gradient-to-br from-brand-orange to-neon-magenta flex items-center justify-center shadow-xl hover:scale-110 transition z-10 border-4 border-[#0c0c0c]"
+        className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-gradient-to-br from-brand-orange to-neon-magenta flex items-center justify-center shadow-xl hover:scale-110 transition z-10 border-4 border-[#0b1120]"
         title="Cambiar foto"
       >
         {uploading ? <Loader2 className="h-4 w-4 text-white animate-spin" /> : <Camera className="h-4 w-4 text-white" strokeWidth={2.5} />}

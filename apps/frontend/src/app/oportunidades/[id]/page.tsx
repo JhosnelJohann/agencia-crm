@@ -1183,7 +1183,7 @@ function PuntajesTab({ op, onReload }: any) {
           <div className="space-y-2">
             {tramites.map((t: any, i: number) => (
               <div key={(t.id || "") + "-" + i} className="flex items-center gap-2 text-sm py-1 border-b border-line last:border-0">
-                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: t.color || "#9b9490" }} />
+                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: t.color || "#94a3b8" }} />
                 <span className="font-semibold">{t.nombre}</span>
                 <span className="text-[10px] text-ink-sub">{t.codigo}</span>
                 <span className="ml-auto font-display font-black tabular-nums">{Number(t.puntaje_vendedor || 0).toFixed(2)} <span className="text-[10px] text-ink-sub font-normal">pts/cargo</span></span>

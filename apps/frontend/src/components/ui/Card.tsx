@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Tarjeta plana (superficie #161310, borde fino, sin sombra) — el primitivo base del rediseño 2026. Distinta de `GlassCard`
+ * Tarjeta plana (superficie #1e293b, borde fino, sin sombra) — el primitivo base del rediseño 2026. Distinta de `GlassCard`
  * (translúcida, se mantiene para donde se quiera ese efecto explícitamente).
  */
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

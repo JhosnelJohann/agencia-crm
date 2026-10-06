@@ -5,11 +5,11 @@ const GRADIENTS = [
   "from-[#e8581a] to-[#f0b040]",
   "from-[#5d8fa8] to-[#16b91a]",
   "from-[#e8581a] to-[#f0b040]",
-  "from-[#c96a3d] to-[#9b9490]",
+  "from-[#c96a3d] to-[#94a3b8]",
   "from-[#16b91a] to-[#16b91a]",
   "from-[#e8581a] to-[#c96a3d]",
   "from-[#FFBE0B] to-[#e8581a]",
-  "from-[#9b9490] to-[#c96a3d]",
+  "from-[#94a3b8] to-[#c96a3d]",
 ];
 
 function hash(s: string): number {

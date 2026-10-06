@@ -930,7 +930,7 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
       className={cn(
         "relative flex h-full min-h-[600px] overflow-hidden rounded-3xl",
         // Área de trabajo (vive en .app-main, claro): superficie de tarjeta, no el degradado carbón.
-        "bg-bg-darkcard border border-line shadow-[0_1px_3px_rgba(20,18,15,0.06)]",
+        "bg-bg-darkcard border border-line shadow-[0_1px_3px_rgba(15,23,42,0.06)]",
         className
       )}
       onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}

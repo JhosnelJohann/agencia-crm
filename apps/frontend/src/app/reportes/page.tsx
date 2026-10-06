@@ -334,7 +334,7 @@ export default function ReportesPage() {
   );
 }
 
-const PALETTE = ["#e8581a", "#f0b040", "#16b91a", "#5d8fa8", "#e30b0b", "#c96a3d", "#9b9490", "#FB5607", "#b8460f", "#0EA5E9"];
+const PALETTE = ["#e8581a", "#f0b040", "#16b91a", "#5d8fa8", "#e30b0b", "#c96a3d", "#94a3b8", "#FB5607", "#b8460f", "#0EA5E9"];
 
 function DonaCard({ title, icon, data }: { title: string; icon: Icon3DName; data: { name: string; value: number }[] }) {
   const filtered = data.filter((d) => d.value > 0);
@@ -361,16 +361,16 @@ function DonaCard({ title, icon, data }: { title: string; icon: Icon3DName; data
                 animationDuration={700}
               >
                 {filtered.map((_, i) => (
-                  <Cell key={i} fill={PALETTE[i % PALETTE.length]} stroke="#161310" strokeWidth={3} style={{ filter: `drop-shadow(0 0 6px ${PALETTE[i % PALETTE.length]}55)` }} />
+                  <Cell key={i} fill={PALETTE[i % PALETTE.length]} stroke="#1e293b" strokeWidth={3} style={{ filter: `drop-shadow(0 0 6px ${PALETTE[i % PALETTE.length]}55)` }} />
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ background: "#161310", border: "1px solid rgba(240,237,232,0.1)", borderRadius: 12, fontSize: 12, color: "#f0ede8" }}
+                contentStyle={{ background: "#1e293b", border: "1px solid rgba(226, 232, 240,0.1)", borderRadius: 12, fontSize: 12, color: "#e2e8f0" }}
                 formatter={(v: any) => [`${Number(v).toFixed(2)} pts`, ""]}
               />
               <Legend
                 iconType="circle"
-                wrapperStyle={{ fontSize: 11, color: "#9b9490" }}
+                wrapperStyle={{ fontSize: 11, color: "#94a3b8" }}
                 verticalAlign="bottom"
                 height={36}
               />
@@ -776,7 +776,7 @@ function TareasTab({ isAdmin }: { isAdmin: boolean }) {
                 const hCom = (d.completadas / maxTend) * 100;
                 return (
                   <div key={d.fecha} className="flex-1 flex flex-col justify-end gap-0.5 group relative">
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-[#161310] border border-white/10 text-ink text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-[#1e293b] border border-white/10 text-ink text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10">
                       {d.fecha}: {d.creadas} creadas, {d.completadas} completadas
                     </div>
                     <div className="flex gap-0.5 items-end h-full">

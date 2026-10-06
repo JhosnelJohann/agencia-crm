@@ -72,7 +72,7 @@ function Gauge({ pct, size = 190 }: { pct: number; size?: number }) {
           <stop offset="1" stopColor="#b8460f" />
         </linearGradient>
       </defs>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(240,237,232,0.07)" strokeWidth="12" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(226, 232, 240,0.07)" strokeWidth="12" />
       <motion.circle
         cx={size / 2} cy={size / 2} r={r} fill="none" stroke="url(#g-grad)" strokeWidth="12" strokeLinecap="round"
         strokeDasharray={c}
@@ -129,7 +129,7 @@ export default function DashboardPage() {
     { name: "A tiempo", value: sla["on_track"] || 0, color: "#16b91a" },
     { name: "Atención", value: sla["warning"] || 0, color: "#f0b040" },
     { name: "Vencido", value: sla["vencido"] || 0, color: "#e30b0b" },
-    { name: "Cerrado", value: sla["completado"] || 0, color: "#9b9490" },
+    { name: "Cerrado", value: sla["completado"] || 0, color: "#94a3b8" },
   ].filter((s) => s.value > 0);
   const slaTotal = bySLA.reduce((a, b) => a + b.value, 0);
 

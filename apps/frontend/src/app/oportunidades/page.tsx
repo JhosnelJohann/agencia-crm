@@ -50,7 +50,7 @@ interface Oportunidad {
 
 function DraggableCard({ op, onOpen }: { op: Oportunidad; onOpen: () => void }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: op.id });
-  const color = op.tramite_color || "#9b9490";
+  const color = op.tramite_color || "#94a3b8";
   const tramiteLabel = op.tramite_codigo || "";
   const tramiteNombre = op.tramite_nombre || "";
   return (
@@ -489,13 +489,13 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
  * cambian a la vez. Un mapa aquí sería una segunda fuente de verdad que se desincroniza en cuanto
  * alguien añada una etapa.
  *
- * `#9b9490` es el mismo defecto que aplica el backend (`pipeline-routes.ts`) cuando una etapa no
+ * `#94a3b8` es el mismo defecto que aplica el backend (`pipeline-routes.ts`) cuando una etapa no
  * tiene color: se repite aquí solo para el caso de que la etapa ni siquiera exista en el pipeline
  * —una fila con una etapa retirada—, que si no se quedaría sin píldora.
  */
 function EtapaPill({ etapa, stages }: { etapa: string; stages: PipelineStage[] | null }) {
   const stage = (stages || []).find((s) => s.key === etapa);
-  const color = stage?.color || "#9b9490";
+  const color = stage?.color || "#94a3b8";
   return (
     <span
       className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[12px] font-ui font-bold uppercase tracking-wider whitespace-nowrap"
@@ -1092,7 +1092,7 @@ export default function OportunidadesPage() {
                       <td className="px-3 py-2.5">
                         {op.tramite_nombre ? (
                           <span className="inline-flex items-center gap-1.5">
-                            <span className="h-2 w-2 rounded-full shrink-0" style={{ background: op.tramite_color || "#9b9490" }} />
+                            <span className="h-2 w-2 rounded-full shrink-0" style={{ background: op.tramite_color || "#94a3b8" }} />
                             <span className="truncate max-w-[160px]">{op.tramite_nombre}</span>
                           </span>
                         ) : (

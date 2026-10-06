@@ -84,7 +84,7 @@ export function FileMessage({ url, filename, mime, size, isMe, onVer }: Props) {
         >
           <Icon className={cn("h-5 w-5", s.color)} strokeWidth={1.8} />
           <span className={cn(
-            "absolute -bottom-1 -right-1 h-4 min-w-[26px] px-1 rounded-md bg-white dark:bg-[#1c1915] border border-black/5 dark:border-white/10 text-[10px] font-ui font-bold tracking-wider flex items-center justify-center",
+            "absolute -bottom-1 -right-1 h-4 min-w-[26px] px-1 rounded-md bg-white dark:bg-[#273449] border border-black/5 dark:border-white/10 text-[10px] font-ui font-bold tracking-wider flex items-center justify-center",
             s.color
           )}>
             {s.label}

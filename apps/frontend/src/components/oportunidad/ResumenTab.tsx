@@ -17,10 +17,10 @@ const ESTATUS_LABELS: Record<string, { label: string; color: string }> = {
   permiso_trabajo: { label: "Permiso de trabajo", color: "#f0b040" },
   tps: { label: "TPS", color: "#c96a3d" },
   daca: { label: "DACA", color: "#16b91a" },
-  visa_u: { label: "Visa U", color: "#9b9490" },
+  visa_u: { label: "Visa U", color: "#94a3b8" },
   visa_t: { label: "Visa T", color: "#FB5607" },
   indocumentado: { label: "Indocumentado", color: "#e30b0b" },
-  otros: { label: "Otros", color: "#9b9490" }
+  otros: { label: "Otros", color: "#94a3b8" }
 };
 
 const METODO_LABELS: Record<string, string> = {

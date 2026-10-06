@@ -19,7 +19,7 @@ interface Depto {
   created_at: string;
 }
 
-const PRESET_COLORS = ["#e8581a", "#f0b040", "#16b91a", "#16b91a", "#5d8fa8", "#9b9490", "#c96a3d", "#e8581a", "#e30b0b", "#9b9490"];
+const PRESET_COLORS = ["#e8581a", "#f0b040", "#16b91a", "#16b91a", "#5d8fa8", "#94a3b8", "#c96a3d", "#e8581a", "#e30b0b", "#94a3b8"];
 
 export default function DepartamentosConfigPage() {
   const { isAdmin } = useCurrentUser();

@@ -34,7 +34,7 @@ const config: Config = {
           blue: "#5d8fa8",
           green: "#16b91a",
           red: "#e30b0b",
-          neutral: "#9b9490"
+          neutral: "#94a3b8"
         },
         // Los "neón" eran decorativos; se reducen a tonos de la misma familia cálida.
         neon: {
@@ -42,7 +42,7 @@ const config: Config = {
           cyan: "#f0a070",
           magenta: "#e8581a",
           purple: "#c96a3d",
-          blue: "#9b9490",
+          blue: "#94a3b8",
           yellow: "#f0b040"
         },
         // bg.dark/darkcard, ink.* y line.* están detrás de variables CSS (ver :root y .app-main en
@@ -56,9 +56,9 @@ const config: Config = {
           "surface-2": "var(--bg-surface-2)",
           accent: "var(--bg-accent)",
           dark: "var(--bg-dark)",
-          dark2: "#111009",
+          dark2: "#0f172a",
           darkcard: "var(--bg-dark-card)",
-          sidebar: "#0c0c0c"
+          sidebar: "#0b1120"
         },
         // Tokens de la landing, por nombre (para código nuevo).
         ink: {
