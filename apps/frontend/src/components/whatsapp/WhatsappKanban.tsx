@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { nombreConversacion } from "@/lib/whatsapp-numero";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -150,13 +151,13 @@ export function WhatsappKanban({ conexionId, etapas, onAbrirConversacion }: Prop
 
   return (
     <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-      <div className="flex-1 overflow-x-auto overflow-y-hidden p-4">
+      <HorizontalScrollArea className="flex-1 overflow-y-hidden p-4 flex-1 min-h-0" outerClassName="flex-1 min-h-0 flex flex-col" tone="dark">
         <div className="flex gap-3 h-full">
           {etapas.map((e) => (
             <ColumnaEtapa key={e.id} etapa={e} items={columnas[e.id] || []} onOpen={onAbrirConversacion} />
           ))}
         </div>
-      </div>
+      </HorizontalScrollArea>
       <DragOverlay>
         {activa && (
           <div className="rounded-xl glass-panel p-2.5 w-[260px]">

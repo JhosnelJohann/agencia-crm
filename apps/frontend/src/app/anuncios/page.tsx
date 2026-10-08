@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -102,7 +103,7 @@ export default function AnunciosPage() {
 
             <Panel className="col-span-12 xl:col-span-7" kicker="Meta" title="Campañas" icon={{ brand: "meta" }} delay={0.08}>
               {!camps ? <div className="h-48 skeleton rounded-2xl" /> : camps.length === 0 ? <p className="text-sm text-ink-muted py-6">Sincroniza una cuenta para ver aquí sus campañas y su gasto de los últimos 30 días.</p> : (
-                <div className="overflow-x-auto rounded-2xl border border-line">
+                <HorizontalScrollArea className="rounded-2xl border border-line">
                   <table className="w-full text-sm">
                     <thead><tr className="text-left text-[10.5px] uppercase tracking-[2px] text-ink-muted bg-white/[0.03]"><th className="px-4 py-3">Campaña</th><th className="px-3 py-3 text-right">Gasto</th><th className="px-3 py-3 text-right">Clics</th><th className="px-3 py-3 text-right">Leads Meta</th><th className="px-3 py-3 text-right">Leads CRM</th><th className="px-3 py-3 text-right">CPL real</th></tr></thead>
                     <tbody className="divide-y divide-line">
@@ -118,7 +119,7 @@ export default function AnunciosPage() {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </HorizontalScrollArea>
               )}
             </Panel>
 
@@ -145,13 +146,13 @@ export default function AnunciosPage() {
 
             <Panel className="col-span-12" kicker="Conversions API" title="Conversiones enviadas a Meta" icon="satellite_antenna" delay={0.16}>
               {conv.length === 0 ? <p className="text-sm text-ink-muted py-4">Sin envíos todavía. Con un píxel y un token de Conversions API, cada formulario envía «Lead», una reunión agendada envía «Schedule» y una venta ganada envía «Purchase».</p> : (
-                <div className="overflow-x-auto rounded-2xl border border-line">
+                <HorizontalScrollArea className="rounded-2xl border border-line">
                   <table className="w-full text-sm"><tbody className="divide-y divide-line">
                     {conv.map((c) => (
                       <tr key={c.id}><td className="px-4 py-2.5 font-bold text-ink">{c.evento}</td><td className="px-4 py-2.5 text-ink-sub">{c.nombre_completo || "—"}</td><td className="px-4 py-2.5"><Pill tone={c.estado === "enviado" ? "good" : c.estado === "fallido" ? "bad" : "neutral"}>{c.estado}</Pill></td><td className="px-4 py-2.5 text-xs text-ink-muted">{new Date(c.created_at).toLocaleString("es", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td></tr>
                     ))}
                   </tbody></table>
-                </div>
+                </HorizontalScrollArea>
               )}
             </Panel>
           </div>

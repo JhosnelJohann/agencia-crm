@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useId, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -55,7 +56,7 @@ export function Sankey({ rows }: { rows: SankeyRow[] }) {
     `M${x0},${a} C${xm},${a} ${xm},${b} ${x1},${b} L${x1},${b + h} C${xm},${b + h} ${xm},${a + h} ${x0},${a + h} Z`;
 
   return (
-    <div className="overflow-x-auto scrollbar-thin" data-lenis-prevent>
+    <HorizontalScrollArea className="scrollbar-thin" lenisPrevent>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[560px]" style={{ height: H }} role="img"
         aria-label={`${total} leads de ${data.length} campañas; ${won} ganadas`}>
         <defs>
@@ -97,6 +98,6 @@ export function Sankey({ rows }: { rows: SankeyRow[] }) {
         <rect x={x1} y={rOpen.y} width={NODE} height={Math.max(2, rOpen.h)} rx={3} fill="#94a3b8" />
         <text x={x1 + NODE + 10} y={rOpen.y + rOpen.h / 2} dominantBaseline="central" className="fill-ink" style={{ fontSize: 12.5, fontWeight: 700 }}>Sin cerrar · {total - won}</text>
       </svg>
-    </div>
+    </HorizontalScrollArea>
   );
 }

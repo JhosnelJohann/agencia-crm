@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarDays, ChevronLeft, ChevronRight, X, Check } from "@/lib/bootstrap-icons";
@@ -199,7 +200,7 @@ export function DateRangePopover({ value, onChange, placeholder = "Fecha", class
             </div>
 
             {/* Presets */}
-            <div className="px-3 py-2 border-b border-line flex items-center gap-1 overflow-x-auto scrollbar-thin">
+            <HorizontalScrollArea className="px-3 py-2 border-b border-line flex items-center gap-1 scrollbar-thin" size="sm">
               {presets.map((p) => (
                 <button
                   key={p.key}
@@ -215,7 +216,7 @@ export function DateRangePopover({ value, onChange, placeholder = "Fecha", class
                   {p.label}
                 </button>
               ))}
-            </div>
+            </HorizontalScrollArea>
 
             {/* Month navigation */}
             <div className="px-4 pt-3 flex items-center">

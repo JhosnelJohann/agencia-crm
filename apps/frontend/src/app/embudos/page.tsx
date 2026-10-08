@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -280,7 +281,7 @@ export default function EmbudosPage() {
         {envios && (envios.rows.length === 0 ? (
           <EmptyState icon="eyes" title="Sin envíos todavía" text="Cuando alguien llene este formulario aparecerá aquí con su origen." />
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-line">
+          <HorizontalScrollArea className="rounded-2xl border border-line">
             <table className="w-full text-sm">
               <thead><tr className="text-left text-[10.5px] uppercase tracking-[2px] text-ink-muted bg-white/[0.03]">
                 <th className="px-4 py-3">Contacto</th><th className="px-4 py-3">Datos</th><th className="px-4 py-3">Origen</th><th className="px-4 py-3">Fecha</th>
@@ -296,7 +297,7 @@ export default function EmbudosPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </HorizontalScrollArea>
         ))}
       </Modal>
     </AppShell>

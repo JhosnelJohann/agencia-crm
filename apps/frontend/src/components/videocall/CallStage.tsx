@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "@/lib/bootstrap-icons";
@@ -129,7 +130,7 @@ export function CallStage({ videollamadaId, nombreSala, hostIdentity, onLeave }:
                 </TrackRefContext.Provider>
               )}
             </div>
-            <div className="h-32 sm:h-40 flex gap-2 overflow-x-auto scrollbar-thin">
+            <HorizontalScrollArea className="h-32 sm:h-40 flex gap-2 scrollbar-thin" size="sm" tone="dark">
               {cameraTracks.map((t) => (
                 <TrackRefContext.Provider key={t.participant.identity + t.publication?.trackSid} value={t}>
                   <div className="flex-shrink-0 aspect-video h-full">
@@ -137,7 +138,7 @@ export function CallStage({ videollamadaId, nombreSala, hostIdentity, onLeave }:
                   </div>
                 </TrackRefContext.Provider>
               ))}
-            </div>
+            </HorizontalScrollArea>
           </>
         ) : (
           <div className={cn("grid gap-3 flex-1 min-h-0", gridCols)}>

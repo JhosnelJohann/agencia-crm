@@ -3,6 +3,7 @@
 // Extraído VERBATIM de configuracion/archivos-sin-identificar/page.tsx (Fase B3, sin cambios de lógica).
 // Único cambio: la pestaña `tab` es CONTROLADA por el contenedor (prop `tab` + `onTabChange`), con `hideTabBar`
 // para embeberlo en el modal de papelera del Drive (que aporta las pestañas de nivel). Gating admin lo hace el modal.
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -546,7 +547,7 @@ export function SinIdentificarPanel({ tab: controlledTab, onTabChange, hideTabBa
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            <HorizontalScrollArea>
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-[13px] font-ui uppercase tracking-wider text-ink-sub border-b border-black/5">
@@ -664,7 +665,7 @@ export function SinIdentificarPanel({ tab: controlledTab, onTabChange, hideTabBa
                   })}
                 </tbody>
               </table>
-            </div>
+            </HorizontalScrollArea>
             <Pagination page={page} pageSize={PAGE_SIZE} total={total} onPageChange={setPage} disabled={loading} />
           </>
         )}

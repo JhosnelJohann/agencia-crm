@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -385,7 +386,7 @@ function ExcelViewer({ url, name }: { url: string; name: string }) {
         <div className="flex-1 flex flex-col min-h-0 selection-doc">
           {/* Tabs hojas */}
           {sheets && sheets.length > 1 && (
-            <div className="flex items-center gap-1 px-3 py-1.5 border-b border-slate-200 dark:border-white/10 overflow-x-auto scrollbar-thin">
+            <HorizontalScrollArea className="flex items-center gap-1 px-3 py-1.5 border-b border-slate-200 dark:border-white/10 scrollbar-thin" size="sm">
               {sheets.map((s, i) => (
                 <button key={i} onClick={() => setActiveSheet(i)}
                   className={cn("h-7 px-3 rounded-lg font-ui text-[12px] font-bold uppercase tracking-wider transition whitespace-nowrap",
@@ -393,7 +394,7 @@ function ExcelViewer({ url, name }: { url: string; name: string }) {
                   {s.name}
                 </button>
               ))}
-            </div>
+            </HorizontalScrollArea>
           )}
           <div className="flex-1 overflow-auto">
             <table className="min-w-max text-[12.5px] border-separate border-spacing-0 w-full">

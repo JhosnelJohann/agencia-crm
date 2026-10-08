@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Sparkles, ArrowLeft, Monitor, X, RefreshCw, Loader2, User, AlertTriangle, LogOut } from "@/lib/bootstrap-icons";
@@ -183,7 +184,7 @@ export default function SeguridadPage() {
               ) : auditoria.length === 0 ? (
                 <div className="text-center py-10 text-[12px] text-ink-sub">Sin eventos auditados</div>
               ) : (
-                <div className="overflow-x-auto">
+                <HorizontalScrollArea>
                   <table className="w-full text-[12px]">
                     <thead>
                       <tr className="text-left border-b border-line text-[12px] uppercase tracking-wider text-ink-sub font-ui">
@@ -206,7 +207,7 @@ export default function SeguridadPage() {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </HorizontalScrollArea>
               )}
             </div>
           ) : (

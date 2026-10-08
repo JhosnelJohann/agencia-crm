@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -123,9 +124,9 @@ export function CoPilotMessage({ contenido, createdAt }: Props) {
                   </blockquote>
                 ),
                 table: ({ children }) => (
-                  <div className="my-3 overflow-x-auto rounded-xl border border-neutral-200 dark:border-white/10">
+                  <HorizontalScrollArea className="my-3 rounded-xl border border-neutral-200 dark:border-white/10" tone="dark">
                     <table className="w-full text-[13px] border-collapse">{children}</table>
-                  </div>
+                  </HorizontalScrollArea>
                 ),
                 thead: ({ children }) => (
                   <thead className="bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 dark:from-violet-900/20 dark:to-fuchsia-900/20">

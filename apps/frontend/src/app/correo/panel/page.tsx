@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -133,7 +134,7 @@ export default function PanelCorreosPage() {
         </div>
 
         <div className="glass rounded-3xl overflow-hidden">
-          <div className="overflow-x-auto">
+          <HorizontalScrollArea>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-[12px] font-ui uppercase tracking-wider text-ink-sub border-b border-black/5">
@@ -204,7 +205,7 @@ export default function PanelCorreosPage() {
                 })}
               </tbody>
             </table>
-          </div>
+          </HorizontalScrollArea>
         </div>
       </div>
 

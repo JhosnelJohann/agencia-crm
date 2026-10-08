@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -241,7 +242,7 @@ export default function CampanasPage() {
       {/* Destinatarios */}
       <Modal open={!!det} onClose={() => setDet(null)} title={det ? `Destinatarios · ${det.campana.nombre}` : ""} icon="e_mail" width="max-w-4xl">
         {det && (
-          <div className="overflow-x-auto rounded-2xl border border-line">
+          <HorizontalScrollArea className="rounded-2xl border border-line">
             <table className="w-full text-sm">
               <thead><tr className="text-left text-[10.5px] uppercase tracking-[2px] text-ink-muted bg-white/[0.03]"><th className="px-4 py-3">Contacto</th><th className="px-4 py-3">Estado</th><th className="px-4 py-3">Abierto</th><th className="px-4 py-3">Clic</th></tr></thead>
               <tbody className="divide-y divide-line">
@@ -255,7 +256,7 @@ export default function CampanasPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </HorizontalScrollArea>
         )}
       </Modal>
     </AppShell>

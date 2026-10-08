@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, FileSpreadsheet, FileText, Users as UsersIcon, X, ExternalLink, Clock, CheckSquare, Flame } from "@/lib/bootstrap-icons";
@@ -283,7 +284,7 @@ export default function ReportesPage() {
               {detalle.length === 0 ? (
                 <EmptyState icon="magnifying_glass_tilted_left" title="Sin movimientos" text="No hay negociaciones registradas en este rango." />
               ) : (
-              <div className="overflow-x-auto">
+              <HorizontalScrollArea>
                 <table className="w-full text-[13px]">
                   <thead>
                     <tr className="text-left border-b border-line text-[12px] uppercase tracking-wider text-ink-sub font-ui">
@@ -324,7 +325,7 @@ export default function ReportesPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </HorizontalScrollArea>
               )}
             </Panel>
           </>
@@ -803,7 +804,7 @@ function TareasTab({ isAdmin }: { isAdmin: boolean }) {
         {loading ? (
           <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-12 skeleton rounded-lg bg-white/[0.04]" />)}</div>
         ) : data?.por_responsable?.length ? (
-          <div className="overflow-x-auto">
+          <HorizontalScrollArea>
             <table className="w-full text-[13px]">
               <thead>
                 <tr className="text-left border-b border-line text-[12px] uppercase tracking-wider text-ink-sub font-ui">
@@ -833,7 +834,7 @@ function TareasTab({ isAdmin }: { isAdmin: boolean }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </HorizontalScrollArea>
         ) : (
           <EmptyState icon="trophy" title="Sin datos" text="Todavía no hay tareas asignadas a nadie." />
         )}
