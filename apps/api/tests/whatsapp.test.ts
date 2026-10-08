@@ -255,7 +255,7 @@ describe("WhatsApp — directorio de contactos (nombre guardado y número real d
     expect(conv?.telefono_real).toBe("584121000000@s.whatsapp.net");
   });
 
-  it("no pisa un nombre o número que ya se hubieran resuelto antes", async () => {
+  it("el nombre guardado en el teléfono (directorio) sustituye al pushName que se puso el contacto", async () => {
     const userId = await usuarioDePruebas();
     const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
     const lid = `${sufijo().replace(/\D/g, "").padEnd(15, "3").slice(0, 15)}@lid`;
@@ -267,7 +267,7 @@ describe("WhatsApp — directorio de contactos (nombre guardado y número real d
     await service.registrarContactoResuelto(conexion.id, lid, { nombre: "Otro nombre distinto" });
 
     const conv = await repo.getConversacionPorJid(conexion.id, lid);
-    expect(conv?.nombre_whatsapp).toBe("Ya Resuelto");
+    expect(conv?.nombre_whatsapp).toBe("Otro nombre distinto");
   });
 
   it("una conversación que no existe para esa conexión/jid no revienta", async () => {
@@ -619,5 +619,147 @@ describe("WhatsApp — FakeWhatsAppProvider (doble de pruebas)", () => {
     const { waMessageId } = await provider.sendMessage("conexion-1", { jid: "521@s.whatsapp.net", tipo: "texto", contenido: "hola" });
     expect(waMessageId).toMatch(/^fake-/);
     expect(provider.sent).toHaveLength(1);
+  });
+});
+
+// ============================================================================================
+// WhatsApp Web (2026-10-08): @lid → teléfono, fusión, reacciones/ediciones/borrados, canales ocultos,
+// palomitas azules, notas de voz y perfil propio.
+// ============================================================================================
+const digitos = (n: number, relleno: string) => sufijo().replace(/\D/g, "").padEnd(n, relleno).slice(0, n);
+
+describe("WhatsApp Web — @lid y teléfono real", () => {
+  it("reconciliarLid pasa la conversación del @lid al teléfono y vincula el contacto por número", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const lid = `${digitos(15, "1")}@lid`;
+    const tel = `58412${digitos(7, "2")}`;
+    const pn = `${tel}@s.whatsapp.net`;
+    const contactoId = await crearContactoConTelefono(`+${tel}`);
+    await service.registrarMensajeEntrante(conexion.id, { jid: lid, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "Hola", timestamp: new Date() } as any);
+
+    await service.reconciliarLid(conexion.id, lid, pn);
+
+    expect(await repo.getConversacionPorJid(conexion.id, lid)).toBeNull();
+    const conv = await repo.getConversacionPorJid(conexion.id, pn);
+    expect(conv?.telefono_real).toBe(pn);
+    expect(conv?.contacto_id).toBe(contactoId);
+    expect(await repo.pnDeLid(conexion.id, lid)).toBe(pn);
+  });
+
+  it("si ya existía la conversación por teléfono, fusiona la del @lid (mensajes y no leídos) y archiva el duplicado", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const lid = `${digitos(15, "3")}@lid`;
+    const pn = `58414${digitos(7, "4")}@s.whatsapp.net`;
+    await service.registrarMensajeEntrante(conexion.id, { jid: pn, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "por teléfono", timestamp: new Date() } as any);
+    await service.registrarMensajeEntrante(conexion.id, { jid: lid, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "por lid", timestamp: new Date() } as any);
+    const porLid = await repo.getConversacionPorJid(conexion.id, lid);
+
+    await service.reconciliarLid(conexion.id, lid, pn);
+
+    const destino = await repo.getConversacionPorJid(conexion.id, pn);
+    const mensajes = await repo.listMensajes(destino!.id, 50);
+    expect(mensajes.map((m) => m.contenido)).toEqual(expect.arrayContaining(["por teléfono", "por lid"]));
+    expect(destino?.no_leidos_count).toBe(2);
+    const origen = await repo.getConversacion(porLid!.id);
+    expect(origen?.archivado).toBe(true);
+  });
+
+  it("un mensaje que llega solo con @lid va a la conversación del teléfono si el par ya se conoce", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const lid = `${digitos(15, "5")}@lid`;
+    const pn = `58416${digitos(7, "6")}@s.whatsapp.net`;
+    await repo.guardarLidMap(conexion.id, lid, pn);
+    await service.registrarMensajeEntrante(conexion.id, { jid: lid, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "hola", timestamp: new Date() } as any);
+    expect(await repo.getConversacionPorJid(conexion.id, lid)).toBeNull();
+    expect(await repo.getConversacionPorJid(conexion.id, pn)).not.toBeNull();
+  });
+});
+
+describe("WhatsApp Web — reacciones, ediciones y borrados", () => {
+  it("se aplican sobre el mensaje original sin crear burbujas nuevas", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const jid = `58418${digitos(7, "7")}@s.whatsapp.net`;
+    const waId = `WA-${sufijo()}`;
+    await service.registrarMensajeEntrante(conexion.id, { jid, waMessageId: waId, tipo: "texto", contenido: "original", timestamp: new Date() } as any);
+    const conv = await repo.getConversacionPorJid(conexion.id, jid);
+
+    await service.registrarCambioMensaje(conexion.id, { waMessageId: waId, reaccion: { emoji: "❤️", fromMe: false } });
+    await service.registrarCambioMensaje(conexion.id, { waMessageId: waId, reaccion: { emoji: "👍", fromMe: true } });
+    await service.registrarCambioMensaje(conexion.id, { waMessageId: waId, editado: { contenido: "corregido" } });
+    let [m] = await repo.listMensajes(conv!.id, 50);
+    expect(m).toMatchObject({ contenido: "corregido", reaccion: "❤️", reaccion_propia: "👍" });
+    expect(m.editado_at).not.toBeNull();
+
+    await service.registrarCambioMensaje(conexion.id, { waMessageId: waId, borrado: true });
+    [m] = await repo.listMensajes(conv!.id, 50);
+    expect(m.borrado_at).not.toBeNull();
+    expect(await repo.listMensajes(conv!.id, 50)).toHaveLength(1);
+  });
+
+  it("guarda nota de voz, ubicación y tamaño de los entrantes", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const jid = `58419${digitos(7, "8")}@s.whatsapp.net`;
+    await service.registrarMensajeEntrante(conexion.id, {
+      jid, waMessageId: `WA-${sufijo()}`, tipo: "audio", archivoUrl: "/uploads/x.ogg", archivoTipo: "audio/ogg",
+      archivoTamanio: 999, esNotaVoz: true, duracionSeg: 9, timestamp: new Date(),
+    } as any);
+    await service.registrarMensajeEntrante(conexion.id, {
+      jid, waMessageId: `WA-${sufijo()}`, tipo: "ubicacion", contenido: "Oficina", datos: { lat: 10.5, lng: -66.9 }, timestamp: new Date(),
+    } as any);
+    const conv = await repo.getConversacionPorJid(conexion.id, jid);
+    const [audio, ubic] = await repo.listMensajes(conv!.id, 50);
+    expect(audio).toMatchObject({ es_nota_voz: true, duracion_seg: 9, archivo_tamanio: 999 });
+    expect(ubic).toMatchObject({ tipo: "ubicacion", datos: { lat: 10.5, lng: -66.9 } });
+    expect(conv?.ultimo_mensaje_preview).toBe("📍 Ubicación");
+  });
+});
+
+describe("WhatsApp Web — solo chats individuales", () => {
+  it("los canales guardados antes del filtro no aparecen en la lista", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const canal = `1203632${digitos(11, "9")}@newsletter`;
+    await service.registrarMensajeEntrante(conexion.id, { jid: canal, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "promo", timestamp: new Date() } as any);
+    const lista = await service.listarConversaciones(conexion.id, {});
+    expect(lista.find((c) => c.wa_jid === canal)).toBeUndefined();
+  });
+});
+
+describe("WhatsApp Web — palomitas azules, envío de nota de voz y perfil propio", () => {
+  it("marcarLeida consume los wa_id no vistos (los que se mandan a WhatsApp como leídos)", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const jid = `58420${digitos(7, "1")}@s.whatsapp.net`;
+    const waId = `WA-${sufijo()}`;
+    await service.registrarMensajeEntrante(conexion.id, { jid, waMessageId: waId, tipo: "texto", contenido: "hola", timestamp: new Date() } as any);
+    const conv = await repo.getConversacionPorJid(conexion.id, jid);
+    expect(await repo.waIdsNoVistos(conv!.id)).toEqual([waId]);
+    await service.marcarLeida(conv!.id, userId);
+    expect(await repo.waIdsNoVistos(conv!.id)).toEqual([]);
+  });
+
+  it("enviarMensaje guarda el MIME real y marca la nota de voz", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    const jid = `58421${digitos(7, "2")}@s.whatsapp.net`;
+    await service.registrarMensajeEntrante(conexion.id, { jid, waMessageId: `WA-${sufijo()}`, tipo: "texto", contenido: "hola", timestamp: new Date() } as any);
+    const conv = await repo.getConversacionPorJid(conexion.id, jid);
+    const m: any = await service.enviarMensaje(conv!.id, userId, {
+      tipo: "audio", archivoUrl: "/uploads/nota.webm", archivoNombre: "nota.webm", archivoTipo: "audio/webm", esNotaVoz: true, duracionSeg: 4,
+    });
+    expect(m).toMatchObject({ archivo_tipo: "audio/webm", es_nota_voz: true, duracion_seg: 4, estado_entrega: "pendiente" });
+  });
+
+  it("registrarPerfilPropio guarda nombre y foto de la cuenta conectada", async () => {
+    const userId = await usuarioDePruebas();
+    const conexion = await service.crearConexion(`Conexión ${sufijo()}`, userId);
+    await service.registrarPerfilPropio(conexion.id, { nombre: "Agencia GOZZ", fotoUrl: "/uploads/whatsapp/perfiles/yo.jpg" });
+    const c = await repo.getConexion(conexion.id);
+    expect(c).toMatchObject({ perfil_nombre: "Agencia GOZZ", perfil_foto_url: "/uploads/whatsapp/perfiles/yo.jpg" });
   });
 });

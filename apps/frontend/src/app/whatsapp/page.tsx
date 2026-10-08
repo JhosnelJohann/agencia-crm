@@ -1,4 +1,5 @@
 "use client";
+import type { EnvioWhatsApp } from "@/components/whatsapp/ConversationComposer";
 import { WireShape } from "@/components/motion/WireShape";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -79,6 +80,7 @@ function WhatsAppPageInner() {
   const [connectOpen, setConnectOpen] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
   const [vincularOpen, setVincularOpen] = useState(false);
+  const [vincularTab, setVincularTab] = useState<"buscar" | "crear">("buscar");
   const [convertirOpen, setConvertirOpen] = useState(false);
   const [desconectarTarget, setDesconectarTarget] = useState<WhatsAppConexion | null>(null);
 
@@ -310,7 +312,7 @@ function WhatsAppPageInner() {
     // vivo sin esperar al próximo refresco automático.
     const onFotoPerfil = (ev: any) => {
       if (ev.conversacion_id === activeConversacionIdRef.current) {
-        setActiveConversacion((c) => c ? { ...c, foto_perfil_url: ev.foto_perfil_url } : c);
+        setActiveConversacion((c) => c ? { ...c, foto_perfil_url: ev.foto_perfil_url, info_perfil: ev.info_perfil ?? c.info_perfil } : c);
       }
       setConversaciones((cur) => cur ? cur.map((c) => c.id === ev.conversacion_id ? { ...c, foto_perfil_url: ev.foto_perfil_url } : c) : cur);
     };
@@ -321,12 +323,36 @@ function WhatsAppPageInner() {
       if (ev.conversacion_id === activeConversacionIdRef.current) loadConversacionDetalle(ev.conversacion_id);
       loadConversacionesRef.current({ silent: true });
     };
+    // Reacción, edición o borrado de un mensaje que ya está en pantalla.
+    const onMensajeActualizado = (ev: any) => {
+      if (ev.conversacion_id !== activeConversacionIdRef.current || !ev.mensaje) return;
+      setMensajes((cur) => cur ? cur.map((m) => (m.id === ev.mensaje.id ? { ...m, ...ev.mensaje } : m)) : cur);
+    };
+    // El @lid y el teléfono de la misma persona eran dos chats: el servidor los unió.
+    const onFusionada = (ev: any) => {
+      if (ev.origen_id === activeConversacionIdRef.current) {
+        loadConversacionDetalle(ev.conversacion_id);
+        loadMensajes(ev.conversacion_id);
+      }
+      loadConversacionesRef.current({ silent: true });
+    };
+    // Nombre y foto de la cuenta conectada.
+    const onPerfil = (ev: any) => {
+      setConexiones((cur) => cur.map((c) => c.id === ev.conexion_id
+        ? { ...c, perfil_nombre: ev.perfil_nombre ?? c.perfil_nombre, perfil_foto_url: ev.perfil_foto_url ?? c.perfil_foto_url } : c));
+    };
+    socket.on("whatsapp:mensaje-actualizado", onMensajeActualizado);
+    socket.on("whatsapp:conversacion-fusionada", onFusionada);
+    socket.on("whatsapp:perfil", onPerfil);
     socket.on("whatsapp:estado", onEstado);
     socket.on("whatsapp:mensaje", onMensaje);
     socket.on("whatsapp:mensaje-estado", onMensajeEstado);
     socket.on("whatsapp:foto-perfil", onFotoPerfil);
     socket.on("whatsapp:contacto-resuelto", onContactoResuelto);
     return () => {
+      socket.off("whatsapp:mensaje-actualizado", onMensajeActualizado);
+      socket.off("whatsapp:conversacion-fusionada", onFusionada);
+      socket.off("whatsapp:perfil", onPerfil);
       socket.off("whatsapp:estado", onEstado);
       socket.off("whatsapp:mensaje", onMensaje);
       socket.off("whatsapp:mensaje-estado", onMensajeEstado);
@@ -350,7 +376,7 @@ function WhatsAppPageInner() {
     loadMensajes(conversacionId);
   };
 
-  const enviarMensaje = async (d: { tipo: string; contenido?: string; archivoUrl?: string; archivoNombre?: string; archivoTamanio?: number }) => {
+  const enviarMensaje = async (d: EnvioWhatsApp) => {
     if (!activeConversacion) return;
     // Envío optimista: la burbuja aparece de inmediato con estado "pendiente" (como WhatsApp Web)
     // en vez de esperar la respuesta del servidor, y se reconcilia (o se marca "fallido") después.
@@ -365,8 +391,10 @@ function WhatsAppPageInner() {
       contenido: d.contenido ?? null,
       archivo_url: d.archivoUrl ?? null,
       archivo_nombre: d.archivoNombre ?? null,
-      archivo_tipo: null,
+      archivo_tipo: d.archivoTipo ?? null,
       archivo_tamanio: d.archivoTamanio ?? null,
+      es_nota_voz: !!d.esNotaVoz,
+      duracion_seg: d.duracionSeg ?? null,
       estado_entrega: "pendiente",
       created_at: new Date().toISOString(),
       visto_at: null,
@@ -399,6 +427,9 @@ function WhatsAppPageInner() {
         archivoUrl: m.archivo_url ?? undefined,
         archivoNombre: m.archivo_nombre ?? undefined,
         archivoTamanio: m.archivo_tamanio ?? undefined,
+        archivoTipo: m.archivo_tipo ?? undefined,
+        esNotaVoz: m.es_nota_voz || undefined,
+        duracionSeg: m.duracion_seg ?? undefined,
       });
       setMensajes((cur) => cur ? cur.filter((x) => x.id !== m.id) : cur);
     } catch (e: any) {
@@ -435,6 +466,20 @@ function WhatsAppPageInner() {
       const dd = await r.json();
       setActiveConversacion((c) => c ? { ...c, tags: dd.tags } : c);
       loadConversaciones({ silent: true });
+    }
+  };
+
+  /** Tarjeta de contacto (vCard) recibida por WhatsApp → contacto nuevo en el CRM (no se vincula a este chat). */
+  const agregarTarjetaComoContacto = async (nombre: string, telefono: string) => {
+    try {
+      const r = await fetch("/api/whatsapp/contactos", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nombre_completo: nombre, telefono }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "No se pudo crear el contacto");
+      toast.success(`${nombre} se agregó a Contactos`);
+    } catch (e: any) {
+      toast.error(e?.message || "No se pudo crear el contacto");
     }
   };
 
@@ -562,6 +607,8 @@ function WhatsAppPageInner() {
                   onToggleTag={toggleTag}
                   onCrearTag={crearTag}
                   onAbrirPerfil={() => setPerfilOpen(true)}
+                  onAgregarContacto={() => { setVincularTab("crear"); setVincularOpen(true); }}
+                  onAgregarTarjeta={agregarTarjetaComoContacto}
                 />
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6 chat-bg relative isolate overflow-hidden">
@@ -598,14 +645,16 @@ function WhatsAppPageInner() {
         <PerfilConversacionModal
           conversacion={activeConversacion}
           onClose={() => setPerfilOpen(false)}
-          onVincular={() => { setPerfilOpen(false); setVincularOpen(true); }}
+          onVincular={() => { setPerfilOpen(false); setVincularTab("buscar"); setVincularOpen(true); }}
           onConvertir={() => { setPerfilOpen(false); setConvertirOpen(true); }}
+          mensajes={mensajes}
         />
       )}
       {vincularOpen && activeConversacion && (
         <VincularContactoModal
           onClose={() => setVincularOpen(false)}
           onVinculado={vincularContacto}
+          tabInicial={vincularTab}
           nombreSugerido={activeConversacion.nombre_whatsapp || undefined}
           telefonoSugerido={(() => {
             const { texto, bandera } = formatearNumeroWhatsApp(activeConversacion.telefono_real || activeConversacion.wa_jid);

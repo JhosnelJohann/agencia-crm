@@ -21,10 +21,12 @@ interface Props {
   /** Para precargar el formulario de "Crear nuevo" con lo que ya se sabe del WhatsApp. */
   nombreSugerido?: string;
   telefonoSugerido?: string;
+  /** "crear" abre directamente el formulario de contacto nuevo (botón "Agregar a contactos"). */
+  tabInicial?: "buscar" | "crear";
 }
 
-export function VincularContactoModal({ onClose, onVinculado, nombreSugerido, telefonoSugerido }: Props) {
-  const [tab, setTab] = useState<"buscar" | "crear">("buscar");
+export function VincularContactoModal({ onClose, onVinculado, nombreSugerido, telefonoSugerido, tabInicial = "buscar" }: Props) {
+  const [tab, setTab] = useState<"buscar" | "crear">(tabInicial);
   const [q, setQ] = useState("");
   const [resultados, setResultados] = useState<Contacto[]>([]);
   const [buscando, setBuscando] = useState(false);

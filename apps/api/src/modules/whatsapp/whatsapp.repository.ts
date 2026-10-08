@@ -21,7 +21,7 @@ import type {
 const CONEXION_COLUMNS = `
   id, nombre, telefono, owner_user_id, proveedor, estado, qr_actual, qr_actualizado_at,
   meta_cloud_phone_number_id, activo, errores_consecutivos, ultimo_error, ultima_actividad,
-  created_at, updated_at
+  created_at, updated_at, perfil_nombre, perfil_foto_url
 `;
 
 export async function listConexiones(userId: string, isAdmin: boolean): Promise<WhatsAppConexion[]> {
@@ -42,13 +42,17 @@ export async function listConexiones(userId: string, isAdmin: boolean): Promise<
  * insignia del menú lateral. `EXISTS` en vez de `LEFT JOIN` a propósito: un `JOIN` contra
  * `whatsapp_conexion_acl` duplicaría filas (y por tanto el conteo) si una conexión tuviera más de
  * una entrada de ACL. */
+/** Solo chats individuales: los canales (@newsletter) y listas de difusión que se guardaron antes del
+ * filtro de entrada se ocultan (no se borran). Los grupos nunca se guardaron. */
+const SOLO_CHATS = "c.wa_jid NOT LIKE '%@newsletter' AND c.wa_jid NOT LIKE '%@broadcast' AND c.wa_jid NOT LIKE '%@g.us'";
+
 export async function contarNoLeidos(userId: string, isAdmin: boolean): Promise<number> {
   if (isAdmin) {
     const rows = await query<{ total: string }>(
       `SELECT COALESCE(SUM(c.no_leidos_count), 0) AS total
        FROM gozz.whatsapp_conversaciones c
        JOIN gozz.whatsapp_conexiones cx ON cx.id = c.conexion_id
-       WHERE cx.activo = true AND c.archivado = false`
+       WHERE cx.activo = true AND c.archivado = false AND ${SOLO_CHATS}`
     );
     return Number(rows[0]?.total ?? 0);
   }
@@ -56,7 +60,7 @@ export async function contarNoLeidos(userId: string, isAdmin: boolean): Promise<
     `SELECT COALESCE(SUM(c.no_leidos_count), 0) AS total
      FROM gozz.whatsapp_conversaciones c
      JOIN gozz.whatsapp_conexiones cx ON cx.id = c.conexion_id
-     WHERE cx.activo = true AND c.archivado = false
+     WHERE cx.activo = true AND c.archivado = false AND ${SOLO_CHATS}
        AND (cx.owner_user_id = $1 OR EXISTS (
          SELECT 1 FROM gozz.whatsapp_conexion_acl a WHERE a.conexion_id = cx.id AND a.user_id = $1
        ))`,
@@ -116,6 +120,16 @@ export async function setConexionEstado(
            qr_actual = CASE WHEN $2 = 'conectado' THEN NULL ELSE qr_actual END
      WHERE id = $1`,
     [id, estado, opts.telefono ?? null, opts.ultimoError ?? null]
+  );
+}
+
+/** Nombre y foto (ya descargada a /uploads) de la cuenta de WhatsApp conectada. */
+export async function setPerfilConexion(id: string, nombre: string | null, fotoUrl: string | null): Promise<void> {
+  await query(
+    `UPDATE gozz.whatsapp_conexiones
+        SET perfil_nombre = COALESCE($2, perfil_nombre), perfil_foto_url = COALESCE($3, perfil_foto_url), updated_at = NOW()
+      WHERE id = $1`,
+    [id, nombre, fotoUrl]
   );
 }
 
@@ -236,13 +250,13 @@ export type WhatsAppConversacionConTags = WhatsAppConversacion & {
  * por etiqueta usa `EXISTS` en vez de un JOIN para no interferir con esta agregación.
  */
 export async function listConversaciones(conexionId: string, filtros: FiltrosConversaciones = {}): Promise<WhatsAppConversacionConTags[]> {
-  const cond: string[] = ["c.conexion_id = $1"];
+  const cond: string[] = ["c.conexion_id = $1", SOLO_CHATS];
   const params: any[] = [conexionId];
   if (filtros.etapaId) { params.push(filtros.etapaId); cond.push(`c.etapa_id = $${params.length}`); }
   if (filtros.asignadoId) { params.push(filtros.asignadoId); cond.push(`c.asignado_a = $${params.length}`); }
   if (filtros.archivado !== undefined) { params.push(filtros.archivado); cond.push(`c.archivado = $${params.length}`); }
   else { cond.push("c.archivado = false"); }
-  if (filtros.q) { params.push(`%${filtros.q}%`); cond.push(`(c.nombre_whatsapp ILIKE $${params.length} OR c.wa_jid ILIKE $${params.length})`); }
+  if (filtros.q) { params.push(`%${filtros.q}%`); cond.push(`(c.nombre_whatsapp ILIKE $${params.length} OR c.wa_jid ILIKE $${params.length} OR c.telefono_real ILIKE $${params.length})`); }
   if (filtros.tagId) {
     params.push(filtros.tagId);
     cond.push(`EXISTS (SELECT 1 FROM gozz.whatsapp_conversacion_tags ct2 WHERE ct2.conversacion_id = c.id AND ct2.tag_id = $${params.length})`);
@@ -378,6 +392,90 @@ export async function actualizarFotoPerfil(conversacionId: string, url: string):
   );
 }
 
+/** Foto ya descargada a /uploads: pisa la anterior (las del CDN caducan) y marca cuándo se refrescó.
+ * `url` null = el contacto no tiene foto o es privada; igual se marca para no reintentar en cada listado. */
+export async function refrescarFotoPerfil(conversacionId: string, url: string | null, info?: string | null): Promise<void> {
+  await query(
+    `UPDATE gozz.whatsapp_conversaciones
+        SET foto_perfil_url = COALESCE($2, CASE WHEN foto_perfil_url LIKE 'http%' THEN NULL ELSE foto_perfil_url END),
+            info_perfil = COALESCE($3, info_perfil),
+            foto_actualizada_at = NOW(), updated_at = NOW()
+      WHERE id = $1`,
+    [conversacionId, url, info ?? null]
+  );
+}
+
+/** Nombre guardado en el teléfono (directorio de WhatsApp): mejor que el pushName, así que sí pisa. */
+export async function actualizarNombre(conversacionId: string, nombre: string): Promise<void> {
+  await query(
+    "UPDATE gozz.whatsapp_conversaciones SET nombre_whatsapp = $2, updated_at = NOW() WHERE id = $1 AND nombre_whatsapp IS DISTINCT FROM $2",
+    [conversacionId, nombre]
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mapa @lid <-> teléfono y fusión de conversaciones duplicadas
+// ---------------------------------------------------------------------------
+
+export async function guardarLidMap(conexionId: string, lid: string, pn: string): Promise<void> {
+  await query(
+    `INSERT INTO gozz.whatsapp_lid_map (conexion_id, lid, pn) VALUES ($1, $2, $3)
+     ON CONFLICT (conexion_id, lid) DO UPDATE SET pn = EXCLUDED.pn, actualizado_at = NOW()`,
+    [conexionId, lid, pn]
+  );
+}
+
+export async function pnDeLid(conexionId: string, lid: string): Promise<string | null> {
+  const rows = await query<{ pn: string }>("SELECT pn FROM gozz.whatsapp_lid_map WHERE conexion_id = $1 AND lid = $2", [conexionId, lid]);
+  return rows[0]?.pn ?? null;
+}
+
+export async function cambiarJidConversacion(conversacionId: string, jid: string, telefonoReal: string | null): Promise<void> {
+  await query(
+    "UPDATE gozz.whatsapp_conversaciones SET wa_jid = $2, telefono_real = COALESCE($3, telefono_real), updated_at = NOW() WHERE id = $1",
+    [conversacionId, jid, telefonoReal]
+  );
+}
+
+/**
+ * La misma persona puede haber quedado en dos conversaciones (una por su @lid y otra por su teléfono).
+ * Se pasan los mensajes, etiquetas y no-leídos de `origen` a `destino`, se completa lo que a `destino`
+ * le falte (contacto, asignado, foto, nombre) y `origen` queda archivada (no se borra nada).
+ */
+export async function fusionarConversaciones(origenId: string, destinoId: string): Promise<void> {
+  // Mensajes duplicados (mismo wa_message_id en ambas) se quedan solo en destino.
+  await query(
+    `DELETE FROM gozz.whatsapp_mensajes o
+      WHERE o.conversacion_id = $1 AND o.wa_message_id IS NOT NULL
+        AND EXISTS (SELECT 1 FROM gozz.whatsapp_mensajes d WHERE d.conversacion_id = $2 AND d.wa_message_id = o.wa_message_id)`,
+    [origenId, destinoId]
+  );
+  await query("UPDATE gozz.whatsapp_mensajes SET conversacion_id = $2 WHERE conversacion_id = $1", [origenId, destinoId]);
+  await query(
+    `INSERT INTO gozz.whatsapp_conversacion_tags (conversacion_id, tag_id)
+     SELECT $2, tag_id FROM gozz.whatsapp_conversacion_tags WHERE conversacion_id = $1 ON CONFLICT DO NOTHING`,
+    [origenId, destinoId]
+  );
+  await query(
+    `UPDATE gozz.whatsapp_conversaciones d
+        SET contacto_id = COALESCE(d.contacto_id, o.contacto_id),
+            contacto_vinculo_estado = CASE WHEN d.contacto_id IS NULL THEN o.contacto_vinculo_estado ELSE d.contacto_vinculo_estado END,
+            asignado_a = COALESCE(d.asignado_a, o.asignado_a),
+            oportunidad_id = COALESCE(d.oportunidad_id, o.oportunidad_id),
+            nombre_whatsapp = COALESCE(d.nombre_whatsapp, o.nombre_whatsapp),
+            foto_perfil_url = COALESCE(d.foto_perfil_url, o.foto_perfil_url),
+            no_leidos_count = d.no_leidos_count + o.no_leidos_count,
+            ultimo_mensaje_at = GREATEST(d.ultimo_mensaje_at, o.ultimo_mensaje_at),
+            ultimo_mensaje_preview = CASE WHEN o.ultimo_mensaje_at > COALESCE(d.ultimo_mensaje_at, 'epoch') THEN o.ultimo_mensaje_preview ELSE d.ultimo_mensaje_preview END,
+            ultimo_mensaje_direccion = CASE WHEN o.ultimo_mensaje_at > COALESCE(d.ultimo_mensaje_at, 'epoch') THEN o.ultimo_mensaje_direccion ELSE d.ultimo_mensaje_direccion END,
+            updated_at = NOW()
+       FROM gozz.whatsapp_conversaciones o
+      WHERE d.id = $2 AND o.id = $1`,
+    [origenId, destinoId]
+  );
+  await query("UPDATE gozz.whatsapp_conversaciones SET archivado = true, no_leidos_count = 0, updated_at = NOW() WHERE id = $1", [origenId]);
+}
+
 /** El número real detrás de un `@lid` puede llegar mucho después de creada la conversación (el
  * directorio de contactos de WhatsApp se sincroniza solo, no bajo pedido) — se corrige cuando
  * llega, sin pisar un valor que ya se hubiera resuelto antes. */
@@ -453,19 +551,24 @@ export interface NuevoMensaje {
   archivoTamanio?: number | null;
   enviadoPor?: string | null;
   estadoEntrega?: WhatsAppMensajeEstado;
+  esNotaVoz?: boolean;
+  duracionSeg?: number | null;
+  datos?: Record<string, any> | null;
 }
 
 export async function insertMensaje(d: NuevoMensaje): Promise<WhatsAppMensaje | null> {
   const rows = await query<WhatsAppMensaje>(
     `INSERT INTO gozz.whatsapp_mensajes
-       (conversacion_id, wa_message_id, direccion, tipo, contenido, archivo_url, archivo_nombre, archivo_tipo, archivo_tamanio, enviado_por, estado_entrega)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       (conversacion_id, wa_message_id, direccion, tipo, contenido, archivo_url, archivo_nombre, archivo_tipo, archivo_tamanio, enviado_por, estado_entrega,
+        es_nota_voz, duracion_seg, datos)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
      ON CONFLICT (conversacion_id, wa_message_id) WHERE wa_message_id IS NOT NULL DO NOTHING
      RETURNING *`,
     [
       d.conversacionId, d.waMessageId ?? null, d.direccion, d.tipo, d.contenido ?? null,
       d.archivoUrl ?? null, d.archivoNombre ?? null, d.archivoTipo ?? null, d.archivoTamanio ?? null,
       d.enviadoPor ?? null, d.estadoEntrega ?? "pendiente",
+      d.esNotaVoz ?? false, d.duracionSeg ?? null, d.datos ? JSON.stringify(d.datos) : null,
     ]
   );
   return rows[0] ?? null; // null = ya existía (idempotencia por wa_message_id)
@@ -496,6 +599,39 @@ export async function getMensaje(id: string): Promise<WhatsAppMensaje | null> {
 export async function getMensajePorWaId(waMessageId: string): Promise<WhatsAppMensaje | null> {
   const rows = await query<WhatsAppMensaje>("SELECT * FROM gozz.whatsapp_mensajes WHERE wa_message_id = $1", [waMessageId]);
   return rows[0] ?? null;
+}
+
+/** Reacción, edición o borrado sobre un mensaje existente (identificado por su id de WhatsApp). */
+export async function aplicarCambioMensaje(
+  conexionId: string,
+  waMessageId: string,
+  cambio: { reaccion?: { emoji: string | null; fromMe: boolean }; editado?: { contenido: string | null }; borrado?: boolean }
+): Promise<WhatsAppMensaje | null> {
+  const sets: string[] = [];
+  const params: any[] = [conexionId, waMessageId];
+  if (cambio.reaccion) { params.push(cambio.reaccion.emoji); sets.push(`${cambio.reaccion.fromMe ? "reaccion_propia" : "reaccion"} = $${params.length}`); }
+  if (cambio.editado) { params.push(cambio.editado.contenido); sets.push(`contenido = COALESCE($${params.length}, contenido)`, "editado_at = NOW()"); }
+  if (cambio.borrado) sets.push("borrado_at = NOW()");
+  if (!sets.length) return null;
+  const rows = await query<WhatsAppMensaje>(
+    `UPDATE gozz.whatsapp_mensajes m SET ${sets.join(", ")}
+       FROM gozz.whatsapp_conversaciones c
+      WHERE c.id = m.conversacion_id AND c.conexion_id = $1 AND m.wa_message_id = $2
+      RETURNING m.*`,
+    params
+  );
+  return rows[0] ?? null;
+}
+
+/** Ids de WhatsApp de los entrantes que el equipo aún no vio (para mandar las palomitas azules). */
+export async function waIdsNoVistos(conversacionId: string): Promise<string[]> {
+  const rows = await query<{ wa_message_id: string }>(
+    `SELECT wa_message_id FROM gozz.whatsapp_mensajes
+      WHERE conversacion_id = $1 AND direccion = 'entrante' AND visto_at IS NULL AND wa_message_id IS NOT NULL
+      ORDER BY created_at DESC LIMIT 200`,
+    [conversacionId]
+  );
+  return rows.map((r) => r.wa_message_id);
 }
 
 export async function actualizarEstadoMensaje(

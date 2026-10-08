@@ -6,7 +6,7 @@ export type WhatsAppProveedor = "baileys" | "meta_cloud";
 export type WhatsAppConexionEstado = "pendiente" | "conectando" | "conectado" | "desconectado" | "error" | "cerrada";
 export type WhatsAppVinculoEstado = "sin_vincular" | "vinculado_auto" | "vinculado_manual";
 export type WhatsAppMensajeDireccion = "entrante" | "saliente";
-export type WhatsAppMensajeTipo = "texto" | "imagen" | "archivo" | "audio" | "video" | "sistema";
+export type WhatsAppMensajeTipo = "texto" | "imagen" | "archivo" | "audio" | "video" | "sistema" | "sticker" | "ubicacion" | "contacto";
 export type WhatsAppMensajeEstado = "pendiente" | "enviado" | "entregado" | "leido" | "fallido";
 
 export interface WhatsAppConexion {
@@ -22,6 +22,9 @@ export interface WhatsAppConexion {
   ultimo_error: string | null;
   ultima_actividad: string | null;
   created_at: string;
+  /** Nombre y foto de la cuenta de WhatsApp conectada (los del teléfono, no el nombre interno). */
+  perfil_nombre?: string | null;
+  perfil_foto_url?: string | null;
 }
 
 export interface WhatsAppPipelineStage {
@@ -62,6 +65,10 @@ export interface WhatsAppConversacion {
   archivado: boolean;
   created_at: string;
   updated_at: string;
+  /** Cuándo se descargó la foto (las URLs del CDN de WhatsApp caducan: se refresca cada 7 días). */
+  foto_actualizada_at?: string | null;
+  /** "Info" (estado) del contacto en WhatsApp. */
+  info_perfil?: string | null;
 }
 
 export interface WhatsAppMensaje {
@@ -84,4 +91,14 @@ export interface WhatsAppMensaje {
    * este mensaje dentro del CRM. */
   visto_at: string | null;
   visto_por: string | null;
+  /** Nota de voz (ptt) — se reproduce como tal en el teléfono, no como archivo de audio. */
+  es_nota_voz?: boolean;
+  duracion_seg?: number | null;
+  /** Última reacción del contacto y la nuestra (emoji), sobre ESTE mensaje. */
+  reaccion?: string | null;
+  reaccion_propia?: string | null;
+  editado_at?: string | null;
+  borrado_at?: string | null;
+  /** ubicacion: {lat,lng,nombre?,direccion?} · contacto: {nombre,telefono?,vcard?} */
+  datos?: Record<string, any> | null;
 }

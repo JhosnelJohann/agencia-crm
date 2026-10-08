@@ -8,6 +8,7 @@ import { query } from "../../shared/db.js";
 import type { WhatsAppProvider } from "./providers/whatsapp-provider.interface.js";
 import * as service from "./whatsapp.service.js";
 import * as repo from "./whatsapp.repository.js";
+import { guardarFotoPerfil } from "./providers/whatsapp-medios.js";
 
 const baileys: WhatsAppProvider = new BaileysWhatsAppProvider();
 const metaCloud: WhatsAppProvider = new MetaCloudWhatsAppProvider();
@@ -33,6 +34,9 @@ const provider = {
   onMessage: (cb: CB<"onMessage">) => proveedores.forEach((x) => x.onMessage(cb)),
   onMessageStatusUpdate: (cb: CB<"onMessageStatusUpdate">) => proveedores.forEach((x) => x.onMessageStatusUpdate(cb)),
   onContactoResuelto: (cb: CB<"onContactoResuelto">) => proveedores.forEach((x) => x.onContactoResuelto(cb)),
+  onLidMapping: (cb: CB<"onLidMapping">) => proveedores.forEach((x) => x.onLidMapping(cb)),
+  onCambioMensaje: (cb: CB<"onCambioMensaje">) => proveedores.forEach((x) => x.onCambioMensaje(cb)),
+  onPerfilPropio: (cb: CB<"onPerfilPropio">) => proveedores.forEach((x) => x.onPerfilPropio(cb)),
 };
 
 provider.onQr((conexionId, qr) => {
@@ -42,7 +46,22 @@ provider.onConnectionUpdate((conexionId, update) => {
   service.registrarActualizacionEstado(conexionId, update).catch((e) => console.error(`[whatsapp-cm] registrarActualizacionEstado(${conexionId}):`, e?.message));
 });
 provider.onMessage((conexionId, msg) => {
-  service.registrarMensajeEntrante(conexionId, msg).catch((e) => console.error(`[whatsapp-cm] registrarMensajeEntrante(${conexionId}):`, e?.message));
+  service.registrarMensajeEntrante(conexionId, msg)
+    .then(() => asegurarFoto(conexionId, msg.jid))
+    .catch((e) => console.error(`[whatsapp-cm] registrarMensajeEntrante(${conexionId}):`, e?.message));
+});
+provider.onLidMapping((conexionId, lid, pn) => {
+  service.registrarLidMapping(conexionId, lid, pn).catch((e) => console.error(`[whatsapp-cm] registrarLidMapping(${lid}):`, e?.message));
+});
+provider.onCambioMensaje((conexionId, cambio) => {
+  service.registrarCambioMensaje(conexionId, cambio).catch((e) => console.error(`[whatsapp-cm] registrarCambioMensaje(${cambio.waMessageId}):`, e?.message));
+});
+provider.onPerfilPropio((conexionId, perfil) => {
+  (async () => {
+    const yo = await query<{ telefono: string | null }>("SELECT telefono FROM gozz.whatsapp_conexiones WHERE id = $1", [conexionId]);
+    const fotoLocal = perfil.fotoUrl ? await guardarFotoPerfil(conexionId, `yo:${yo[0]?.telefono || conexionId}`, perfil.fotoUrl) : null;
+    await service.registrarPerfilPropio(conexionId, { nombre: perfil.nombre, fotoUrl: fotoLocal });
+  })().catch((e) => console.error(`[whatsapp-cm] registrarPerfilPropio(${conexionId}):`, e?.message));
 });
 provider.onMessageStatusUpdate((_conexionId, waMessageId, estado) => {
   if (estado !== "entregado" && estado !== "leido") return;
@@ -88,6 +107,9 @@ export async function enviarMensajePendiente(mensajeId: string): Promise<void> {
       contenido: mensaje.contenido,
       archivoUrl: mensaje.archivo_url,
       archivoNombre: mensaje.archivo_nombre,
+      archivoTipo: mensaje.archivo_tipo,
+      esNotaVoz: !!(mensaje as any).es_nota_voz,
+      duracionSeg: (mensaje as any).duracion_seg ?? null,
     });
     await service.registrarConfirmacionEnvio(mensajeId, waMessageId);
   } catch (e: any) {
@@ -103,12 +125,36 @@ export async function reenviarPendientesAlArrancar(): Promise<void> {
   }
 }
 
-/** Pedido bajo demanda (al listar/abrir una conversación sin foto) — solo hace algo si la
- * conexión dueña sigue activa en este proceso; si no, no pasa nada (se reintentará la próxima
- * vez que se liste/abra). */
-export async function actualizarFotoConversacion(conversacionId: string): Promise<void> {
+/** Evita pedir la misma foto una y otra vez (cada listado pide las que faltan o caducaron). */
+const fotoPedidaAt = new Map<string, number>();
+const ESPERA_ENTRE_PEDIDOS_MS = 30 * 60 * 1000;
+
+/**
+ * Descarga la foto de perfil (la URL del CDN caduca) y la "info" del contacto, y las guarda. Solo hace
+ * algo si la conexión dueña sigue activa en este proceso; si no, se reintentará en otro listado.
+ */
+export async function actualizarFotoConversacion(conversacionId: string, forzar = false): Promise<void> {
+  const ultimo = fotoPedidaAt.get(conversacionId) || 0;
+  if (!forzar && Date.now() - ultimo < ESPERA_ENTRE_PEDIDOS_MS) return;
+  fotoPedidaAt.set(conversacionId, Date.now());
   const conversacion = await repo.getConversacion(conversacionId);
-  if (!conversacion || conversacion.foto_perfil_url) return;
-  const url = await (await proveedorDe(conversacion.conexion_id)).resolverFotoPerfil(conversacion.conexion_id, conversacion.wa_jid);
-  if (url) await service.registrarFotoPerfilResuelta(conversacionId, url);
+  if (!conversacion || !service.fotoNecesitaRefresco(conversacion)) return;
+  const p = await proveedorDe(conversacion.conexion_id);
+  const urlCdn = await p.resolverFotoPerfil(conversacion.conexion_id, conversacion.wa_jid);
+  const local = urlCdn ? await guardarFotoPerfil(conversacion.conexion_id, conversacion.wa_jid, urlCdn) : null;
+  const info = await p.resolverInfoPerfil(conversacion.conexion_id, conversacion.wa_jid);
+  await service.registrarFotoPerfilResuelta(conversacionId, local, info);
+}
+
+/** Tras un mensaje entrante: si la conversación aún no tiene foto (o caducó), se descarga. */
+async function asegurarFoto(conexionId: string, jid: string): Promise<void> {
+  const c = await repo.getConversacionPorJid(conexionId, jid);
+  if (c && service.fotoNecesitaRefresco(c)) await actualizarFotoConversacion(c.id);
+}
+
+/** Palomitas azules: el equipo abrió la conversación en el CRM. */
+export async function marcarLeidosEnWhatsApp(conversacionId: string, waIds: string[]): Promise<void> {
+  const conversacion = await repo.getConversacion(conversacionId);
+  if (!conversacion || !waIds.length) return;
+  await (await proveedorDe(conversacion.conexion_id)).marcarLeidos(conversacion.conexion_id, conversacion.wa_jid, waIds);
 }
