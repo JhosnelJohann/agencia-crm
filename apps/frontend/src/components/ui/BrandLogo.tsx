@@ -1,7 +1,7 @@
 "use client";
 import { useId } from "react";
 import { cn } from "@/lib/utils";
-import { iconTileStyle } from "./AppIcon";
+import { toneVars } from "./AppIcon";
 
 /**
  * Logos oficiales (SVG inline, sin peticiones) de las plataformas con las que trabaja el CRM.
@@ -82,16 +82,17 @@ export function BrandLogo({
   brand: BrandName;
   size?: number;
   bare?: boolean;
-  /** Seleccionado: ficha blanca para que el logo conserve sus colores oficiales. */
+  /** Seleccionado: ficha blanca (CSS) para que el logo conserve sus colores oficiales. */
   active?: boolean;
   className?: string;
 }) {
   if (bare) return <span className={cn("inline-flex shrink-0", className)}><Glyph brand={brand} size={size} /></span>;
-  const tile = iconTileStyle(BRAND_COLOR[brand], size);
+  const c = BRAND_COLOR[brand];
   return (
     <span
-      className={cn("app-icon inline-flex items-center justify-center shrink-0", className)}
-      style={active ? { ...tile, background: "#fff", boxShadow: `inset 0 0 0 1px ${BRAND_COLOR[brand]}55` } : tile}
+      className={cn("app-icon app-icon-brand inline-flex items-center justify-center shrink-0", className)}
+      data-active={active || undefined}
+      style={toneVars(c, c, size)}
       aria-hidden
     >
       <Glyph brand={brand} size={Math.round(size * 0.6)} />

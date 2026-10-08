@@ -65,7 +65,7 @@ export default function AnunciosPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon="rocket" kicker="Marketing · inversión" title="Anuncios" accent="y atribución" subtitle="Cuánto gastas en Meta, cuántos leads llegan de cada campaña y cuánto vale ya lo que cerraste.">
+        <ModuleHero icon={{ brand: "meta" }} kicker="Marketing · inversión" title="Anuncios" accent="y atribución" subtitle="Cuánto gastas en Meta, cuántos leads llegan de cada campaña y cuánto vale ya lo que cerraste.">
           <StatTile label="Gasto · 30 d" value={camps ? Math.round(tot.gasto) : null} prefix="$" icon="money_bag" />
           <StatTile label="Leads (CRM)" value={atr ? tot.leads : null} icon="busts_in_silhouette" tone="accent" delay={0.06} />
           <StatTile label="Costo por lead" value={camps && atr ? Math.round(tot.cpl * 100) / 100 : null} prefix="$" icon="bullseye" delay={0.12} />
@@ -75,7 +75,7 @@ export default function AnunciosPage() {
 
         {cuentas && !hayCuentas ? (
           <div className="glass-3d rounded-[28px]">
-            <EmptyState icon="satellite_antenna" title="Conecta tu cuenta publicitaria" text="Necesitas el ID de tu cuenta de anuncios (act_…) y un token de acceso de Meta con permiso ads_read. Opcional: el ID del píxel y un token de Conversions API para devolver conversiones." action={<button onClick={() => setForm({ ...VACIA })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Conectar cuenta</button>} />
+            <EmptyState icon={{ brand: "meta" }} title="Conecta tu cuenta publicitaria" text="Necesitas el ID de tu cuenta de anuncios (act_…) y un token de acceso de Meta con permiso ads_read. Opcional: el ID del píxel y un token de Conversions API para devolver conversiones." action={<button onClick={() => setForm({ ...VACIA })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Conectar cuenta</button>} />
           </div>
         ) : (
           <div className="grid grid-cols-12 gap-5">
@@ -99,7 +99,7 @@ export default function AnunciosPage() {
               </div>
             </Panel>
 
-            <Panel className="col-span-12 xl:col-span-7" kicker="Meta" title="Campañas" icon="megaphone" delay={0.08}>
+            <Panel className="col-span-12 xl:col-span-7" kicker="Meta" title="Campañas" icon={{ brand: "meta" }} delay={0.08}>
               {!camps ? <div className="h-48 skeleton rounded-2xl" /> : camps.length === 0 ? <p className="text-sm text-ink-muted py-6">Sincroniza una cuenta para ver aquí sus campañas y su gasto de los últimos 30 días.</p> : (
                 <div className="overflow-x-auto rounded-2xl border border-line">
                   <table className="w-full text-sm">
@@ -151,7 +151,7 @@ export default function AnunciosPage() {
         )}
       </div>
 
-      <Modal open={!!form} onClose={() => setForm(null)} title="Conectar cuenta de Meta Ads" icon="rocket">
+      <Modal open={!!form} onClose={() => setForm(null)} title="Conectar cuenta de Meta Ads" icon={{ brand: "meta" }}>
         {form && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
