@@ -485,7 +485,7 @@ function WhatsAppPageInner() {
       <div className="mx-3.5 lg:mx-5 mt-3.5 mb-3.5 h-[calc(100vh-8.2rem)] min-h-[420px] flex flex-col overflow-hidden relative glass-3d rounded-[28px] dark-island">
         {vista === "tablero" ? (
           <>
-            <div className="shrink-0 flex items-center gap-2 px-3 py-2.5 glass-topbar">
+            <div className="relative z-20 shrink-0 flex items-center gap-2 px-3 py-2.5 glass-topbar">
               <ConnectionSwitcher
                 conexiones={conexiones}
                 activeId={activeConexionId}
@@ -507,7 +507,7 @@ function WhatsAppPageInner() {
         ) : (
           <div className="flex-1 flex overflow-hidden">
             <div className={cn("w-full lg:w-[380px] shrink-0 border-r border-black/5 dark:border-white/10 flex-col", activeConversacion ? "hidden lg:flex" : "flex")}>
-              <div className="shrink-0 flex items-center gap-2 px-3 py-2.5 glass-topbar">
+              <div className="relative z-20 shrink-0 flex items-center gap-2 px-3 py-2.5 glass-topbar">
                 <ConnectionSwitcher
                   conexiones={conexiones}
                   activeId={activeConexionId}
