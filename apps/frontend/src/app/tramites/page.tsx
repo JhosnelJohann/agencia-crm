@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash, Pencil, X } from "@/lib/bootstrap-icons";
@@ -163,12 +164,14 @@ export default function ServiciosPage() {
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}
           className="glass-3d rounded-[28px] relative overflow-hidden p-7 sm:p-9 mb-6">
           <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.26), transparent 72%)" }} />
+          <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
+          <WireShape kind="torus" size={300} className="absolute -right-6 top-1/2 -translate-y-1/2 opacity-60 hidden md:block" />
           <div className="relative flex items-center justify-between gap-6 flex-wrap">
             <div className="flex items-center gap-5">
-              <AppIcon name="toolbox" size={84} />
+              <AppIcon name="toolbox" size={64} />
               <div>
-                <div className="kicker">Catálogo</div>
-                <h1 className="mt-2 text-[clamp(34px,5vw,56px)] leading-none text-ink">Servicios <span className="text-brand-orange text-orange-glow">de la agencia</span></h1>
+                <div className="kicker">Comercial · catálogo</div>
+                <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Servicios <span className="text-brand-orange text-orange-glow">de la agencia</span></h1>
                 <p className="mt-2 text-ink-sub max-w-xl">Lo que vendes, con su precio base, plazo de entrega y un color único que tiñe todo tu pipeline.</p>
               </div>
             </div>

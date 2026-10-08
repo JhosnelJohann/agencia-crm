@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -563,7 +564,8 @@ function WhatsAppPageInner() {
                   onAbrirPerfil={() => setPerfilOpen(true)}
                 />
               ) : (
-                <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6 chat-bg">
+                <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-6 chat-bg relative isolate overflow-hidden">
+                  <WireShape kind="globe" size={380} speed={0.6} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 -z-10" />
                   <div className="h-16 w-16 rounded-2xl glass-panel text-brand-green flex items-center justify-center">
                     <WhatsappLogo className="h-7 w-7" weight="duotone" />
                   </div>

@@ -1,4 +1,5 @@
 "use client";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -34,21 +35,20 @@ export default function EquipoPage() {
 
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
         {/* Hero */}
-        <div className="relative mb-8 rounded-3xl overflow-hidden glass p-8 border border-white/10">
+        <div className="relative mb-5 rounded-[28px] overflow-hidden isolate glass-3d px-6 py-5">
+          <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-brand-orange/15 rounded-full blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-neon-magenta/10 rounded-full blur-3xl" />
           <div className="relative flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <div className="flex items-center gap-2 text-brand-orange font-ui uppercase text-[13px] tracking-[0.2em] mb-2">
-                <Sparkles className="h-3 w-3" strokeWidth={1.5} />
-                Equipo GOZZ
+            <div className="flex items-center gap-5 min-w-0">
+              <AppIcon name="handshake" size={64} className="shrink-0" />
+              <div className="min-w-0">
+                <div className="kicker">Equipo · personas</div>
+                <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Directorio <span className="text-brand-orange text-orange-glow">del equipo</span></h1>
+                <p className="mt-1.5 text-ink-sub text-[14px]">Perfiles, contactos y roles del equipo.</p>
               </div>
-              <h1 className="font-display text-4xl font-black mb-2">Directorio del equipo</h1>
-              <p className="text-sm text-ink-sub max-w-lg">
-                Perfiles, contactos y roles del equipo.
-              </p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <Link href="/equipo" className="h-11 px-4 rounded-xl bg-bg-darkcard text-ink shadow-sm font-ui text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 border border-line">

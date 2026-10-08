@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { motion } from "framer-motion";
 import { Sparkle } from "@/lib/bootstrap-icons";
 import { MoonMark } from "@/components/magic/MoonMark";
@@ -12,7 +13,8 @@ const SPARKLES = [
 
 export function EmailEmptyState({ onConnectMailbox }: { onConnectMailbox?: () => void }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center text-center px-8 py-12 relative overflow-hidden">
+    <div className="flex-1 flex flex-col items-center justify-center text-center px-8 py-12 relative overflow-hidden isolate">
+      <WireShape kind="icosahedron" size={360} speed={0.6} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25 -z-10" />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

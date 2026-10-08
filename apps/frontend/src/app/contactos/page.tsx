@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, Users, Mail, Phone, X, Filter, UserPlus, MoreVertical, LayoutGrid, List, Trash2, Edit3, GitMerge, UserCheck, UserX, CalendarOff } from "@/lib/bootstrap-icons";
 import { toast } from "sonner";
+import { WireShape } from "@/components/motion/WireShape";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { AppShell } from "@/components/AppShell";
 import { DateField } from "@/components/ui/DateField";
@@ -342,12 +343,14 @@ export default function ContactosPage() {
       {/* min-h-screen: la barra es `sticky bottom-0` y necesita un contenedor más alto que el
           viewport para quedar pegada abajo también cuando hay pocas filas. */}
       <div className="min-h-screen flex flex-col">
-        <div className={cn("max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-10 flex-1", barraVisible && "pb-28")} ref={listaRef}>
+        <div className={cn("max-w-[1500px] mx-auto w-full px-3.5 lg:px-5 pt-5 pb-14 flex-1", barraVisible && "pb-28")} ref={listaRef}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-3d rounded-[28px] px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap"
+            className="glass-3d rounded-[28px] px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden isolate"
           >
+            <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
+            <WireShape kind="cube" size={280} className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-50 -z-10 hidden lg:block" />
             <div className="flex items-center gap-5 min-w-0">
               <AppIcon name="identification_card" size={64} className="shrink-0" />
               <div>

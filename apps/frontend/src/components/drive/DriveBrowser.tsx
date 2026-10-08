@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -1232,7 +1233,8 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
               onGoFile={(folderId) => { setSearchScope(false); setSearchQ(""); openFolder(folderId); }}
             />
           ) : !detail ? (
-            <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-sub text-sm">
+            <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-sub text-sm relative isolate overflow-hidden">
+              <WireShape kind="cube" size={320} speed={0.6} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40 -z-10" />
               <HardDrive className="h-12 w-12" strokeWidth={1.2} />
               Ninguna carpeta seleccionada
             </div>

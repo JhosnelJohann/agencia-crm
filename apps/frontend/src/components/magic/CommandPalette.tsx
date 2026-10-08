@@ -7,6 +7,7 @@ import {
   FileText, BarChart3, Settings, KeyRound, Search, UserPlus,
   Plus, LogOut, Mic, Sparkles, ArrowDown, ArrowUp, CornerDownLeft
 } from "@/lib/bootstrap-icons";
+import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 
 interface Action {
   id: string;
@@ -18,6 +19,8 @@ interface Action {
   onSelect: () => void;
   section?: string;
   shortcut?: string;
+  /** Mismo icono que el menú (2D o logo de marca); si está, reemplaza a `icon`. */
+  nav?: NavIconRef;
 }
 
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
@@ -30,29 +33,47 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
         onOpenChange(!open);
       }
       if (e.key === "Escape" && open) onOpenChange(false);
+      // Atajos de navegación «G y luego una letra» (los que muestra la paleta), fuera de campos de texto.
+      const t = e.target as HTMLElement | null;
+      const escribiendo = !!t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+      if (escribiendo || e.metaKey || e.ctrlKey || e.altKey || open) return;
+      const k = e.key.toLowerCase();
+      if (k === "g") { pendienteG = Date.now(); return; }
+      if (pendienteG && Date.now() - pendienteG < 1200) {
+        const destino = ({ d: "/dashboard", c: "/contactos", o: "/oportunidades", t: "/tareas", w: "/whatsapp", e: "/correo" } as Record<string, string>)[k];
+        pendienteG = 0;
+        if (destino) { e.preventDefault(); router.push(destino); }
+      }
     };
+    let pendienteG = 0;
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, [open, onOpenChange]);
+  }, [open, onOpenChange, router]);
 
   const go = (href: string) => { router.push(href); onOpenChange(false); };
 
   const nav: Action[] = [
-    { id: "dash", label: "Dashboard", subtitle: "Vista general del CRM", icon: LayoutDashboard, iconColor: "#e8581a", section: "Navegar", onSelect: () => go("/dashboard"), shortcut: "G D" },
-    { id: "cont", label: "Contactos", subtitle: "Base de leads y clientes", icon: Users, iconColor: "#5d8fa8", section: "Navegar", onSelect: () => go("/contactos"), shortcut: "G C" },
-    { id: "opo", label: "Oportunidades", subtitle: "Pipeline comercial", icon: Briefcase, iconColor: "#c96a3d", section: "Navegar", onSelect: () => go("/oportunidades"), shortcut: "G O" },
-    { id: "tar", label: "Tareas", subtitle: "To-do del equipo", icon: CheckSquare, iconColor: "#16b91a", section: "Navegar", onSelect: () => go("/tareas"), shortcut: "G T" },
-    { id: "tra", label: "Servicios", subtitle: "Catálogo de servicios de la agencia", icon: FileText, iconColor: "#f0b040", section: "Navegar", onSelect: () => go("/tramites") },
-    { id: "emb", label: "Embudos y formularios", subtitle: "Captación con UTM", icon: FileText, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/embudos") },
-    { id: "cam", label: "Campañas de correo", subtitle: "Segmentos, envíos y métricas", icon: FileText, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/campanas") },
-    { id: "ads", label: "Anuncios y atribución", subtitle: "Meta Ads, CPL y ROAS", icon: BarChart3, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/anuncios") },
-    { id: "sco", label: "Lead scoring", subtitle: "Reglas y ranking de leads", icon: BarChart3, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/scoring") },
-    { id: "red", label: "Redes sociales", subtitle: "Marcas y redes en Metricool", icon: Users, iconColor: "#e8581a", section: "Marketing", onSelect: () => go("/redes") },
-    { id: "cha", label: "Chat interno", subtitle: "Mensajes del equipo", icon: MessageSquare, iconColor: "#06BCC1", section: "Navegar", onSelect: () => go("/chat") },
-    { id: "rep", label: "Reportes", subtitle: "Análisis y métricas", icon: BarChart3, iconColor: "#b8460f", section: "Navegar", onSelect: () => go("/reportes") },
-    { id: "con2", label: "Configuración", subtitle: "Panel admin", icon: Settings, iconColor: "#94a3b8", section: "Navegar", onSelect: () => go("/configuracion") },
-    { id: "api", label: "API Keys", subtitle: "Integraciones externas", icon: KeyRound, iconColor: "#0EA5E9", section: "Admin", onSelect: () => go("/configuracion/api-keys") },
-    { id: "usr", label: "Gestión de usuarios", subtitle: "Equipo y roles", icon: UserPlus, iconColor: "#EC4899", section: "Admin", onSelect: () => go("/configuracion/usuarios") },
+    { id: "dash", label: "Panel", subtitle: "Vista general del CRM", icon: LayoutDashboard, iconColor: "#e8581a", nav: "bar_chart", section: "Navegar", onSelect: () => go("/dashboard"), shortcut: "G D" },
+    { id: "cont", label: "Contactos", subtitle: "Base de leads y clientes", icon: Users, iconColor: "#5d8fa8", nav: "identification_card", section: "Navegar", onSelect: () => go("/contactos"), shortcut: "G C" },
+    { id: "opo", label: "Oportunidades", subtitle: "Pipeline comercial", icon: Briefcase, iconColor: "#c96a3d", nav: "bullseye", section: "Navegar", onSelect: () => go("/oportunidades"), shortcut: "G O" },
+    { id: "tar", label: "Tareas", subtitle: "To-do del equipo", icon: CheckSquare, iconColor: "#16b91a", nav: "check_mark_button", section: "Navegar", onSelect: () => go("/tareas"), shortcut: "G T" },
+    { id: "tra", label: "Servicios", subtitle: "Catálogo de servicios de la agencia", icon: FileText, iconColor: "#f0b040", nav: "toolbox", section: "Navegar", onSelect: () => go("/tramites") },
+    { id: "emb", label: "Embudos y formularios", subtitle: "Captación con UTM", icon: FileText, iconColor: "#e8581a", nav: "satellite_antenna", section: "Marketing", onSelect: () => go("/embudos") },
+    { id: "cam", label: "Campañas de correo", subtitle: "Segmentos, envíos y métricas", icon: FileText, iconColor: "#e8581a", nav: "megaphone", section: "Marketing", onSelect: () => go("/campanas") },
+    { id: "ads", label: "Anuncios y atribución", subtitle: "Meta Ads, CPL y ROAS", icon: BarChart3, iconColor: "#e8581a", nav: { brand: "meta" }, section: "Marketing", onSelect: () => go("/anuncios") },
+    { id: "sco", label: "Lead scoring", subtitle: "Reglas y ranking de leads", icon: BarChart3, iconColor: "#e8581a", nav: "fire", section: "Marketing", onSelect: () => go("/scoring") },
+    { id: "red", label: "Redes sociales", subtitle: "Marcas y redes en Metricool", icon: Users, iconColor: "#e8581a", nav: { brand: "instagram" }, section: "Marketing", onSelect: () => go("/redes") },
+    { id: "wa", label: "WhatsApp", subtitle: "Conversaciones con leads", icon: MessageSquare, nav: { brand: "whatsapp" }, section: "Navegar", onSelect: () => go("/whatsapp"), shortcut: "G W" },
+    { id: "mail", label: "Correo", subtitle: "Bandeja de entrada y envíos", icon: MessageSquare, nav: { brand: "gmail" }, section: "Navegar", onSelect: () => go("/correo"), shortcut: "G E" },
+    { id: "drv", label: "Drive", subtitle: "Archivos del equipo", icon: FileText, nav: "file_folder", section: "Navegar", onSelect: () => go("/drive") },
+    { id: "aut", label: "Automatizaciones", subtitle: "Agentes de IA, reglas y webhooks", icon: FileText, nav: "high_voltage", section: "Navegar", onSelect: () => go("/automatizaciones") },
+    { id: "eqp", label: "Equipo", subtitle: "Directorio y organigrama", icon: Users, nav: "handshake", section: "Navegar", onSelect: () => go("/equipo") },
+    { id: "asi", label: "Asistencia", subtitle: "Mi jornada y puntualidad", icon: CheckSquare, nav: "alarm_clock", section: "Navegar", onSelect: () => go("/asistencia") },
+    { id: "cha", label: "Chat interno", subtitle: "Mensajes del equipo", icon: MessageSquare, iconColor: "#06BCC1", nav: "left_speech_bubble", section: "Navegar", onSelect: () => go("/chat") },
+    { id: "rep", label: "Reportes", subtitle: "Análisis y métricas", icon: BarChart3, iconColor: "#b8460f", nav: "chart_increasing", section: "Navegar", onSelect: () => go("/reportes") },
+    { id: "con2", label: "Ajustes", subtitle: "Panel admin", icon: Settings, iconColor: "#94a3b8", nav: "gear", section: "Navegar", onSelect: () => go("/configuracion") },
+    { id: "api", label: "Claves de API", subtitle: "Integraciones externas", icon: KeyRound, iconColor: "#0EA5E9", nav: "key", section: "Admin", onSelect: () => go("/configuracion/api-keys") },
+    { id: "usr", label: "Gestión de usuarios", subtitle: "Equipo y roles", icon: UserPlus, iconColor: "#EC4899", nav: "busts_in_silhouette", section: "Admin", onSelect: () => go("/configuracion/usuarios") },
   ];
 
   const actions: Action[] = [
@@ -119,12 +140,16 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
                         onSelect={action.onSelect}
                         className="group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all border-l-2 border-transparent aria-selected:border-brand-orange aria-selected:bg-gradient-to-r aria-selected:from-orange-900/20 aria-selected:to-transparent aria-selected:shadow-sm"
                       >
-                        <div
-                          className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-aria-selected:scale-105"
-                          style={{ background: color + "15", color }}
-                        >
-                          <Icon className="h-4 w-4" strokeWidth={2} />
-                        </div>
+                        {action.nav ? (
+                          <NavIcon icon={action.nav} size={36} className="transition-transform group-aria-selected:scale-105" />
+                        ) : (
+                          <div
+                            className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-aria-selected:scale-105"
+                            style={{ background: color + "15", color }}
+                          >
+                            <Icon className="h-4 w-4" strokeWidth={2} />
+                          </div>
+                        )}
                         <div className="flex-1 min-w-0">
                           <div className="text-[13px] font-bold text-white truncate group-aria-selected:text-brand-orange transition-colors">
                             {action.label}

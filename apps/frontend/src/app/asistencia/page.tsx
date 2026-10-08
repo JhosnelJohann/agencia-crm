@@ -1,4 +1,6 @@
 "use client";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { WireShape } from "@/components/motion/WireShape";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Clock, Play, Coffee, LogOut, AlertTriangle, Trophy, Flame, Calendar, ChevronDown, Settings, Users, Loader2, Search } from "@/lib/bootstrap-icons";
@@ -40,15 +42,18 @@ export default function AsistenciaPage() {
 
   return (
     <AppShell>
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-[28px] px-6 py-5 mb-5">
-          <div className="inline-flex items-center gap-2 text-brand-orange font-ui uppercase text-[13px] tracking-wider mb-2">
-            <Clock className="h-3.5 w-3.5" />
-            Asistencia
+      <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-[28px] px-6 py-5 mb-5 relative overflow-hidden isolate">
+          <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
+          <WireShape kind="torus" size={260} className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-50 -z-10 hidden lg:block" />
+          <div className="flex items-center gap-5 min-w-0">
+            <AppIcon name="alarm_clock" size={64} className="shrink-0" />
+            <div className="min-w-0">
+              <div className="kicker">Equipo · asistencia</div>
+              <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Mi <span className="text-brand-orange text-orange-glow">jornada</span></h1>
+              <p className="mt-1.5 text-ink-sub text-[14px]">Entradas, pausas y puntualidad del día.</p>
+            </div>
           </div>
-          <h1 className="font-display text-4xl font-black leading-tight">
-            <span className="text-gradient-orange">Mi jornada</span>
-          </h1>
         </motion.div>
 
         {isAdmin && (

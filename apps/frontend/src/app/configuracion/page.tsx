@@ -1,4 +1,6 @@
 "use client";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { WireShape } from "@/components/motion/WireShape";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Users, KeyRound, Bell, Palette, ShieldCheck, Sparkles, ArrowRight, Building2, Cog } from "@/lib/bootstrap-icons";
@@ -19,16 +21,18 @@ export default function ConfiguracionPage() {
   const sections = SECTIONS;
   return (
     <AppShell>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-[28px] px-6 py-5 mb-5">
-          <div className="inline-flex items-center gap-2 text-brand-orange font-ui uppercase text-[13px] tracking-wider mb-3">
-            <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Admin
+      <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-[28px] px-6 py-5 mb-5 relative overflow-hidden isolate">
+          <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
+          <WireShape kind="cube" size={260} className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-50 -z-10 hidden lg:block" />
+          <div className="flex items-center gap-5 min-w-0">
+            <AppIcon name="gear" size={64} className="shrink-0" />
+            <div className="min-w-0">
+              <div className="kicker">Equipo · administración</div>
+              <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Ajustes <span className="text-brand-orange text-orange-glow">del CRM</span></h1>
+              <p className="mt-1.5 text-ink-sub text-[14px]">Usuarios, pipeline, notificaciones y seguridad. Solo administradores.</p>
+            </div>
           </div>
-          <h1 className="font-display text-4xl font-black leading-tight">
-            <span className="text-gradient-orange">Configuración</span>
-          </h1>
-          <p className="mt-2 text-ink-sub">Panel del super administrador</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
