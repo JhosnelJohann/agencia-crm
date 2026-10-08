@@ -83,7 +83,7 @@ export default function ReportesPage() {
   return (
     <AppShell>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        <ModuleHero icon="bar_chart" kicker="Análisis" title="Reportes" subtitle="Puntajes, asistencia y rendimiento del equipo.">
+        <ModuleHero shape="dodecahedron" icon="bar_chart" kicker="Análisis" title="Reportes" subtitle="Puntajes, asistencia y rendimiento del equipo.">
           {tab === "puntajes" && (
             <>
               <motion.button

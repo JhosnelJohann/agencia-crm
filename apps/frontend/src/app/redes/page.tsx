@@ -47,7 +47,7 @@ export default function RedesPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon={{ brand: "instagram" }} kicker="Marketing · reputación" title="Redes" accent="sociales" subtitle="Tus marcas y redes conectadas en Metricool, en un solo lugar. Panel de lectura: la gestión y publicación siguen en Metricool.">
+        <ModuleHero shape="globe" icon={{ brand: "instagram" }} kicker="Marketing · reputación" title="Redes" accent="sociales" subtitle="Tus marcas y redes conectadas en Metricool, en un solo lugar. Panel de lectura: la gestión y publicación siguen en Metricool.">
           <StatTile label="Cuentas" value={cuentas ? cuentas.length : null} icon="link" />
           <StatTile label="Marcas" value={cuentas ? todas.length : null} icon="crown" tone="accent" delay={0.06} />
           <StatTile label="Redes conectadas" value={cuentas ? totalRedes : null} icon="globe_showing_americas" tone="good" delay={0.12} />

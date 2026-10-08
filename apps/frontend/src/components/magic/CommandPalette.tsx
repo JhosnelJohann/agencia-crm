@@ -73,7 +73,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
       className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-start justify-center p-4 pt-24 animate-fade-in"
       onClick={() => onOpenChange(false)}
     >
-      <div className="relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative w-full max-w-2xl palette-pop" onClick={(e) => e.stopPropagation()}>
         {/* Glow exterior */}
         <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-brand-orange/30 via-amber-400/20 to-brand-orange/30 blur-2xl opacity-60 pointer-events-none" />
 
@@ -89,7 +89,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
                 className="flex-1 bg-transparent outline-none text-[15px] text-white placeholder:text-neutral-400 font-medium"
                 autoFocus
               />
-              <kbd className="text-[12px] font-ui font-black uppercase tracking-wider px-2 py-1 rounded-md bg-white/10 text-neutral-300 border border-white/10">ESC</kbd>
+              <kbd className="kbd">ESC</kbd>
             </div>
 
             {/* Lista */}
@@ -136,7 +136,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
                           )}
                         </div>
                         {action.shortcut && (
-                          <kbd className="text-[11px] font-ui font-black uppercase tracking-wider px-1.5 py-1 rounded-md bg-white/10 text-neutral-300 border border-white/10 shrink-0">
+                          <kbd className="kbd shrink-0">
                             {action.shortcut}
                           </kbd>
                         )}
@@ -152,13 +152,13 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
             <div className="border-t border-white/5 px-4 py-2.5 bg-white/[0.02] flex items-center gap-4 text-[12px] font-ui text-neutral-400">
               <span className="flex items-center gap-1.5">
                 <span className="flex items-center gap-0.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-bold"><ArrowUp className="h-2.5 w-2.5 inline" /></kbd>
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-bold"><ArrowDown className="h-2.5 w-2.5 inline" /></kbd>
+                  <kbd className="kbd kbd-sm"><ArrowUp className="h-2.5 w-2.5 inline" /></kbd>
+                  <kbd className="kbd kbd-sm"><ArrowDown className="h-2.5 w-2.5 inline" /></kbd>
                 </span>
                 Navegar
               </span>
               <span className="flex items-center gap-1.5">
-                <kbd className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-bold flex items-center gap-0.5"><CornerDownLeft className="h-2.5 w-2.5" /></kbd>
+                <kbd className="kbd kbd-sm"><CornerDownLeft className="h-2.5 w-2.5" /></kbd>
                 Seleccionar
               </span>
               <span className="ml-auto flex items-center gap-1.5">

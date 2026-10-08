@@ -52,7 +52,7 @@ export default function ScoringPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon="fire" kicker="Marketing · calificación" title="Lead" accent="scoring" subtitle="Cada acción de un contacto suma o resta puntos. Tus leads más calientes suben solos al principio de la lista.">
+        <ModuleHero shape="icosahedron" icon="fire" kicker="Marketing · calificación" title="Lead" accent="scoring" subtitle="Cada acción de un contacto suma o resta puntos. Tus leads más calientes suben solos al principio de la lista.">
           <StatTile label="Calientes" value={d ? d.calientes : null} icon="fire" tone="bad" />
           <StatTile label="Tibios" value={d ? d.tibios : null} icon="sparkles" tone="accent" delay={0.06} />
           <StatTile label="Fríos" value={d ? d.frios : null} icon="hourglass_done" delay={0.12} />

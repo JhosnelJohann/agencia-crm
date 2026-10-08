@@ -13,8 +13,15 @@ import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
 import { useCurrentUser } from "@/lib/auth-user";
 import { useFx } from "@/components/magic/fx";
 import { ETAPAS } from "@/lib/etapas";
-import { AreaChart } from "@/components/marketing/ui";
+import { AreaChart, Delta } from "@/components/marketing/ui";
+import { Sparkline } from "@/components/charts/Sparkline";
+import { WireShape } from "@/components/motion/WireShape";
+import { CollectionRing } from "@/components/charts/CollectionRing";
+import { FlowDiagram } from "@/components/charts/FlowDiagram";
 import { cn } from "@/lib/utils";
+
+interface Metrica { serie: number[]; variacion: number | null; total: number }
+interface Series { dias: number; contactos: Metrica; oportunidades: Metrica; cobrado: Metrica }
 
 interface Stats {
   contactos: number;
@@ -59,31 +66,6 @@ function Glass({ children, className, delay = 0, tilt = true }: { children: Reac
 }
 
 /** Medidor radial animado (SVG). */
-function Gauge({ pct, size = 190 }: { pct: number; size?: number }) {
-  const r = size / 2 - 14;
-  const c = 2 * Math.PI * r;
-  const p = Math.max(0, Math.min(1, pct));
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-      <defs>
-        <linearGradient id="g-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffb37a" />
-          <stop offset="0.5" stopColor="#e8581a" />
-          <stop offset="1" stopColor="#b8460f" />
-        </linearGradient>
-      </defs>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(226, 232, 240,0.07)" strokeWidth="12" />
-      <motion.circle
-        cx={size / 2} cy={size / 2} r={r} fill="none" stroke="url(#g-grad)" strokeWidth="12" strokeLinecap="round"
-        strokeDasharray={c}
-        initial={{ strokeDashoffset: c }}
-        animate={{ strokeDashoffset: c * (1 - p) }}
-        transition={{ duration: 1.6, ease: EASE, delay: 0.3 }}
-        style={{ filter: "drop-shadow(0 0 10px rgba(232,88,26,0.65))" }}
-      />
-    </svg>
-  );
-}
 
 const QUICK: { href: string; label: string; hint: string; icon: AppIconName }[] = [
   { href: "/oportunidades", label: "Pipeline", hint: "Mueve tus oportunidades", icon: "bullseye" },
@@ -99,6 +81,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
   const [mk, setMk] = useState<any>(null);
+  const [series, setSeries] = useState<Series | null>(null);
   const [calientes, setCalientes] = useState<any[] | null>(null);
   // Saludo y fecha dependen de la hora LOCAL del navegador: se calculan tras montar. Si se pintan en el
   // SSR salen con la zona del VPS (Europe/Berlin), no coinciden al hidratar y React re-renderiza toda la app.
@@ -112,6 +95,7 @@ export default function DashboardPage() {
     fetch("/api/stats").then((r) => r.json()).then((d) => setStats(d.stats)).catch(() => {});
     fetch("/api/notificaciones").then((r) => r.json()).then((d) => setNotifs(d.notificaciones || [])).catch(() => {});
     fetch("/api/marketing/resumen").then((r) => r.json()).then(setMk).catch(() => {});
+    fetch("/api/stats/series?dias=30").then((r) => (r.ok ? r.json() : null)).then(setSeries).catch(() => {});
     fetch("/api/marketing/scoring/ranking?limit=5").then((r) => r.json()).then((d) => setCalientes(d.ranking || [])).catch(() => setCalientes([]));
   }, []);
 
@@ -133,12 +117,25 @@ export default function DashboardPage() {
   ].filter((s) => s.value > 0);
   const slaTotal = bySLA.reduce((a, b) => a + b.value, 0);
 
-  const kpis: { label: string; value: number | null; icon: AppIconName; sub: string; ratio: number; href: string; danger?: boolean }[] = [
-    { label: "Contactos", value: stats ? stats.contactos : null, icon: "identification_card", sub: "en tu base", ratio: 1, href: "/contactos" },
-    { label: "Oportunidades", value: stats ? stats.oportunidades : null, icon: "bullseye", sub: `${stats?.en_progreso ?? 0} en progreso`, ratio: stats && stats.oportunidades ? stats.en_progreso / stats.oportunidades : 0, href: "/oportunidades" },
+  const kpis: { label: string; value: number | null; icon: AppIconName; sub: string; ratio: number; href: string; danger?: boolean; m?: Metrica }[] = [
+    { label: "Contactos", value: stats ? stats.contactos : null, icon: "identification_card", sub: "en tu base", ratio: 1, href: "/contactos", m: series?.contactos },
+    { label: "Oportunidades", value: stats ? stats.oportunidades : null, icon: "bullseye", sub: `${stats?.en_progreso ?? 0} en progreso`, ratio: stats && stats.oportunidades ? stats.en_progreso / stats.oportunidades : 0, href: "/oportunidades", m: series?.oportunidades },
     { label: "Tareas pendientes", value: stats ? stats.tareas_pendientes : null, icon: "check_mark_button", sub: "por completar", ratio: stats && stats.tareas_pendientes ? Math.min(1, stats.tareas_pendientes / 40) : 0, href: "/tareas" },
     { label: "SLA vencido", value: stats ? stats.sla_vencido : null, icon: "alarm_clock", sub: "requieren atención", ratio: stats && stats.oportunidades ? stats.sla_vencido / stats.oportunidades : 0, href: "/oportunidades", danger: true },
   ];
+
+  // Flujo del negocio: solo cifras reales de /api/stats; una tasa sin denominador se muestra como "—".
+  const ganadas = ["ganado", "aprobado", "completado"].reduce((n, k) => n + (stats?.por_etapa?.[k] || 0), 0);
+  const ratio = (a: number, b: number) => (stats && b > 0 ? a / b : null);
+  const flow = {
+    nodes: [
+      { label: "Leads", value: stats ? stats.contactos : null, icon: "identification_card" as const, hint: "contactos en tu base" },
+      { label: "Oportunidades", value: stats ? stats.oportunidades : null, icon: "bullseye" as const, hint: `${stats?.en_progreso ?? 0} en progreso` },
+      { label: "Clientes", value: stats ? ganadas : null, icon: "handshake" as const, hint: "oportunidades ganadas" },
+      { label: "Cobrado", value: stats ? Math.round(cobrado) : null, prefix: "$", icon: "money_bag" as const, hint: series && series.cobrado.total > 0 ? `${money(series.cobrado.total)} en 30 días` : `de ${money(totalValor)} facturado` },
+    ],
+    rates: [ratio(stats?.oportunidades || 0, stats?.contactos || 0), ratio(ganadas, stats?.oportunidades || 0), totalValor > 0 ? pctCobrado : null],
+  };
 
   const firstName = (user?.nombre || "").split(" ")[0];
 
@@ -150,6 +147,8 @@ export default function DashboardPage() {
           <div className="col-span-12 xl:col-span-8">
             <Glass className="relative overflow-hidden p-7 sm:p-10 min-h-[300px]" tilt={false}>
               <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.30), rgba(232,88,26,0.06) 55%, transparent 75%)" }} />
+              <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
+              <WireShape kind="icosahedron" size={340} className="absolute -right-10 top-1/2 -translate-y-1/2 opacity-70 hidden md:block" />
               <div className="relative max-w-2xl">
                 <div className="kicker">{hoy?.fecha ?? " "}</div>
                 <h1 className="mt-4 text-[clamp(38px,6vw,76px)] leading-[0.98]">
@@ -177,14 +176,8 @@ export default function DashboardPage() {
                 <div className="kicker">Cobranza</div>
                 <AppIcon name="money_bag" size={34} />
               </div>
-              <div className="relative my-2">
-                <Gauge pct={pctCobrado} />
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="font-display font-extrabold text-[44px] leading-none tabular-nums text-ink">
-                    <NumberTicker value={stats ? Math.round(pctCobrado * 100) : null} suffix="%" />
-                  </div>
-                  <div className="mt-1 text-[10.5px] uppercase tracking-[2.4px] text-ink-muted font-semibold">cobrado</div>
-                </div>
+              <div className="my-2">
+                <CollectionRing pct={pctCobrado} loading={!stats} />
               </div>
               <div className="grid grid-cols-2 gap-3 w-full text-center">
                 <div className="rounded-2xl bg-white/[0.04] border border-line py-2.5">
@@ -209,11 +202,17 @@ export default function DashboardPage() {
                   <AppIcon name={k.icon} size={54} />
                   <span className="text-ink-muted group-hover:text-brand-primary transition-colors text-lg leading-none">↗</span>
                 </div>
-                <div className="mt-5 font-display font-extrabold text-[52px] leading-none tabular-nums text-ink">
-                  <NumberTicker value={k.value} />
+                <div className="mt-5 flex items-end justify-between gap-3">
+                  <div className="font-display font-extrabold text-[52px] leading-none tabular-nums text-ink">
+                    <NumberTicker value={k.value} />
+                  </div>
+                  {k.m && k.m.total > 0 && <Sparkline data={k.m.serie} width={84} height={32} className="mb-1.5 hidden sm:block" />}
                 </div>
                 <div className="mt-2 text-[13px] font-bold uppercase tracking-[2px] text-ink">{k.label}</div>
-                <div className="text-xs text-ink-muted">{k.sub}</div>
+                <div className="flex items-center gap-2 text-xs text-ink-muted">
+                  {k.m?.variacion != null && <Delta value={k.m.variacion} />}
+                  <span className="truncate">{k.m?.variacion != null ? "vs. 30 días previos" : k.sub}</span>
+                </div>
                 <div className="mt-4 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
@@ -226,6 +225,23 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
+
+        {/* ─── FLUJO DEL NEGOCIO ────────────────────────────────────────────── */}
+        <Glass className="p-6 sm:p-7 relative overflow-hidden" delay={0.12} tilt={false}>
+          <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
+          <div className="relative flex items-center justify-between gap-3 mb-5">
+            <div>
+              <div className="kicker">Flujo del negocio</div>
+              <h2 className="mt-1.5 text-[30px] leading-none text-ink">Del lead al cobro</h2>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-[11px] font-semibold text-ink-sub">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-green animate-pulse" /> En vivo
+            </span>
+          </div>
+          <div className="relative">
+            <FlowDiagram nodes={flow.nodes} rates={flow.rates} />
+          </div>
+        </Glass>
 
         {/* ─── MARKETING ───────────────────────────────────────────────────── */}
         <div className="grid grid-cols-12 gap-5">

@@ -92,8 +92,9 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
           >
             <MagnifyingGlass className="h-4 w-4 text-ink-sub group-hover:text-brand-primary transition-colors shrink-0" />
             <span className="text-sm text-ink-sub flex-1 text-left truncate hidden sm:block">Busca contactos, oportunidades, tareas…</span>
-            <span className="flex items-center gap-1 text-[10px] font-bold text-ink-sub bg-white/[0.06] rounded-md px-1.5 py-1 ml-auto">
-              <CommandIcon className="h-2.5 w-2.5" weight="bold" />K
+            <span className="ml-auto flex items-center gap-1">
+              <kbd className="kbd kbd-sm"><CommandIcon className="h-2.5 w-2.5" weight="bold" /></kbd>
+              <kbd className="kbd kbd-sm">K</kbd>
             </span>
           </button>
 

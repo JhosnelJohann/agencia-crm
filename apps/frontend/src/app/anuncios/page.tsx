@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Plus, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { Sankey } from "@/components/charts/Sankey";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 
 /**
@@ -65,7 +66,7 @@ export default function AnunciosPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon={{ brand: "meta" }} kicker="Marketing · inversión" title="Anuncios" accent="y atribución" subtitle="Cuánto gastas en Meta, cuántos leads llegan de cada campaña y cuánto vale ya lo que cerraste.">
+        <ModuleHero icon={{ brand: "meta" }} shape="icosahedron" kicker="Marketing · inversión" title="Anuncios" accent="y atribución" subtitle="Cuánto gastas en Meta, cuántos leads llegan de cada campaña y cuánto vale ya lo que cerraste.">
           <StatTile label="Gasto · 30 d" value={camps ? Math.round(tot.gasto) : null} prefix="$" icon="money_bag" />
           <StatTile label="Leads (CRM)" value={atr ? tot.leads : null} icon="busts_in_silhouette" tone="accent" delay={0.06} />
           <StatTile label="Costo por lead" value={camps && atr ? Math.round(tot.cpl * 100) / 100 : null} prefix="$" icon="bullseye" delay={0.12} />
@@ -135,6 +136,12 @@ export default function AnunciosPage() {
                 </ul>
               )}
             </Panel>
+
+            {atr && atr.some((r) => r.leads > 0) && (
+              <Panel className="col-span-12" kicker="Atribución · flujo" title="De la campaña al cierre" icon="chart_increasing" delay={0.14}>
+                <Sankey rows={atr} />
+              </Panel>
+            )}
 
             <Panel className="col-span-12" kicker="Conversions API" title="Conversiones enviadas a Meta" icon="satellite_antenna" delay={0.16}>
               {conv.length === 0 ? <p className="text-sm text-ink-muted py-4">Sin envíos todavía. Con un píxel y un token de Conversions API, cada formulario envía «Lead», una reunión agendada envía «Schedule» y una venta ganada envía «Purchase».</p> : (

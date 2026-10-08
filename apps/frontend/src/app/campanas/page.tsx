@@ -99,7 +99,7 @@ export default function CampanasPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon="megaphone" kicker="Marketing · difusión" title="Campañas" accent="de correo" subtitle="Segmenta tu base, escribe una vez y mide quién abre y quién hace clic. Cada apertura y clic suma puntos de scoring.">
+        <ModuleHero shape="octahedron" icon="megaphone" kicker="Marketing · difusión" title="Campañas" accent="de correo" subtitle="Segmenta tu base, escribe una vez y mide quién abre y quién hace clic. Cada apertura y clic suma puntos de scoring.">
           <StatTile label="Enviados" value={camps ? kpi.env : null} icon="e_mail" />
           <StatTile label="Aperturas" value={camps ? kpi.aperturas : null} suffix="%" icon="eyes" tone="accent" delay={0.06} />
           <StatTile label="Clics" value={camps ? kpi.clics : null} suffix="%" icon="bullseye" tone="good" delay={0.12} />
