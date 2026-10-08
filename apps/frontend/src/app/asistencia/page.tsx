@@ -73,14 +73,15 @@ export default function AsistenciaPage() {
   );
 }
 
-/** "America/New_York" → "Nueva York": nombre legible de la zona en español. */
+/** "America/New_York" → "Nueva York": la ciudad de la zona, en español cuando su nombre cambia. */
+const CIUDADES: Record<string, string> = {
+  New_York: "Nueva York", Los_Angeles: "Los Ángeles", Mexico_City: "Ciudad de México", Bogota: "Bogotá",
+  Sao_Paulo: "São Paulo", Buenos_Aires: "Buenos Aires", Panama: "Panamá", Puerto_Rico: "Puerto Rico",
+  Santo_Domingo: "Santo Domingo", Costa_Rica: "Costa Rica", El_Salvador: "El Salvador", London: "Londres",
+};
 function nombreZona(tz: string) {
-  try {
-    const p = new Intl.DateTimeFormat("es", { timeZone: tz, timeZoneName: "longGeneric" }).formatToParts(new Date());
-    const n = p.find((x) => x.type === "timeZoneName")?.value;
-    if (n) return n.replace(/^hora (de |del )?/i, "");
-  } catch {}
-  return (tz.split("/").pop() || tz).replace(/_/g, " ");
+  const ciudad = tz.split("/").pop() || tz;
+  return CIUDADES[ciudad] || ciudad.replace(/_/g, " ");
 }
 
 function MiJornada() {
