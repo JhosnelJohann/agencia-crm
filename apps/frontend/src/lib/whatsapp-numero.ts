@@ -49,5 +49,9 @@ export function nombreConversacion(c: { nombre_whatsapp?: string | null; wa_jid:
   const [, servidor] = c.wa_jid.split("@");
   if (servidor === "lid") return "Contacto de WhatsApp";
   if (servidor === "g.us") return "Grupo de WhatsApp";
+  if (servidor === "newsletter" || servidor === "broadcast") return "Canal de WhatsApp";
+  // Un teléfono E.164 tiene como mucho 15 dígitos: algo más largo es un identificador interno.
+  const digitos = c.wa_jid.split("@")[0].replace(/\D/g, "");
+  if (digitos.length > 15) return "Contacto de WhatsApp";
   return formatearNumeroWhatsApp(c.wa_jid).texto;
 }
