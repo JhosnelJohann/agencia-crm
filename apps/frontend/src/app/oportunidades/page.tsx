@@ -294,10 +294,11 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
         "relative rounded-2xl border bg-bg-darkcard shadow-sm transition-all",
         allClear ? "border-line" : "border-brand-orange/30 shadow-md"
       )}>
-        {/* Row 1: search + filtros principales */}
+        {/* Dos filas intencionadas (con `order`, sin mover el JSX): 1) buscador, «Mis casos» y total;
+            2) Servicio, Asignado, SLA y fechas. Antes una sola fila se partía y dejaba «Creado entre…» sola. */}
         <div className="flex items-center gap-2 p-2.5 flex-wrap">
           {/* Search hero */}
-          <div className="relative flex-1 min-w-[220px] max-w-[300px]">
+          <div className="relative order-[-5] flex-1 min-w-[220px]">
             <div className={cn(
               "absolute left-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg flex items-center justify-center transition-all pointer-events-none",
               value.q ? "bg-brand-orange/15 text-brand-orange" : "text-ink-sub"
@@ -325,7 +326,7 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
             )}
           </div>
 
-          <div className="w-px h-8 bg-gradient-to-b from-transparent via-neutral-200 to-transparent" />
+          <div className="order-[-1] basis-full h-0" aria-hidden />
 
           {/* Filtros */}
           <FancySelect
@@ -382,8 +383,6 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
             placeholder={value.campoFecha === "fecha_completada" ? "Ganado entre…" : "Creado entre…"}
           />
 
-          <div className="w-px h-8 bg-gradient-to-b from-transparent via-neutral-200 to-transparent" />
-
           {/* Mis casos toggle */}
           {meId && (
             <motion.button
@@ -391,7 +390,7 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
               whileHover={{ scale: value.soloMios ? 1.02 : 1.01 }}
               onClick={() => onChange({ ...value, soloMios: !value.soloMios })}
               className={cn(
-                "h-11 px-4 rounded-xl text-[13px] font-ui font-black uppercase tracking-[0.12em] flex items-center gap-2 transition-all relative overflow-hidden",
+                "order-[-4] h-11 px-4 rounded-xl text-[13px] font-ui font-black uppercase tracking-[0.12em] flex items-center gap-2 transition-all relative overflow-hidden",
                 value.soloMios
                   ? "bg-gradient-to-br from-brand-orange to-amber-500 text-white shadow-lg shadow-brand-orange/30 ring-2 ring-brand-orange/40 ring-offset-2 ring-offset-white"
                   : "bg-white/[0.04] text-ink-sub hover:bg-white/[0.08]"
@@ -406,14 +405,14 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
             </motion.button>
           )}
 
-          <div className="flex-1 min-w-[40px]" />
+          <div className="hidden" />
 
           {/* Counter + clear */}
-          <div className="flex items-center gap-3 pr-1">
+          <div className="order-[-2] flex items-center gap-3 pr-1">
             {typeof filtered === "number" && typeof total === "number" && (
               <div className="text-[13px] font-ui font-bold text-ink-sub tabular-nums">
                 {filtered === total ? (
-                  <span><span className="text-ink">{total}</span> casos</span>
+                  <span><span className="text-ink">{total}</span> {total === 1 ? "caso" : "casos"}</span>
                 ) : (
                   <span><span className="text-brand-orange">{filtered}</span> de {total}</span>
                 )}
