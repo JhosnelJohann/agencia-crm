@@ -229,14 +229,15 @@ export async function listarConversaciones(conexionId: string, filtros: repo.Fil
   // La resolución automática de la foto solo ocurre cuando llega o sale un mensaje nuevo — una
   // conversación vieja sin actividad reciente se quedaría sin foto para siempre. Al listar (y al
   // abrir, ver abajo) se pide de una vez, sin bloquear la respuesta.
-  for (const c of conversaciones) if (fotoNecesitaRefresco(c)) notifyPedirFoto(c.id).catch(() => {});
+  // También los @lid: el worker intenta resolver su número real (se limita a un intento cada 30 min por chat).
+  for (const c of conversaciones) if (fotoNecesitaRefresco(c) || c.wa_jid.endsWith("@lid")) notifyPedirFoto(c.id).catch(() => {});
   return conversaciones;
 }
 
 export async function obtenerConversacion(id: string) {
   const conversacion = await repo.getConversacion(id);
   if (!conversacion) return null;
-  if (fotoNecesitaRefresco(conversacion)) notifyPedirFoto(id).catch(() => {});
+  if (fotoNecesitaRefresco(conversacion) || conversacion.wa_jid.endsWith("@lid")) notifyPedirFoto(id).catch(() => {});
   const tags = await repo.tagsDeConversacion(id);
   return { ...conversacion, tags };
 }

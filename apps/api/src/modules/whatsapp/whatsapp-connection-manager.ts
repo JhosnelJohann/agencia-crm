@@ -137,13 +137,21 @@ export async function actualizarFotoConversacion(conversacionId: string, forzar 
   const ultimo = fotoPedidaAt.get(conversacionId) || 0;
   if (!forzar && Date.now() - ultimo < ESPERA_ENTRE_PEDIDOS_MS) return;
   fotoPedidaAt.set(conversacionId, Date.now());
-  const conversacion = await repo.getConversacion(conversacionId);
-  if (!conversacion || !service.fotoNecesitaRefresco(conversacion)) return;
+  let conversacion = await repo.getConversacion(conversacionId);
+  if (!conversacion) return;
   const p = await proveedorDe(conversacion.conexion_id);
+  if (conversacion.wa_jid.endsWith("@lid")) {
+    const pn = (await repo.pnDeLid(conversacion.conexion_id, conversacion.wa_jid)) || (await p.resolverPnDeLid(conversacion.conexion_id, conversacion.wa_jid));
+    if (pn) {
+      await service.reconciliarLid(conversacion.conexion_id, conversacion.wa_jid, pn);
+      conversacion = (await repo.getConversacionPorJid(conversacion.conexion_id, pn)) || conversacion;
+    }
+  }
+  if (!service.fotoNecesitaRefresco(conversacion)) return;
   const urlCdn = await p.resolverFotoPerfil(conversacion.conexion_id, conversacion.wa_jid);
   const local = urlCdn ? await guardarFotoPerfil(conversacion.conexion_id, conversacion.wa_jid, urlCdn) : null;
   const info = await p.resolverInfoPerfil(conversacion.conexion_id, conversacion.wa_jid);
-  await service.registrarFotoPerfilResuelta(conversacionId, local, info);
+  await service.registrarFotoPerfilResuelta(conversacion.id, local, info);
 }
 
 /** Tras un mensaje entrante: si la conversación aún no tiene foto (o caducó), se descarga. */

@@ -114,6 +114,7 @@ export class MetaCloudWhatsAppProvider implements WhatsAppProvider {
   onContactoResuelto(): void {}
   async resolverFotoPerfil(): Promise<string | null> { return null; } // la Cloud API no expone fotos de perfil
   async resolverInfoPerfil(): Promise<string | null> { return null; }
+  async resolverPnDeLid(): Promise<string | null> { return null; }
   async marcarLeidos(): Promise<void> {} // la Cloud API marca leído por mensaje vía webhook propio (fuera de alcance)
   onLidMapping(): void {}
   onCambioMensaje(): void {}
