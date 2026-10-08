@@ -26,7 +26,7 @@ export function SegmentDonut({ segments, size = 180, centerLabel = "total" }: { 
   const shown = hot != null ? segments[hot] : null;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-6">
+    <div className="flex flex-col sm:flex-row items-center gap-5">
       <div className="relative shrink-0" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" role="img"
           aria-label={segments.map((s) => `${s.name}: ${s.value}`).join(", ")}>
@@ -46,12 +46,12 @@ export function SegmentDonut({ segments, size = 180, centerLabel = "total" }: { 
           <div className="mt-1 text-[10px] uppercase tracking-[2px] font-semibold text-ink-muted">{shown ? shown.name : centerLabel}</div>
         </div>
       </div>
-      <ul className="w-full space-y-2">
+      <ul className="w-full min-w-0 space-y-2">
         {segments.map((s, i) => (
           <li key={s.name} onPointerEnter={() => setHot(i)} onPointerLeave={() => setHot(null)}
             className={`flex items-center gap-3 rounded-xl px-2 py-1.5 transition ${hot === i ? "bg-black/[0.04]" : ""}`}>
             <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: s.color }} />
-            <span className="flex-1 text-sm text-ink-sub">{s.name}</span>
+            <span className="flex-1 min-w-0 truncate whitespace-nowrap text-sm text-ink-sub">{s.name}</span>
             <span className="font-bold tabular-nums text-ink">{s.value}</span>
             <span className="w-10 text-right text-xs tabular-nums text-ink-muted">{total ? Math.round((s.value / total) * 100) : 0}%</span>
           </li>
