@@ -12,6 +12,7 @@ import { KanbanTareas } from "@/components/tareas/KanbanTareas";
 import { TareasPorFecha } from "@/components/tareas/TareasPorFecha";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { FancySelect } from "@/components/ui/FancySelect";
+import { StackedFlow } from "@/components/charts/StackedFlow";
 import { DateRangePopover, type DateRange } from "@/components/ui/DateRangePopover";
 import {
   consultaDeTareas, vinculoGuardado, ETIQUETAS_VINCULO, VINCULOS, VINCULO_POR_DEFECTO,
@@ -322,6 +323,18 @@ export default function TareasPage() {
           <StatChip icon={AlertTriangle} label="Vencidas" value={stats.vencidas} color="#e30b0b" />
           <StatChip icon={CheckSquare} label="Completadas" value={stats.completadas} color="#16b91a" />
         </motion.div>
+
+        {stats.pendientes + stats.enProgreso + stats.vencidas + stats.completadas > 0 && (
+          <div className="glass-3d rounded-[24px] px-5 py-4 mb-6">
+            <div className="kicker !text-[10.5px] mb-3">Estado del trabajo</div>
+            <StackedFlow segments={[
+              { label: "Pendientes", value: stats.pendientes, color: "#5d8fa8" },
+              { label: "En progreso", value: stats.enProgreso, color: "#e8581a" },
+              { label: "Vencidas", value: stats.vencidas, color: "#dc2626" },
+              { label: "Completadas", value: stats.completadas, color: "#16a34a" },
+            ]} />
+          </div>
+        )}
 
         {/* Toolbar: tabs scope + search + filters */}
         <motion.div

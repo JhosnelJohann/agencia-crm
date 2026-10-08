@@ -1497,3 +1497,13 @@ html.fx-off .flow-pulse { display: none; }
   .palette-pop { animation: none; }
   .app-main :is(button, a)[class*="rounded"]:not(:disabled):active { transform: none; }
 }
+
+/* Franjas diagonales que avanzan sobre una barra de composición (StackedFlow). */
+.flow-stripes {
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0.22) 75%, transparent 75%);
+  background-size: 18px 18px;
+  animation: flow-stripes 1.2s linear infinite;
+}
+@keyframes flow-stripes { to { background-position: 18px 0; } }
+html.fx-off .flow-stripes { animation: none; }
+@media (prefers-reduced-motion: reduce) { .flow-stripes { animation: none; } }

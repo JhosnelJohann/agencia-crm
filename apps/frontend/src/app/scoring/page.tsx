@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { SegmentDonut } from "@/components/charts/SegmentDonut";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, Switch, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +59,16 @@ export default function ScoringPage() {
           <StatTile label="Fríos" value={d ? d.frios : null} icon="hourglass_done" delay={0.12} />
           <button onClick={() => setEdit({ ...VACIA })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Nueva regla</button>
         </ModuleHero>
+
+        {d && total > 0 && (
+          <Panel className="mb-5" kicker="Distribución" title="Temperatura de la base" icon="fire" delay={0.03}>
+            <SegmentDonut centerLabel="contactos" segments={[
+              { name: "Calientes", value: d.calientes, color: "#e11d48" },
+              { name: "Tibios", value: d.tibios, color: "#f59e0b" },
+              { name: "Fríos", value: d.frios, color: "#0891b2" },
+            ]} />
+          </Panel>
+        )}
 
         <div className="grid grid-cols-12 gap-5">
           <Panel className="col-span-12 xl:col-span-7" kicker="Ranking" title="Contactos por temperatura" icon="trophy" delay={0.05}>
