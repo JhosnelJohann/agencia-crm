@@ -51,6 +51,15 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const inputCls = "w-full h-11 px-3.5 rounded-xl bg-black/25 border border-line text-sm text-ink outline-none transition focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20";
 const labelCls = "text-[10.5px] font-bold uppercase tracking-[2px] text-ink-sub block mb-1.5";
 
+/** Blanco o tinta según la luminosidad del color de fondo (los colores de servicio los elige el usuario). */
+function textoSobre(hex: string) {
+  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex || "");
+  if (!m) return "#fff";
+  const [r, g, b] = m.slice(1).map((h) => { const c = parseInt(h, 16) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return (1.05 / (L + 0.05)) >= 4.5 ? "#fff" : "#0f172a";
+}
+
 export default function ServiciosPage() {
   const [servicios, setServicios] = useState<Servicio[] | null>(null);
   const [modal, setModal] = useState<typeof DEFAULT_FORM | null>(null);
@@ -222,7 +231,7 @@ export default function ServiciosPage() {
                         <div className="h-14 w-14 rounded-2xl flex items-center justify-center" style={{ background: `${color}22`, boxShadow: `inset 0 0 0 1px ${color}44` }}>
                           <AppIcon name={ICONOS[i % ICONOS.length]} size={38} />
                         </div>
-                        <span className="text-[10.5px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-lg text-white" style={{ background: color }}>{t.codigo}</span>
+                        <span className="text-[10.5px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-lg" style={{ background: color, color: textoSobre(color) }}>{t.codigo}</span>
                       </div>
                       <h3 className="font-display font-extrabold text-[26px] leading-tight text-ink">{t.nombre}</h3>
                       {t.descripcion && <p className="mt-1 text-sm text-ink-sub line-clamp-2">{t.descripcion}</p>}

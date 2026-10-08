@@ -297,7 +297,7 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
         {/* Row 1: search + filtros principales */}
         <div className="flex items-center gap-2 p-2.5 flex-wrap">
           {/* Search hero */}
-          <div className="relative flex-1 min-w-[240px] max-w-md">
+          <div className="relative flex-1 min-w-[220px] max-w-[300px]">
             <div className={cn(
               "absolute left-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg flex items-center justify-center transition-all pointer-events-none",
               value.q ? "bg-brand-orange/15 text-brand-orange" : "text-ink-sub"

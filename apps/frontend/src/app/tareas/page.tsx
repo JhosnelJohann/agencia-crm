@@ -407,7 +407,7 @@ export default function TareasPage() {
 
           {/* Vista toggle */}
           <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.04]">
-            <button onClick={() => setVista("lista")} className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "lista" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
+            <button onClick={() => setVista("lista")} aria-label="Vista de lista" title="Lista" className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "lista" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
               <LayoutList className="h-3.5 w-3.5" strokeWidth={2} />
             </button>
             <button onClick={() => setVista("kanban")} title="Tablero por estado" className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "kanban" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
@@ -428,7 +428,7 @@ export default function TareasPage() {
               className="h-9 pl-9 pr-8 rounded-xl bg-white/[0.04] border border-transparent text-sm outline-none transition-all focus:bg-white/[0.06] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 w-48"
             />
             {searchQ && (
-              <button onClick={() => setSearchQ("")} className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 rounded-md hover:bg-white/[0.08] flex items-center justify-center">
+              <button onClick={() => setSearchQ("")} aria-label="Borrar búsqueda" className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 rounded-md hover:bg-white/[0.08] flex items-center justify-center">
                 <X className="h-3 w-3 text-ink-sub" />
               </button>
             )}

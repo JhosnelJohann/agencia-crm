@@ -29,7 +29,7 @@ function SortableRow({ stage, onEdit, onDelete, onAutomations }: { stage: Pipeli
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.3 : 1 }}
       className="glass rounded-2xl p-4 flex items-center gap-3"
     >
-      <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-ink-sub hover:text-brand-orange">
+      <button {...attributes} {...listeners} aria-label={`Arrastrar para reordenar ${stage.label}`} title="Arrastrar para reordenar" className="h-9 w-9 -ml-2 rounded-lg flex items-center justify-center cursor-grab active:cursor-grabbing text-ink-sub hover:text-brand-orange hover:bg-black/[0.04]">
         <GripVertical className="h-4 w-4" />
       </button>
       <div className="h-8 w-8 rounded-lg shrink-0" style={{ background: stage.color, boxShadow: `0 0 12px ${stage.color}40` }} />
@@ -90,7 +90,7 @@ function StageEditorModal({ stage, onClose, onSaved }: { stage: Partial<Pipeline
       <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} onClick={(e) => e.stopPropagation()} className="rounded-3xl p-8 max-w-md w-full modal-surface">
         <div className="flex items-center justify-between mb-5">
           <h3 className="font-display text-xl font-black">{stage?.id ? "Editar etapa" : "Nueva etapa"}</h3>
-          <button onClick={onClose} className="h-8 w-8 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} aria-label="Cerrar" className="h-9 w-9 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center"><X className="h-4 w-4" /></button>
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
@@ -185,7 +185,7 @@ function AutomationsDrawer({ stage, onClose }: { stage: PipelineStage; onClose: 
           <div className="text-[12px] font-ui uppercase tracking-wider text-ink-sub">Automations</div>
           <h3 className="font-display text-xl font-black">{stage.label}</h3>
         </div>
-        <button onClick={onClose} className="h-9 w-9 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center"><X className="h-4 w-4" /></button>
+        <button onClick={onClose} aria-label="Cerrar" className="h-9 w-9 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-center"><X className="h-4 w-4" /></button>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-3">
         {autos === null ? (
@@ -204,7 +204,7 @@ function AutomationsDrawer({ stage, onClose }: { stage: PipelineStage; onClose: 
                   </div>
                   <div className="flex items-center gap-1">
                     <label className="flex items-center gap-1 text-[10px] cursor-pointer"><input type="checkbox" checked={a.activa} onChange={(e) => updateAuto(a, { activa: e.target.checked })} /> activa</label>
-                    <button onClick={() => removeAuto(a)} className="h-7 w-7 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-500/10 text-brand-red flex items-center justify-center"><Trash className="h-3.5 w-3.5" /></button>
+                    <button onClick={() => removeAuto(a)} aria-label="Quitar automatización" title="Quitar" className="h-9 w-9 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-500/10 text-brand-red flex items-center justify-center"><Trash className="h-3.5 w-3.5" /></button>
                   </div>
                 </div>
                 <ConfigEditor auto={a} onChange={(cfg) => updateAuto(a, { config: cfg })} />

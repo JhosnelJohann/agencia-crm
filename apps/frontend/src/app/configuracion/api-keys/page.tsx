@@ -82,7 +82,7 @@ export default function ApiKeysPage() {
               Integraciones
             </div>
             <h1 className="font-display text-4xl font-black leading-tight">
-              <span className="text-gradient-orange">API Keys</span>
+              <span className="text-gradient-orange">Claves de API</span>
             </h1>
             <p className="mt-2 text-ink-sub">{keys ? `${keys.length} keys activas` : "Cargando…"}</p>
           </div>

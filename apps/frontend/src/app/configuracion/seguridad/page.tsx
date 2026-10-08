@@ -114,7 +114,7 @@ export default function SeguridadPage() {
             <div className="bg-bg-darkcard rounded-2xl border border-line p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-black text-[15px]">{sesiones.length} sesione{sesiones.length !== 1 ? "s" : ""} registrada{sesiones.length !== 1 ? "s" : ""}</h3>
-                <button onClick={load} className="h-8 w-8 rounded-lg hover:bg-white/[0.04] flex items-center justify-center text-ink-sub"><RefreshCw className="h-4 w-4" /></button>
+                <button onClick={load} aria-label="Actualizar" title="Actualizar" className="h-9 w-9 rounded-lg hover:bg-black/[0.04] flex items-center justify-center text-ink-sub"><RefreshCw className="h-4 w-4" /></button>
               </div>
               {loading ? (
                 <div className="text-center py-8"><Loader2 className="h-5 w-5 animate-spin inline text-ink-sub" /></div>
@@ -176,7 +176,7 @@ export default function SeguridadPage() {
             <div className="bg-bg-darkcard rounded-2xl border border-line p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-black text-[15px]">{auditoria.length} eventos de auditoría</h3>
-                <button onClick={load} className="h-8 w-8 rounded-lg hover:bg-white/[0.04] flex items-center justify-center text-ink-sub"><RefreshCw className="h-4 w-4" /></button>
+                <button onClick={load} aria-label="Actualizar" title="Actualizar" className="h-9 w-9 rounded-lg hover:bg-black/[0.04] flex items-center justify-center text-ink-sub"><RefreshCw className="h-4 w-4" /></button>
               </div>
               {loading ? (
                 <div className="text-center py-8"><Loader2 className="h-5 w-5 animate-spin inline text-ink-sub" /></div>

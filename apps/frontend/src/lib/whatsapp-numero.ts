@@ -38,3 +38,16 @@ export function formatearNumeroWhatsApp(jidODigitos: string): NumeroFormateado {
   if (!parsed || !parsed.isValid()) return { texto: `+${digitos}`, bandera: null };
   return { texto: parsed.formatInternational(), bandera: banderaDesdeISO(parsed.country) };
 }
+
+/**
+ * Nombre visible de una conversación: el nombre de WhatsApp si existe; si no, el teléfono formateado; y si
+ * el JID es un `@lid` (identificador opaco, no un teléfono), "Contacto de WhatsApp" en lugar de los dígitos.
+ */
+export function nombreConversacion(c: { nombre_whatsapp?: string | null; wa_jid: string }): string {
+  const n = (c.nombre_whatsapp || "").trim();
+  if (n) return n;
+  const [, servidor] = c.wa_jid.split("@");
+  if (servidor === "lid") return "Contacto de WhatsApp";
+  if (servidor === "g.us") return "Grupo de WhatsApp";
+  return formatearNumeroWhatsApp(c.wa_jid).texto;
+}

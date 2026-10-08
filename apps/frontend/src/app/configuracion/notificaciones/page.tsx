@@ -168,6 +168,9 @@ function ToggleRow({ icon: Icon, label, desc, value, onChange, color, saving }: 
       {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-ink-sub" />}
       <button
         onClick={() => onChange(!value)}
+        role="switch"
+        aria-checked={value}
+        aria-label={label}
         className={cn("relative h-6 w-11 rounded-full transition-colors", value ? "bg-brand-orange" : "bg-neutral-300")}
       >
         <motion.div

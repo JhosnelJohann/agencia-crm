@@ -19,6 +19,9 @@ interface PorUsuario { user_id: string; nombre: string; foto_perfil_url: string 
 interface PorTramite { tramite_id: string; tramite_nombre: string; tramite_codigo: string; cantidad: number; puntos: string; monto_usd: string; }
 interface Totales { total_puntos: string; total_usd: string; negociaciones: number; }
 
+/** Puntos sin decimales cuando son enteros (0 → "0", 12.5 → "12.50"). */
+const fmtPts = (v: any) => { const n = Number(v) || 0; return Number.isInteger(n) ? String(n) : n.toFixed(2); };
+
 export default function ReportesPage() {
   const { isAdmin } = useCurrentUser();
   const [tab, setTab] = useState<Tab>("puntajes");
@@ -83,23 +86,23 @@ export default function ReportesPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero shape="dodecahedron" icon="bar_chart" kicker="Análisis" title="Reportes" subtitle="Puntajes, asistencia y rendimiento del equipo.">
+        <ModuleHero shape="dodecahedron" icon="bar_chart" kicker="Operación · análisis" title="Reportes" accent="del equipo" subtitle="Puntajes, asistencia y rendimiento del equipo.">
           {tab === "puntajes" && (
             <>
               <motion.button
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={() => exportFile("xlsx")}
-                className="h-11 px-5 rounded-2xl bg-brand-green text-white font-ui text-[13px] font-bold uppercase tracking-[0.1em] shadow-lg shadow-green-500/25 hover:shadow-xl flex items-center justify-center gap-2 transition-shadow"
+                className="h-11 px-5 rounded-2xl border border-line bg-white/[0.04] hover:border-brand-primary/30 hover:bg-white/[0.08] text-ink font-ui text-[13px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition"
               >
-                <FileSpreadsheet className="h-4 w-4" strokeWidth={2} />
+                <FileSpreadsheet className="h-4 w-4 text-[#15803d]" strokeWidth={2} />
                 Excel
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={() => exportFile("pdf")}
-                className="h-11 px-5 rounded-2xl bg-brand-red text-white font-ui text-[13px] font-bold uppercase tracking-[0.1em] shadow-lg shadow-red-500/25 hover:shadow-xl flex items-center justify-center gap-2 transition-shadow"
+                className="h-11 px-5 rounded-2xl border border-line bg-white/[0.04] hover:border-brand-primary/30 hover:bg-white/[0.08] text-ink font-ui text-[13px] font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition"
               >
-                <FileText className="h-4 w-4" strokeWidth={2} />
+                <FileText className="h-4 w-4 text-[#b91c1c]" strokeWidth={2} />
                 PDF
               </motion.button>
             </>
@@ -195,7 +198,7 @@ export default function ReportesPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3 mb-5">
-              <StatTile icon="chart_increasing" label="Total puntos" value={totales ? Number(totales.total_puntos) : null} decimals={2} tone="accent" />
+              <StatTile icon="chart_increasing" label="Total puntos" value={totales ? Number(totales.total_puntos) : null} decimals={totales && !Number.isInteger(Number(totales.total_puntos)) ? 2 : 0} tone="accent" />
               <StatTile icon="handshake" label="Negociaciones" value={totales ? Number(totales.negociaciones) : null} tone="neutral" delay={0.05} />
             </div>
 
@@ -229,7 +232,7 @@ export default function ReportesPage() {
                           {u.cargo_codigo && <div className="text-[10px] text-ink-sub uppercase tracking-wider">{u.cargo_codigo.replace(/_/g, " ")}</div>}
                         </div>
                         <div className="text-right shrink-0">
-                          <div className="text-sm font-bold text-brand-orange">{Number(u.puntos).toFixed(2)}</div>
+                          <div className="text-sm font-bold text-brand-orange">{fmtPts(u.puntos)}</div>
                         </div>
                       </motion.div>
                     ))}
@@ -255,7 +258,7 @@ export default function ReportesPage() {
                         <div className="flex items-center justify-between mb-1">
                           <div className="text-sm font-semibold truncate">{t.tramite_nombre || "Sin trámite"}</div>
                           <div className="flex items-center gap-2 text-[11px] text-ink-sub shrink-0">
-                            <span className="font-bold text-ink-sub">{Number(t.puntos).toFixed(2)} pts</span>
+                            <span className="font-bold text-ink-sub">{fmtPts(t.puntos)} pts</span>
                             <span>· {t.cantidad}</span>
                           </div>
                         </div>
@@ -301,7 +304,7 @@ export default function ReportesPage() {
                         <td className="py-2 text-ink-sub">{d.tramite_nombre || "—"}</td>
                         <td className="py-2">{d.usuario_nombre}</td>
                         <td className="py-2 text-[11px] text-ink-sub uppercase tracking-wider">{d.cargo_codigo?.replace(/_/g, " ") || "—"}</td>
-                        <td className="py-2 text-right font-bold">{Number(d.puntos).toFixed(2)}</td>
+                        <td className="py-2 text-right font-bold">{fmtPts(d.puntos)}</td>
                         <td className="py-2 text-[11px] text-ink-sub">{d.fecha_creacion_oportunidad ? new Date(d.fecha_creacion_oportunidad).toLocaleDateString("es") : "—"}</td>
                         <td className="py-2 text-[11px] text-ink-sub">{d.fecha ? new Date(d.fecha).toLocaleDateString("es") : "—"}</td>
                         <td className="py-2 text-right">
@@ -366,7 +369,7 @@ function DonaCard({ title, icon, data }: { title: string; icon: AppIconName; dat
               </Pie>
               <Tooltip
                 contentStyle={{ background: "#1e293b", border: "1px solid rgba(226, 232, 240,0.1)", borderRadius: 12, fontSize: 12, color: "#e2e8f0" }}
-                formatter={(v: any) => [`${Number(v).toFixed(2)} pts`, ""]}
+                formatter={(v: any) => [`${fmtPts(v)} pts`, ""]}
               />
               <Legend
                 iconType="circle"
@@ -449,16 +452,16 @@ function AsistenciaTab({ isAdmin }: { isAdmin: boolean }) {
           <motion.button
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
             onClick={() => exportFile("xlsx")}
-            className="h-10 px-4 rounded-xl bg-emerald-600 text-white text-[13px] font-ui font-bold uppercase tracking-wider shadow-md hover:shadow-lg flex items-center gap-1.5"
+            className="h-10 px-4 rounded-xl border border-line bg-white/[0.04] hover:border-brand-primary/30 text-ink text-[13px] font-ui font-bold uppercase tracking-wider flex items-center gap-1.5 transition"
           >
-            <FileSpreadsheet className="h-4 w-4" /> Excel
+            <FileSpreadsheet className="h-4 w-4 text-[#15803d]" /> Excel
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
             onClick={() => exportFile("pdf")}
-            className="h-10 px-4 rounded-xl bg-red-600 text-white text-[13px] font-ui font-bold uppercase tracking-wider shadow-md hover:shadow-lg flex items-center gap-1.5"
+            className="h-10 px-4 rounded-xl border border-line bg-white/[0.04] hover:border-brand-primary/30 text-ink text-[13px] font-ui font-bold uppercase tracking-wider flex items-center gap-1.5 transition"
           >
-            <FileText className="h-4 w-4" /> PDF
+            <FileText className="h-4 w-4 text-[#b91c1c]" /> PDF
           </motion.button>
         </div>
       </div>

@@ -9,9 +9,9 @@ import { AppShell } from "@/components/AppShell";
 const SECTIONS = [
   { href: "/configuracion/usuarios", label: "Usuarios del equipo", desc: "Crear, editar y asignar roles", Icon: Users, color: "#e8581a" },
   { href: "/configuracion/departamentos", label: "Departamentos", desc: "Estructura organizacional", Icon: Building2, color: "#f0b040" },
-  { href: "/configuracion/pipeline", label: "Pipeline & Automations", desc: "Etapas, colores, disparadores y campos obligatorios", Icon: Cog, color: "#c96a3d" },
+  { href: "/configuracion/pipeline", label: "Pipeline y automatizaciones", desc: "Etapas, colores, disparadores y campos obligatorios", Icon: Cog, color: "#c96a3d" },
   { href: "/configuracion/notificaciones", label: "Notificaciones", desc: "Preferencias de alertas", Icon: Bell, color: "#e30b0b" },
-  { href: "/configuracion/api-keys", label: "API Keys", desc: "Llaves públicas para integraciones externas", Icon: KeyRound, color: "#5d8fa8" },
+  { href: "/configuracion/api-keys", label: "Claves de API", desc: "Llaves públicas para integraciones externas", Icon: KeyRound, color: "#5d8fa8" },
   { href: "/configuracion/seguridad", label: "Seguridad", desc: "Auditoría y sesiones activas", Icon: ShieldCheck, color: "#94a3b8" }
 ];
 
