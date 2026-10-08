@@ -16,19 +16,20 @@ import { cn } from "@/lib/utils";
 /**
  * Iconos 2D del CRM: Phosphor duotono dentro de una "ficha" con el tono de su sección.
  * Conserva los nombres del antiguo Icon3D (Fluent Emoji 3D) para que los usos no cambien de lógica.
- * Los tonos son de saturación media: se leen igual sobre el menú oscuro y sobre el contenido claro.
+ * Cada tono tiene dos variantes: `l` (brillante, para el menú/barra/modales oscuros) y `d` (intensa,
+ * para el contenido claro de .app-main). Qué variante se usa lo decide el CSS (.app-icon en globals.css).
  */
 const TONE = {
-  orange: "#e8581a",
-  blue: "#3b82f6",
-  violet: "#8b5cf6",
-  green: "#16a34a",
-  amber: "#d97706",
-  rose: "#e11d48",
-  slate: "#64748b",
-  cyan: "#0891b2",
-  teal: "#0d9488",
-  pink: "#db2777",
+  orange: { d: "#e8581a", l: "#fb7f45" },
+  blue: { d: "#2563eb", l: "#60a5fa" },
+  violet: { d: "#7c3aed", l: "#a78bfa" },
+  green: { d: "#16a34a", l: "#4ade80" },
+  amber: { d: "#d97706", l: "#fbbf24" },
+  rose: { d: "#e11d48", l: "#fb7185" },
+  slate: { d: "#475569", l: "#cbd5e1" },
+  cyan: { d: "#0891b2", l: "#22d3ee" },
+  teal: { d: "#0d9488", l: "#2dd4bf" },
+  pink: { d: "#db2777", l: "#f472b6" },
 } as const;
 type Tone = keyof typeof TONE;
 
@@ -109,19 +110,9 @@ const ICONS = {
 
 export type AppIconName = keyof typeof ICONS;
 
-export function iconTone(name: AppIconName): string {
-  return TONE[ICONS[name][1]];
-}
-
-/** Ficha cuadrada redondeada con fondo tenue del tono; reutilizada por BrandLogo para alinear. */
-export function iconTileStyle(color: string, size: number, solid = false): CSSProperties {
-  return {
-    width: size,
-    height: size,
-    borderRadius: Math.round(size * 0.3),
-    background: solid ? color : `${color}1f`,
-    boxShadow: `inset 0 0 0 1px ${solid ? "transparent" : `${color}33`}`,
-  };
+/** Variables CSS de un tono; `.app-icon` (globals.css) elige la variante según la superficie. */
+export function toneVars(d: string, l: string, size: number): CSSProperties {
+  return { "--ic-d": d, "--ic-l": l, width: size, height: size, borderRadius: Math.round(size * 0.3) } as CSSProperties;
 }
 
 export function AppIcon({
@@ -136,15 +127,22 @@ export function AppIcon({
   className?: string;
 }) {
   const [Glyph, tone] = ICONS[name];
-  const color = TONE[tone];
-  if (bare) return <Glyph size={size} weight="duotone" color={color} className={cn("shrink-0", className)} aria-hidden />;
+  const { d, l } = TONE[tone];
+  if (bare) {
+    return (
+      <span className={cn("app-icon-bare inline-flex shrink-0", className)} style={{ "--ic-d": d, "--ic-l": l } as CSSProperties} aria-hidden>
+        <Glyph size={size} weight="duotone" />
+      </span>
+    );
+  }
   return (
     <span
       className={cn("app-icon inline-flex items-center justify-center shrink-0", className)}
-      style={iconTileStyle(color, size, active)}
+      data-active={active || undefined}
+      style={toneVars(d, l, size)}
       aria-hidden
     >
-      <Glyph size={Math.round(size * 0.58)} weight={active ? "fill" : "duotone"} color={active ? "#fff" : color} />
+      <Glyph size={Math.round(size * 0.58)} weight={active ? "fill" : "duotone"} />
     </span>
   );
 }

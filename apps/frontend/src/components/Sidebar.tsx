@@ -35,7 +35,7 @@ export const NAV_GROUPS: Group[] = [
     title: "Marketing",
     items: [
       { href: "/embudos", label: "Embudos", icon: "satellite_antenna" },
-      { href: "/campanas", label: "Campañas", icon: { brand: "meta" } },
+      { href: "/campanas", label: "Campañas", icon: "megaphone" },
       { href: "/anuncios", label: "Anuncios", icon: { brand: "meta" } },
       { href: "/scoring", label: "Scoring", icon: "fire" },
       { href: "/redes", label: "Redes", icon: { brand: "instagram" } },

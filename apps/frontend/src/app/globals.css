@@ -1316,7 +1316,18 @@ html.fx-off .shimmer-btn::after { display: none; }
 .shimmer-btn::before { display: none; }
 
 /* --- Iconos 2D (AppIcon / BrandLogo) ------------------------------------------------------ */
-.app-icon { transition: transform 0.2s var(--ease-out), filter 0.2s var(--ease-out); }
+/* Ficha: fondo y borde tenues del tono. Superficies oscuras (menú, barra, modales, .dark-island) usan la
+   variante brillante --ic-l; el contenido claro de .app-main usa la intensa --ic-d. */
+.app-icon, .app-icon-bare { --ic: var(--ic-l); color: var(--ic); }
+.app-main .app-icon, .app-main .app-icon-bare { --ic: var(--ic-d); }
+.app-main :is(.modal-surface, .dark-island) :is(.app-icon, .app-icon-bare) { --ic: var(--ic-l); }
+.app-icon {
+  background: color-mix(in srgb, var(--ic) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ic) 30%, transparent);
+  transition: transform 0.2s var(--ease-out), filter 0.2s var(--ease-out);
+}
+.app-icon[data-active] { background: var(--ic-d); box-shadow: 0 4px 14px -4px color-mix(in srgb, var(--ic-d) 70%, transparent); color: #fff; }
+.app-icon-brand[data-active] { background: #fff; box-shadow: 0 4px 14px -4px color-mix(in srgb, var(--ic-d) 60%, transparent); }
 a:hover .app-icon, button:hover .app-icon { transform: translateY(-1px); filter: brightness(1.08); }
 
 /* --- Motion global: todo lo que se monta, entra con gracia ------------------------------------ */

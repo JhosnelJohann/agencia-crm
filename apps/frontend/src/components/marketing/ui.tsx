@@ -2,7 +2,7 @@
 import { useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "@/lib/bootstrap-icons";
-import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
+import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 import { NumberTicker } from "@/components/magic/NumberTicker";
 import { cn } from "@/lib/utils";
 
@@ -14,9 +14,9 @@ export const labelCls = "text-[10.5px] font-bold uppercase tracking-[2px] text-i
 export const btnGhost = "h-11 px-5 rounded-2xl border border-line bg-white/[0.04] hover:bg-white/[0.08] hover:border-brand-primary/30 text-ink font-bold text-sm inline-flex items-center justify-center gap-2 transition";
 export const btnAurora = "btn-aurora h-11 px-5 rounded-2xl text-white font-bold text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none";
 
-/** Encabezado de módulo: icono 3D flotante, kicker, titular Barlow y acciones/indicadores a la derecha. */
+/** Encabezado de módulo: icono (o logo de la plataforma), kicker, titular Barlow y acciones/indicadores a la derecha. */
 export function ModuleHero({ icon, kicker, title, accent, subtitle, children }: {
-  icon: AppIconName; kicker: string; title: string; accent?: string; subtitle?: string; children?: React.ReactNode;
+  icon: NavIconRef; kicker: string; title: string; accent?: string; subtitle?: string; children?: React.ReactNode;
 }) {
   return (
     <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}
@@ -24,7 +24,7 @@ export function ModuleHero({ icon, kicker, title, accent, subtitle, children }: 
       <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.24), transparent 72%)" }} />
       <div className="relative flex items-center justify-between gap-6 flex-wrap">
         <div className="flex items-center gap-5 min-w-0">
-          <AppIcon name={icon} size={64} className="shrink-0" />
+          <NavIcon icon={icon} size={64} className="shrink-0" />
           <div className="min-w-0">
             <div className="kicker">{kicker}</div>
             <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">
@@ -41,7 +41,7 @@ export function ModuleHero({ icon, kicker, title, accent, subtitle, children }: 
 
 /** Indicador con número animado. */
 export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neutral", delay = 0, decimals = 0 }: {
-  label: string; value: number | null; suffix?: string; prefix?: string; hint?: string; icon?: AppIconName; tone?: "neutral" | "accent" | "good" | "bad"; delay?: number; decimals?: number;
+  label: string; value: number | null; suffix?: string; prefix?: string; hint?: string; icon?: NavIconRef; tone?: "neutral" | "accent" | "good" | "bad"; delay?: number; decimals?: number;
 }) {
   const ring = tone === "accent" ? "border-brand-primary/30 bg-brand-primary/[0.08]" : tone === "good" ? "border-brand-green/25 bg-brand-green/[0.06]" : tone === "bad" ? "border-brand-red/25 bg-brand-red/[0.06]" : "border-line bg-white/[0.03]";
   return (
@@ -49,7 +49,7 @@ export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neu
       className={cn("rounded-2xl border px-4 py-3 min-w-0 sm:min-w-[132px]", ring)}>
       <div className="flex items-center justify-between gap-3">
         <div className="text-[10.5px] uppercase tracking-[2px] text-ink-sub font-semibold">{label}</div>
-        {icon && <AppIcon name={icon} size={26} />}
+        {icon && <NavIcon icon={icon} size={26} />}
       </div>
       <div className="mt-1 font-display font-extrabold text-[34px] leading-none tabular-nums text-ink">
         <NumberTicker value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
@@ -61,7 +61,7 @@ export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neu
 
 /** Panel de cristal con cabecera. */
 export function Panel({ title, kicker, icon, right, children, className, delay = 0 }: {
-  title?: string; kicker?: string; icon?: AppIconName; right?: React.ReactNode; children: React.ReactNode; className?: string; delay?: number;
+  title?: string; kicker?: string; icon?: NavIconRef; right?: React.ReactNode; children: React.ReactNode; className?: string; delay?: number;
 }) {
   return (
     <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay }}
@@ -69,7 +69,7 @@ export function Panel({ title, kicker, icon, right, children, className, delay =
       {(title || kicker) && (
         <div className="flex items-center justify-between gap-3 mb-5">
           <div className="flex items-center gap-3">
-            {icon && <AppIcon name={icon} size={34} />}
+            {icon && <NavIcon icon={icon} size={34} />}
             <div>
               {kicker && <div className="kicker !text-[10.5px]">{kicker}</div>}
               {title && <h2 className="text-[28px] leading-none text-ink mt-1">{title}</h2>}
@@ -83,10 +83,10 @@ export function Panel({ title, kicker, icon, right, children, className, delay =
   );
 }
 
-export function EmptyState({ icon, title, text, action }: { icon: AppIconName; title: string; text: string; action?: React.ReactNode }) {
+export function EmptyState({ icon, title, text, action }: { icon: NavIconRef; title: string; text: string; action?: React.ReactNode }) {
   return (
     <div className="py-14 text-center">
-      <AppIcon name={icon} size={84} />
+      <NavIcon icon={icon} size={84} />
       <div className="mt-4 font-display font-bold text-[28px] uppercase tracking-wide text-ink">{title}</div>
       <p className="mt-1 text-ink-sub max-w-md mx-auto">{text}</p>
       {action && <div className="mt-5 flex justify-center">{action}</div>}
@@ -95,7 +95,7 @@ export function EmptyState({ icon, title, text, action }: { icon: AppIconName; t
 }
 
 export function Modal({ open, onClose, title, icon, children, width = "max-w-xl" }: {
-  open: boolean; onClose: () => void; title: string; icon?: AppIconName; children: React.ReactNode; width?: string;
+  open: boolean; onClose: () => void; title: string; icon?: NavIconRef; children: React.ReactNode; width?: string;
 }) {
   return (
     <AnimatePresence>
@@ -107,7 +107,7 @@ export function Modal({ open, onClose, title, icon, children, width = "max-w-xl"
             className={cn("glass-3d glass-blur rounded-[28px] p-7 w-full max-h-[92vh] overflow-y-auto scrollbar-thin", width)}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                {icon && <AppIcon name={icon} size={40} />}
+                {icon && <NavIcon icon={icon} size={40} />}
                 <h2 className="text-[30px] leading-none text-ink">{title}</h2>
               </div>
               <button onClick={onClose} aria-label="Cerrar" className="h-10 w-10 rounded-xl hover:bg-white/[0.08] flex items-center justify-center"><X className="h-4 w-4" /></button>
