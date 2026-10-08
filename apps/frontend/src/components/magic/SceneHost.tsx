@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useFx, useFpsGuard } from "./fx";
 
 const Scene3D = dynamic(() => import("./Scene3D"), { ssr: false });
+import { LoginVideo } from "./LoginVideo";
 
 /**
  * Cualquier fallo del fondo 3D (WebGL no disponible, chunk que no carga, excepción de render…)
@@ -40,6 +41,7 @@ export function SceneHost() {
   if (!hero) return null;
   return (
     <div className="scene-host" aria-hidden="true">
+      <LoginVideo />
       <div className="aurora-mesh" />
       {fx && (
         <SilentBoundary>
