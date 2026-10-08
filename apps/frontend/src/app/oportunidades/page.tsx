@@ -16,6 +16,8 @@ import { Spotlight } from "@/components/magic/Spotlight";
 import { ShimmerButton } from "@/components/magic/ShimmerButton";
 import { useStages, PipelineStage } from "@/lib/pipeline";
 import { TaperFunnel } from "@/components/charts/TaperFunnel";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { WireShape } from "@/components/motion/WireShape";
 import { FancySelect } from "@/components/ui/FancySelect";
 import { ContactoPicker } from "@/components/oportunidad/ContactoPicker";
 import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
@@ -295,7 +297,7 @@ function FilterBar({ value, onChange, tramites, users, meId, total, filtered }: 
         {/* Row 1: search + filtros principales */}
         <div className="flex items-center gap-2 p-2.5 flex-wrap">
           {/* Search hero */}
-          <div className="relative flex-1 min-w-[240px] max-w-md">
+          <div className="relative flex-1 min-w-[220px] max-w-[300px]">
             <div className={cn(
               "absolute left-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg flex items-center justify-center transition-all pointer-events-none",
               value.q ? "bg-brand-orange/15 text-brand-orange" : "text-ink-sub"
@@ -893,28 +895,28 @@ export default function OportunidadesPage() {
 
   return (
     <AppShell>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-3d rounded-[28px] px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap"
+          className="glass-3d rounded-[28px] px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden isolate"
         >
-          <div>
-            <div className="inline-flex items-center gap-2 text-brand-orange font-ui uppercase text-[13px] tracking-[0.15em] mb-3">
-              <Sparkle className="h-3.5 w-3.5" weight="fill" />
-              Pipeline
-            </div>
-            <h1 className="font-display text-h1 md:text-display-md font-black leading-[1.05]">
-              <span className="text-gradient-neon">Oportunidades</span>
-            </h1>
-            <p className="mt-2 text-ink-sub">
+          <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
+            <WireShape kind="dodecahedron" size={280} className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-50 -z-10 hidden lg:block" />
+          <div className="flex items-center gap-5 min-w-0">
+              <AppIcon name="bullseye" size={64} className="shrink-0" />
+              <div className="min-w-0">
+                <div className="kicker">Comercial · pipeline</div>
+                <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Oportunidades <span className="text-brand-orange text-orange-glow">en curso</span></h1>
+            <p className="mt-1.5 text-ink-sub text-[14px]">
               {/* El número REAL de casos que cumplen el filtro, no cuántos se han cargado. Antes
                   aquí salía la longitud del array recortado a 150 + abiertas. */}
               {Object.keys(columnas).length === 0
                 ? "Cargando…"
-                : `${totalFiltrado.toLocaleString("es")} casos · arrastra para cambiar etapa · doble click para detalle`}
+                : `${totalFiltrado.toLocaleString("es")} ${totalFiltrado === 1 ? "caso" : "casos"} · arrastra para cambiar etapa · doble clic para ver el detalle`}
             </p>
-          </div>
+              </div>
+            </div>
           <div className="flex flex-wrap items-center gap-2">
             {/* Alternador tablero ⇄ lista, que recuerda la elección — como en Contactos. */}
             <div className="inline-flex rounded-xl bg-black/[0.04] p-1">

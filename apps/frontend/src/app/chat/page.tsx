@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -687,8 +688,9 @@ export default function ChatPage() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-                className="relative z-10 flex flex-col items-center text-center px-6"
+                className="relative z-10 isolate flex flex-col items-center text-center px-6"
               >
+                <WireShape kind="octahedron" size={340} speed={0.6} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 -z-10" />
                 {/* Icono principal flotante con glow + anillos pulsantes */}
                 <div className="relative mb-6 h-24 w-24 flex items-center justify-center">
                   <motion.span

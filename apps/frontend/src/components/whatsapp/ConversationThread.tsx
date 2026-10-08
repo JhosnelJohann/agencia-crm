@@ -9,7 +9,7 @@ import { AudioMessage } from "@/components/chat/AudioMessage";
 import { ConversationComposer } from "./ConversationComposer";
 import { WhatsAppAvatar } from "./WhatsAppAvatar";
 import { AsignadoPicker, type UsuarioAsignable } from "./AsignadoPicker";
-import { formatearNumeroWhatsApp } from "@/lib/whatsapp-numero";
+import { formatearNumeroWhatsApp, nombreConversacion } from "@/lib/whatsapp-numero";
 import type { WhatsAppConversacionDetalle, WhatsAppMensaje, WhatsAppPipelineStage, WhatsAppTag } from "./types";
 
 /** Colores predefinidos para crear un tag sin salir del chat — los mismos tonos que ya usa el
@@ -310,9 +310,9 @@ export function ConversationThread({
           </button>
         )}
         <button onClick={onAbrirPerfil} className="flex-1 min-w-0 flex items-center gap-2.5 text-left rounded-lg -mx-1.5 px-1.5 py-0.5 hover:bg-black/[0.03] dark:hover:bg-white/5 transition" title="Ver perfil">
-          <WhatsAppAvatar fotoUrl={conversacion.foto_perfil_url} nombre={conversacion.nombre_whatsapp || conversacion.wa_jid} size={36} />
+          <WhatsAppAvatar fotoUrl={conversacion.foto_perfil_url} nombre={nombreConversacion(conversacion)} size={36} />
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold truncate">{conversacion.nombre_whatsapp || conversacion.wa_jid.split("@")[0]}</div>
+            <div className="text-sm font-bold truncate">{nombreConversacion(conversacion)}</div>
             <div className="text-[10px] text-ink-sub truncate">{numeroConBandera(conversacion.telefono_real || conversacion.wa_jid)}</div>
           </div>
         </button>

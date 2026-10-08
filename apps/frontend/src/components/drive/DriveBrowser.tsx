@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -1061,7 +1062,7 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
         {!storageReady && (
           <div className="px-5 py-2.5 bg-amber-50/80 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-900/40 flex items-center gap-2 text-xs backdrop-blur">
             <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
-            <span className="text-amber-800 dark:text-amber-300 font-ui">Almacenamiento no configurado — configurá el object store en .env y reiniciá crm-api.</span>
+            <span className="text-amber-800 dark:text-amber-300 font-ui">Drive aún no está disponible: falta conectar el almacenamiento de archivos. Avisa al administrador.</span>
           </div>
         )}
 
@@ -1232,7 +1233,8 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
               onGoFile={(folderId) => { setSearchScope(false); setSearchQ(""); openFolder(folderId); }}
             />
           ) : !detail ? (
-            <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-sub text-sm">
+            <div className="h-full flex flex-col items-center justify-center gap-2 text-ink-sub text-sm relative isolate overflow-hidden">
+              <WireShape kind="cube" size={320} speed={0.6} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40 -z-10" />
               <HardDrive className="h-12 w-12" strokeWidth={1.2} />
               Ninguna carpeta seleccionada
             </div>

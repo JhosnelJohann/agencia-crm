@@ -25,7 +25,7 @@ export interface Buzon {
 }
 
 const FOLDERS = [
-  { key: "INBOX", label: "Bandeja entrada", Icon: Inbox },
+  { key: "INBOX", label: "Bandeja de entrada", Icon: Inbox },
   { key: "SENT", label: "Enviados", Icon: SendIcon },
   { key: "SPAM", label: "Spam", Icon: AlertCircle },
   { key: "TRASH", label: "Papelera", Icon: Trash },

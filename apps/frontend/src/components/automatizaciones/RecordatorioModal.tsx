@@ -1,4 +1,5 @@
 "use client";
+import { nombreConversacion } from "@/lib/whatsapp-numero";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, WhatsappLogo, Envelope } from "@/lib/bootstrap-icons";
@@ -141,7 +142,7 @@ export function RecordatorioModal({ onClose, onSaved }: Props) {
                   <label className="text-[12px] font-ui uppercase tracking-wider text-ink-sub block mb-1.5">Conversación</label>
                   <select value={conversacionId} onChange={(e) => setConversacionId(e.target.value)} disabled={!conexionId} className={cn(inputCls, "disabled:opacity-50")}>
                     <option value="">Elige una…</option>
-                    {conversaciones.map((c) => <option key={c.id} value={c.id}>{c.nombre_whatsapp || c.wa_jid.split("@")[0]}</option>)}
+                    {conversaciones.map((c) => <option key={c.id} value={c.id}>{nombreConversacion(c)}</option>)}
                   </select>
                 </div>
               </div>

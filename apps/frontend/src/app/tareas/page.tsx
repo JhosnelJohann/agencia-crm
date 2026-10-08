@@ -11,6 +11,7 @@ import { TaskModal } from "@/components/tareas/TaskModal";
 import { KanbanTareas } from "@/components/tareas/KanbanTareas";
 import { TareasPorFecha } from "@/components/tareas/TareasPorFecha";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { WireShape } from "@/components/motion/WireShape";
 import { FancySelect } from "@/components/ui/FancySelect";
 import { StackedFlow } from "@/components/charts/StackedFlow";
 import { DateRangePopover, type DateRange } from "@/components/ui/DateRangePopover";
@@ -250,23 +251,23 @@ export default function TareasPage() {
 
   return (
     <AppShell>
-      <div className={cn("mx-auto px-4 sm:px-6 py-6 sm:py-10", vista === "fechas" ? "max-w-[1800px]" : "max-w-6xl")}>
+      <div className={cn("mx-auto px-3.5 lg:px-5 pt-5 pb-14", vista === "fechas" ? "max-w-[1800px]" : "max-w-[1500px]")}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
-          className="glass-3d rounded-[28px] relative overflow-hidden px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap"
+          className="glass-3d rounded-[28px] relative overflow-hidden isolate px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap"
         >
+          <div className="tech-grid pointer-events-none absolute inset-0 -z-10" aria-hidden />
+            <WireShape kind="octahedron" size={280} className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-50 -z-10 hidden lg:block" />
           <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.22), transparent 72%)" }} />
           <div className="relative flex items-center gap-5 min-w-0">
             <AppIcon name="check_mark_button" size={60} className="shrink-0" />
             <div className="min-w-0">
-              <div className="kicker">Productividad</div>
-              <h1 className="mt-1.5 font-display text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-                <span className="text-gradient-orange">Tareas</span>
-              </h1>
-              <p className="mt-3 text-ink-sub text-[15px]">
+              <div className="kicker">Operación · productividad</div>
+              <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Tareas <span className="text-brand-orange text-orange-glow">del equipo</span></h1>
+              <p className="mt-1.5 text-ink-sub text-[14px]">
                 {list === null ? "Cargando…" : (
                   <>
                     {asUserId && (() => {
@@ -406,7 +407,7 @@ export default function TareasPage() {
 
           {/* Vista toggle */}
           <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.04]">
-            <button onClick={() => setVista("lista")} className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "lista" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
+            <button onClick={() => setVista("lista")} aria-label="Vista de lista" title="Lista" className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "lista" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
               <LayoutList className="h-3.5 w-3.5" strokeWidth={2} />
             </button>
             <button onClick={() => setVista("kanban")} title="Tablero por estado" className={cn("h-7 w-9 rounded-lg flex items-center justify-center transition-all", vista === "kanban" ? "bg-bg-darkcard shadow-sm text-ink" : "text-ink-sub hover:text-ink")}>
@@ -427,7 +428,7 @@ export default function TareasPage() {
               className="h-9 pl-9 pr-8 rounded-xl bg-white/[0.04] border border-transparent text-sm outline-none transition-all focus:bg-white/[0.06] focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 w-48"
             />
             {searchQ && (
-              <button onClick={() => setSearchQ("")} className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 rounded-md hover:bg-white/[0.08] flex items-center justify-center">
+              <button onClick={() => setSearchQ("")} aria-label="Borrar búsqueda" className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 rounded-md hover:bg-white/[0.08] flex items-center justify-center">
                 <X className="h-3 w-3 text-ink-sub" />
               </button>
             )}

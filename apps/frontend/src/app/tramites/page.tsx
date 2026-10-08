@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash, Pencil, X } from "@/lib/bootstrap-icons";
@@ -49,6 +50,15 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const inputCls = "w-full h-11 px-3.5 rounded-xl bg-black/25 border border-line text-sm text-ink outline-none transition focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20";
 const labelCls = "text-[10.5px] font-bold uppercase tracking-[2px] text-ink-sub block mb-1.5";
+
+/** Blanco o tinta según la luminosidad del color de fondo (los colores de servicio los elige el usuario). */
+function textoSobre(hex: string) {
+  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex || "");
+  if (!m) return "#fff";
+  const [r, g, b] = m.slice(1).map((h) => { const c = parseInt(h, 16) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return (1.05 / (L + 0.05)) >= 4.5 ? "#fff" : "#0f172a";
+}
 
 export default function ServiciosPage() {
   const [servicios, setServicios] = useState<Servicio[] | null>(null);
@@ -163,12 +173,14 @@ export default function ServiciosPage() {
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}
           className="glass-3d rounded-[28px] relative overflow-hidden p-7 sm:p-9 mb-6">
           <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.26), transparent 72%)" }} />
+          <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
+          <WireShape kind="torus" size={300} className="absolute -right-6 top-1/2 -translate-y-1/2 opacity-60 hidden md:block" />
           <div className="relative flex items-center justify-between gap-6 flex-wrap">
             <div className="flex items-center gap-5">
-              <AppIcon name="toolbox" size={84} />
+              <AppIcon name="toolbox" size={64} />
               <div>
-                <div className="kicker">Catálogo</div>
-                <h1 className="mt-2 text-[clamp(34px,5vw,56px)] leading-none text-ink">Servicios <span className="text-brand-orange text-orange-glow">de la agencia</span></h1>
+                <div className="kicker">Comercial · catálogo</div>
+                <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Servicios <span className="text-brand-orange text-orange-glow">de la agencia</span></h1>
                 <p className="mt-2 text-ink-sub max-w-xl">Lo que vendes, con su precio base, plazo de entrega y un color único que tiñe todo tu pipeline.</p>
               </div>
             </div>
@@ -219,7 +231,7 @@ export default function ServiciosPage() {
                         <div className="h-14 w-14 rounded-2xl flex items-center justify-center" style={{ background: `${color}22`, boxShadow: `inset 0 0 0 1px ${color}44` }}>
                           <AppIcon name={ICONOS[i % ICONOS.length]} size={38} />
                         </div>
-                        <span className="text-[10.5px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-lg text-white" style={{ background: color }}>{t.codigo}</span>
+                        <span className="text-[10.5px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-lg" style={{ background: color, color: textoSobre(color) }}>{t.codigo}</span>
                       </div>
                       <h3 className="font-display font-extrabold text-[26px] leading-tight text-ink">{t.nombre}</h3>
                       {t.descripcion && <p className="mt-1 text-sm text-ink-sub line-clamp-2">{t.descripcion}</p>}

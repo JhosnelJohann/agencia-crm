@@ -15,6 +15,7 @@ import { ETAPAS } from "@/lib/etapas";
 import { AreaChart, Delta } from "@/components/marketing/ui";
 import { Sparkline } from "@/components/charts/Sparkline";
 import { WireShape } from "@/components/motion/WireShape";
+import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 import { CollectionRing } from "@/components/charts/CollectionRing";
 import { FlowDiagram } from "@/components/charts/FlowDiagram";
 import { SegmentDonut } from "@/components/charts/SegmentDonut";
@@ -67,10 +68,10 @@ function Glass({ children, className, delay = 0, tilt = true }: { children: Reac
 
 /** Medidor radial animado (SVG). */
 
-const QUICK: { href: string; label: string; hint: string; icon: AppIconName }[] = [
+const QUICK: { href: string; label: string; hint: string; icon: NavIconRef }[] = [
   { href: "/oportunidades", label: "Pipeline", hint: "Mueve tus oportunidades", icon: "bullseye" },
   { href: "/contactos", label: "Contactos", hint: "Leads y clientes", icon: "identification_card" },
-  { href: "/whatsapp", label: "WhatsApp", hint: "Conversaciones en vivo", icon: "mobile_phone" },
+  { href: "/whatsapp", label: "WhatsApp", hint: "Conversaciones en vivo", icon: { brand: "whatsapp" } },
   { href: "/tareas", label: "Tareas", hint: "Lo que toca hoy", icon: "check_mark_button" },
   { href: "/automatizaciones", label: "Automatizar", hint: "Agentes y reglas", icon: "high_voltage" },
   { href: "/reportes", label: "Reportes", hint: "Números del equipo", icon: "chart_increasing" },
@@ -148,7 +149,7 @@ export default function DashboardPage() {
             <Glass className="relative overflow-hidden p-7 sm:p-10 min-h-[300px]" tilt={false}>
               <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.30), rgba(232,88,26,0.06) 55%, transparent 75%)" }} />
               <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
-              <WireShape kind="icosahedron" size={340} className="absolute -right-10 top-1/2 -translate-y-1/2 opacity-70 hidden md:block" />
+              <WireShape kind="icosahedron" size={300} className="absolute -right-16 top-1/2 -translate-y-1/2 opacity-70 hidden lg:block" />
               <div className="relative max-w-2xl">
                 <div className="kicker">{hoy?.fecha ?? " "}</div>
                 <h1 className="mt-4 text-[clamp(38px,6vw,76px)] leading-[0.98]">
@@ -355,7 +356,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {QUICK.map((q) => (
                   <Link key={q.href} href={q.href} className="group relative rounded-2xl border border-line bg-white/[0.03] hover:bg-brand-primary/[0.08] hover:border-brand-primary/30 p-4 transition-all duration-300 hover:-translate-y-1">
-                    <AppIcon name={q.icon} size={46} />
+                    <NavIcon icon={q.icon} size={46} />
                     <div className="mt-3 font-display font-bold text-xl uppercase tracking-wide text-ink">{q.label}</div>
                     <div className="text-xs text-ink-muted">{q.hint}</div>
                   </Link>

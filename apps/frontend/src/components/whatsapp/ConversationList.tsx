@@ -1,4 +1,5 @@
 "use client";
+import { nombreConversacion } from "@/lib/whatsapp-numero";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -202,7 +203,7 @@ export function ConversationList({
                 >
                   {active && <span className="absolute left-0 top-0 bottom-0 w-1 bg-brand-primary rounded-r-full" />}
                   <div className="relative shrink-0">
-                    <WhatsAppAvatar fotoUrl={c.foto_perfil_url} nombre={c.nombre_whatsapp || c.wa_jid} size={44} />
+                    <WhatsAppAvatar fotoUrl={c.foto_perfil_url} nombre={nombreConversacion(c)} size={44} />
                     {c.asignado_a && (
                       <div title={`Asignada a ${c.asignado_nombre || "alguien"}`} className="absolute -bottom-1 -right-1 ring-2 ring-bg-canvas dark:ring-[#0B0F16] rounded-full">
                         <WhatsAppAvatar fotoUrl={c.asignado_foto_url} nombre={c.asignado_nombre || "?"} size={18} />
@@ -212,7 +213,7 @@ export function ConversationList({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <div className={cn("text-[13px] truncate flex-1", c.no_leidos_count > 0 ? "font-bold" : "font-medium text-ink-sub")}>
-                        {c.nombre_whatsapp || c.wa_jid.split("@")[0]}
+                        {nombreConversacion(c)}
                       </div>
                       <div className="text-[10px] text-ink-sub shrink-0 tabular-nums">{friendlyDate(c.ultimo_mensaje_at)}</div>
                     </div>

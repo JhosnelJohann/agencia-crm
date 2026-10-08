@@ -1507,3 +1507,23 @@ html.fx-off .flow-pulse { display: none; }
 @keyframes flow-stripes { to { background-position: 18px 0; } }
 html.fx-off .flow-stripes { animation: none; }
 @media (prefers-reduced-motion: reduce) { .flow-stripes { animation: none; } }
+
+/* --- Accesibilidad: naranja legible en texto pequeño sobre fondo claro ---------------------------- */
+/* #e8581a sobre blanco da 3,6:1 (el mínimo AA para texto pequeño es 4,5:1). Dentro del contenido claro,
+   los textos pequeños en naranja (kickers, enlaces "Ver todo", cifras de %, píldoras) usan #c2410c
+   (5,2:1). Los titulares grandes (h1/h2) conservan el naranja de marca: a ese tamaño 3:1 basta. */
+.app-main :is(.kicker, .eyebrow-num):not(:is(.modal-surface, .dark-island) *) { --accent: #c2410c; }
+.app-main :is(.text-brand-primary, .text-brand-orange):not(:is(h1, h2, h1 *, h2 *)):not(:is(.modal-surface, .dark-island, [class*="bg-gradient"], .btn-aurora) *) {
+  color: #c2410c;
+}
+/* Verdes y ámbar de estado sobre fondo claro: #16b91a da 2,6:1 y amber-400 ~1,9:1. En el contenido claro
+   se usan sus tonos oscuros (≥4,5:1). Fondos (bg-…) y las islas oscuras no cambian. */
+.app-main :is(.text-brand-green, .text-green-400, .text-green-500, .text-emerald-400, .text-emerald-500):not(:is(.modal-surface, .dark-island, [class*="bg-gradient"]) *) { color: #15803d; }
+.app-main :is(.text-amber-300, .text-amber-400, .text-amber-500, .text-yellow-400, .text-yellow-500):not(:is(.modal-surface, .dark-island, [class*="bg-gradient"]) *) { color: #b45309; }
+.app-main :is(.text-sky-400, .text-blue-400, .text-cyan-400):not(:is(.modal-surface, .dark-island, [class*="bg-gradient"]) *) { color: #0369a1; }
+/* La barra de cristal (.glass-topbar) tenía su variante oscura también dentro del contenido claro (Correo):
+   texto oscuro sobre degradado gris. En el contenido claro se pinta clara, salvo en las islas oscuras. */
+html.dark .app-main .glass-topbar:not(:is(.modal-surface, .dark-island) *) {
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}

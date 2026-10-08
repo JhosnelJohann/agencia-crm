@@ -1,4 +1,5 @@
 "use client";
+import { WireShape } from "@/components/motion/WireShape";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -295,11 +296,13 @@ export default function AutomatizacionesPage() {
 
 function EstadoVacio({ icon: Icon, texto }: { icon: any; texto: string }) {
   return (
-    <div className="col-span-full flex flex-col items-center justify-center text-center px-6 py-16 gap-3 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02]">
-      <div className="h-14 w-14 rounded-2xl glass-panel text-brand-primary flex items-center justify-center">
-        <Icon className="h-6 w-6" weight="duotone" />
+    <div className="col-span-full relative isolate overflow-hidden flex flex-col items-center justify-center text-center px-6 py-16 gap-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02]">
+      <WireShape kind="cube" size={170} speed={0.7} className="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 opacity-40 -z-10" />
+      {/* Mismo tamaño y ficha que el resto de estados vacíos del CRM (EmptyState: 72px). */}
+      <div className="h-[72px] w-[72px] rounded-[22px] bg-brand-primary/10 ring-1 ring-brand-primary/25 text-brand-primary flex items-center justify-center">
+        <Icon className="h-8 w-8" weight="duotone" />
       </div>
-      <p className="text-sm text-ink-sub max-w-[320px]">{texto}</p>
+      <p className="text-sm text-ink-sub max-w-[340px]">{texto}</p>
     </div>
   );
 }
