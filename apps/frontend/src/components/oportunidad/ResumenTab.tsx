@@ -480,7 +480,7 @@ function Card({ icon: Icon, title, accent, action, children }: any) {
       <div className="p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-orange/20 to-brand-orange/5 text-brand-orange flex items-center justify-center icon3d-float">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-orange/20 to-brand-orange/5 text-brand-orange flex items-center justify-center">
               <Icon className="h-4 w-4" strokeWidth={2} />
             </div>
             <h3 className="font-display font-black text-[15px] tracking-tight">{title}</h3>

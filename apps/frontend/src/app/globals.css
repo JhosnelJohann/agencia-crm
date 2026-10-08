@@ -105,21 +105,6 @@ h3 {
   font-weight: 700;
 }
 
-/* Grano de película: tesela PNG de 128px (sin filtros SVG ni blend modes: el feTurbulence con
-   mix-blend-mode sobre toda la ventana congelaba el render en máquinas modestas). */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("/noise.png");
-  background-size: 128px 128px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .grain-overlay { display: none; }
-}
-
 /* Kicker de la landing: línea naranja de 22px + texto en mayúsculas espaciado. */
 .kicker {
   display: inline-flex;
@@ -1330,15 +1315,9 @@ html.fx-off .btn-aurora::after,
 html.fx-off .shimmer-btn::after { display: none; }
 .shimmer-btn::before { display: none; }
 
-/* --- Iconos 3D --------------------------------------------------------------------------- */
-@keyframes float-y {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-5px) rotate(2.5deg); }
-}
-.icon3d { display: inline-block; transition: transform 0.45s var(--ease-out); will-change: transform; }
-.icon3d-float { animation: float-y 5s ease-in-out infinite; }
-a:hover > .icon3d, button:hover > .icon3d, .group:hover .icon3d { transform: translateY(-3px) scale(1.14) rotate(-4deg); }
-html.fx-off .icon3d-float { animation: none; }
+/* --- Iconos 2D (AppIcon / BrandLogo) ------------------------------------------------------ */
+.app-icon { transition: transform 0.2s var(--ease-out), filter 0.2s var(--ease-out); }
+a:hover .app-icon, button:hover .app-icon { transform: translateY(-1px); filter: brightness(1.08); }
 
 /* --- Motion global: todo lo que se monta, entra con gracia ------------------------------------ */
 @keyframes rise-in {
@@ -1362,7 +1341,7 @@ html.fx-off main [class*="rounded-3xl"],
 html.fx-off main .glass-3d { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   main [class*="rounded-2xl"], main [class*="rounded-xl2"], main [class*="rounded-3xl"], main .glass-3d,
-  .btn-aurora, .shimmer-btn, .icon3d-float, .aurora-mesh { animation: none !important; }
+  .btn-aurora, .shimmer-btn, .aurora-mesh { animation: none !important; }
 }
 
 /* --- Texto ----------------------------------------------------------------------------------- */

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EASE, Pill, api } from "@/components/marketing/ui";
 
 /** Pestaña «marketing» de la ficha del contacto: temperatura (score), origen, formularios, campañas y línea de eventos. */
@@ -24,7 +24,7 @@ export function MarketingTab({ contactoId }: { contactoId: string }) {
       <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE }} className="glass-3d rounded-[24px] p-6 col-span-12 md:col-span-4">
         <div className="kicker !text-[10.5px]">Temperatura</div>
         <div className="mt-3 flex items-center gap-4">
-          <Icon3D name={t.icon} size={64} float />
+          <AppIcon name={t.icon} size={64} />
           <div><div className="font-display font-extrabold text-[64px] leading-none tabular-nums text-ink">{d.score}</div><Pill tone={t.tone}>{t.l}</Pill></div>
         </div>
         <div className="mt-5 h-2 rounded-full bg-white/[0.06] overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, d.score)}%` }} transition={{ duration: 1.1, ease: EASE }} className="h-full rounded-full bg-gradient-to-r from-brand-gold via-brand-primary to-orange-300" /></div>
@@ -40,7 +40,7 @@ export function MarketingTab({ contactoId }: { contactoId: string }) {
         <div className="kicker !text-[10.5px]">Origen del lead</div>
         {origen ? (
           <div className="mt-3 space-y-2 text-sm">
-            <div className="flex items-center gap-3"><Icon3D name="compass" size={44} /><div><div className="font-display font-extrabold text-2xl text-ink capitalize">{origen.utm_source || "directo"}</div><div className="text-xs text-ink-muted">{origen.utm_medium || "—"} · {origen.metodo === "fbclid" ? "Meta (fbclid)" : "solo UTM"}</div></div></div>
+            <div className="flex items-center gap-3"><AppIcon name="compass" size={44} /><div><div className="font-display font-extrabold text-2xl text-ink capitalize">{origen.utm_source || "directo"}</div><div className="text-xs text-ink-muted">{origen.utm_medium || "—"} · {origen.metodo === "fbclid" ? "Meta (fbclid)" : "solo UTM"}</div></div></div>
             {origen.utm_campaign && <div><span className="text-ink-muted text-xs uppercase tracking-[1.6px]">Campaña</span><div className="text-ink font-semibold">{origen.utm_campaign}</div></div>}
             {origen.utm_content && <div><span className="text-ink-muted text-xs uppercase tracking-[1.6px]">Anuncio</span><div className="text-ink font-semibold">{origen.utm_content}</div></div>}
           </div>
@@ -60,7 +60,7 @@ export function MarketingTab({ contactoId }: { contactoId: string }) {
       </motion.section>
 
       <motion.section initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.18 }} className="glass-3d rounded-[24px] p-6 col-span-12">
-        <div className="flex items-center gap-3 mb-4"><Icon3D name="high_voltage" size={34} float /><h3 className="text-[26px] leading-none text-ink">Línea de eventos</h3></div>
+        <div className="flex items-center gap-3 mb-4"><AppIcon name="high_voltage" size={34} /><h3 className="text-[26px] leading-none text-ink">Línea de eventos</h3></div>
         {d.eventos.length === 0 ? <p className="text-sm text-ink-muted">Todavía no hay actividad registrada.</p> : (
           <ol className="relative border-l border-line ml-3 space-y-4">
             {d.eventos.map((e: any) => (

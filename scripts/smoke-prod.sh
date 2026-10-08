@@ -14,7 +14,7 @@ code() { curl -s -o /dev/null -w "%{http_code}" -m 20 "$1"; }
 
 echo "Rutas y estáticos públicos"
 sleep 4   # el reinicio de PM2 tarda unos segundos en volver a aceptar conexiones
-for p in /login /3d/rocket.webp /noise.png /favicon.svg /api/health; do
+for p in /login /favicon.svg /logo-gozz.svg /api/health; do
   c=$(code "$B$p"); [ "$c" = "200" ] && ok "$p → 200" || bad "$p → $c"
 done
 

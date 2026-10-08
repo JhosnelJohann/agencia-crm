@@ -43,5 +43,5 @@ export function middleware(req: NextRequest) {
 export const config = {
   // Los archivos estáticos de /public (iconos 3D, textura de grano, favicon…) deben poder cargarse
   // SIN sesión: los usa la propia pantalla de login.
-  matcher: ["/((?!_next/static|_next/image|3d/|noise\.png|favicon\.(?:ico|svg)|logo-gozz\.(?:png|svg)|chat-bg\.jpg|sw\.js).*)"]
+  matcher: ["/((?!_next/static|_next/image|favicon\.(?:ico|svg)|logo-gozz\.(?:png|svg)|chat-bg\.jpg|sw\.js).*)"]
 };

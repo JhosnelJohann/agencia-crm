@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, Users, Mail, Phone, X, Filter, UserPlus, MoreVertical, LayoutGrid, List, Trash2, Edit3, GitMerge, UserCheck, UserX, CalendarOff } from "@/lib/bootstrap-icons";
 import { toast } from "sonner";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { AppShell } from "@/components/AppShell";
 import { DateField } from "@/components/ui/DateField";
 import { Pagination } from "@/components/ui/Pagination";
@@ -349,7 +349,7 @@ export default function ContactosPage() {
             className="glass-3d rounded-[28px] px-6 py-5 mb-5 flex items-center justify-between gap-4 flex-wrap"
           >
             <div className="flex items-center gap-5 min-w-0">
-              <Icon3D name="identification_card" size={64} float className="shrink-0" />
+              <AppIcon name="identification_card" size={64} className="shrink-0" />
               <div>
                 <div className="kicker">Comercial · base de datos</div>
                 <h1 className="mt-1.5 text-[clamp(28px,3.4vw,44px)] leading-none text-ink">Contactos <span className="text-brand-orange text-orange-glow">y clientes</span></h1>

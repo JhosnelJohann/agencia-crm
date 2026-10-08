@@ -10,15 +10,15 @@ import { useWhatsappUnread } from "@/lib/useWhatsappUnread";
 import { useTareasPendientes } from "@/lib/useTareasPendientes";
 import { useCurrentUser, initialsOf } from "@/lib/auth-user";
 import { MoonMark } from "@/components/magic/MoonMark";
-import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
+import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 
-interface Item { href: string; label: string; icon: Icon3DName; badge?: "chat" | "whatsapp" | "tareas"; }
+interface Item { href: string; label: string; icon: NavIconRef; badge?: "chat" | "whatsapp" | "tareas"; }
 interface Group { title: string; items: Item[]; }
 
 /**
  * Dock de navegación de GOZZ (rediseño 2026).
  * Un panel de cristal flotante, separado de los bordes de la pantalla, que descansa como una
- * columna de iconos 3D y se despliega al pasar el cursor (o al enfocarlo con teclado) mostrando
+ * columna de iconos y se despliega al pasar el cursor (o al enfocarlo con teclado) mostrando
  * secciones y etiquetas. Móvil: cajón a pantalla completa con las mismas secciones.
  */
 export const NAV_GROUPS: Group[] = [
@@ -35,10 +35,10 @@ export const NAV_GROUPS: Group[] = [
     title: "Marketing",
     items: [
       { href: "/embudos", label: "Embudos", icon: "satellite_antenna" },
-      { href: "/campanas", label: "Campañas", icon: "megaphone" },
-      { href: "/anuncios", label: "Anuncios", icon: "rocket" },
+      { href: "/campanas", label: "Campañas", icon: { brand: "meta" } },
+      { href: "/anuncios", label: "Anuncios", icon: { brand: "meta" } },
       { href: "/scoring", label: "Scoring", icon: "fire" },
-      { href: "/redes", label: "Redes", icon: "loudspeaker" },
+      { href: "/redes", label: "Redes", icon: { brand: "instagram" } },
     ],
   },
   {
@@ -53,8 +53,8 @@ export const NAV_GROUPS: Group[] = [
   {
     title: "Comunicación",
     items: [
-      { href: "/whatsapp", label: "WhatsApp", icon: "mobile_phone", badge: "whatsapp" },
-      { href: "/correo", label: "Correo", icon: "e_mail" },
+      { href: "/whatsapp", label: "WhatsApp", icon: { brand: "whatsapp" }, badge: "whatsapp" },
+      { href: "/correo", label: "Correo", icon: { brand: "gmail" } },
       { href: "/chat", label: "Chat", icon: "left_speech_bubble", badge: "chat" },
     ],
   },
@@ -183,7 +183,7 @@ function DockContent({ pathname, expanded, badges, user, onNavigate, headerExtra
                     )}
                     {active && <span className="absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full bg-brand-primary shadow-[0_0_12px_rgba(232,88,26,0.9)]" />}
                     <span className="relative shrink-0 w-[34px] flex items-center justify-center">
-                      <Icon3D name={item.icon} size={active ? 32 : 28} float={active} />
+                      <NavIcon icon={item.icon} size={30} active={active} />
                       {n > 0 && !expanded && (
                         <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-brand-red text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0b1120]">
                           {n > 99 ? "99+" : n}

@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash } from "@/lib/bootstrap-icons";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EmptyState, Modal, Pill, Switch, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -51,7 +51,7 @@ export function WebhooksTab({ isAdmin }: { isAdmin: boolean }) {
     <div className="space-y-6">
       <div className="glass-3d rounded-[24px] p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
-          <div className="flex items-center gap-3"><Icon3D name="satellite_antenna" size={40} float /><div><div className="kicker !text-[10.5px]">n8n y automatización externa</div><h2 className="text-[28px] leading-none mt-1 text-ink">Webhooks por evento</h2></div></div>
+          <div className="flex items-center gap-3"><AppIcon name="satellite_antenna" size={40} /><div><div className="kicker !text-[10.5px]">n8n y automatización externa</div><h2 className="text-[28px] leading-none mt-1 text-ink">Webhooks por evento</h2></div></div>
           {isAdmin && <button onClick={() => setEd({ ...VACIO })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Nuevo webhook</button>}
         </div>
         {trigs === null ? <div className="h-32 skeleton rounded-2xl" /> : trigs.length === 0 ? (
@@ -81,7 +81,7 @@ export function WebhooksTab({ isAdmin }: { isAdmin: boolean }) {
 
       <div className="grid xl:grid-cols-2 gap-6">
         <div className="glass-3d rounded-[24px] p-6">
-          <div className="flex items-center gap-3 mb-4"><Icon3D name="high_voltage" size={34} float /><h3 className="text-[26px] leading-none text-ink">Últimas ejecuciones</h3></div>
+          <div className="flex items-center gap-3 mb-4"><AppIcon name="high_voltage" size={34} /><h3 className="text-[26px] leading-none text-ink">Últimas ejecuciones</h3></div>
           {runs.length === 0 ? <p className="text-sm text-ink-muted py-4">Cuando un evento dispare un webhook, verás aquí si llegó bien.</p> : (
             <ul className="divide-y divide-line rounded-2xl border border-line overflow-hidden">
               {runs.map((r) => (
@@ -95,7 +95,7 @@ export function WebhooksTab({ isAdmin }: { isAdmin: boolean }) {
           )}
         </div>
         <div className="glass-3d rounded-[24px] p-6">
-          <div className="flex items-center gap-3 mb-4"><Icon3D name="eyes" size={34} float /><h3 className="text-[26px] leading-none text-ink">Flujo de eventos</h3></div>
+          <div className="flex items-center gap-3 mb-4"><AppIcon name="eyes" size={34} /><h3 className="text-[26px] leading-none text-ink">Flujo de eventos</h3></div>
           {evs.length === 0 ? <p className="text-sm text-ink-muted py-4">Aún no hay eventos. Se publican solos al recibir formularios, cambiar etapas, mover tareas, etc.</p> : (
             <ul className="divide-y divide-line rounded-2xl border border-line overflow-hidden">
               {evs.map((e) => (

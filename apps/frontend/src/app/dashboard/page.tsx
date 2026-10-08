@@ -9,7 +9,7 @@ import { RecognitionsBanner } from "@/components/dashboard/RecognitionsBanner";
 import { NumberTicker } from "@/components/magic/NumberTicker";
 import { ClientesGanadosCard } from "@/components/ClientesGanadosCard";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
+import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
 import { useCurrentUser } from "@/lib/auth-user";
 import { useFx } from "@/components/magic/fx";
 import { ETAPAS } from "@/lib/etapas";
@@ -85,7 +85,7 @@ function Gauge({ pct, size = 190 }: { pct: number; size?: number }) {
   );
 }
 
-const QUICK: { href: string; label: string; hint: string; icon: Icon3DName }[] = [
+const QUICK: { href: string; label: string; hint: string; icon: AppIconName }[] = [
   { href: "/oportunidades", label: "Pipeline", hint: "Mueve tus oportunidades", icon: "bullseye" },
   { href: "/contactos", label: "Contactos", hint: "Leads y clientes", icon: "identification_card" },
   { href: "/whatsapp", label: "WhatsApp", hint: "Conversaciones en vivo", icon: "mobile_phone" },
@@ -133,7 +133,7 @@ export default function DashboardPage() {
   ].filter((s) => s.value > 0);
   const slaTotal = bySLA.reduce((a, b) => a + b.value, 0);
 
-  const kpis: { label: string; value: number | null; icon: Icon3DName; sub: string; ratio: number; href: string; danger?: boolean }[] = [
+  const kpis: { label: string; value: number | null; icon: AppIconName; sub: string; ratio: number; href: string; danger?: boolean }[] = [
     { label: "Contactos", value: stats ? stats.contactos : null, icon: "identification_card", sub: "en tu base", ratio: 1, href: "/contactos" },
     { label: "Oportunidades", value: stats ? stats.oportunidades : null, icon: "bullseye", sub: `${stats?.en_progreso ?? 0} en progreso`, ratio: stats && stats.oportunidades ? stats.en_progreso / stats.oportunidades : 0, href: "/oportunidades" },
     { label: "Tareas pendientes", value: stats ? stats.tareas_pendientes : null, icon: "check_mark_button", sub: "por completar", ratio: stats && stats.tareas_pendientes ? Math.min(1, stats.tareas_pendientes / 40) : 0, href: "/tareas" },
@@ -150,16 +150,6 @@ export default function DashboardPage() {
           <div className="col-span-12 xl:col-span-8">
             <Glass className="relative overflow-hidden p-7 sm:p-10 min-h-[300px]" tilt={false}>
               <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.30), rgba(232,88,26,0.06) 55%, transparent 75%)" }} />
-              {/* Iconos 3D flotantes */}
-              <div className="pointer-events-none absolute right-6 top-6 hidden md:block">
-                <div className="relative h-[230px] w-[300px]">
-                  <div className="absolute right-2 top-2"><Icon3D name="rocket" size={118} float /></div>
-                  <div className="absolute left-4 top-24" style={{ animationDelay: "-1.6s" }}><Icon3D name="trophy" size={78} float /></div>
-                  <div className="absolute right-32 bottom-0" style={{ animationDelay: "-3s" }}><Icon3D name="sparkles" size={62} float /></div>
-                  <div className="absolute left-20 top-0" style={{ animationDelay: "-2.2s" }}><Icon3D name="gem_stone" size={48} float /></div>
-                </div>
-              </div>
-
               <div className="relative max-w-2xl">
                 <div className="kicker">{hoy?.fecha ?? " "}</div>
                 <h1 className="mt-4 text-[clamp(38px,6vw,76px)] leading-[0.98]">
@@ -185,7 +175,7 @@ export default function DashboardPage() {
             <Glass className="p-7 flex flex-col items-center justify-between min-h-[300px]" delay={0.1}>
               <div className="w-full flex items-center justify-between">
                 <div className="kicker">Cobranza</div>
-                <Icon3D name="money_bag" size={34} float />
+                <AppIcon name="money_bag" size={34} />
               </div>
               <div className="relative my-2">
                 <Gauge pct={pctCobrado} />
@@ -216,7 +206,7 @@ export default function DashboardPage() {
             <Link key={k.label} href={k.href} className="group block">
               <Glass className="p-5 sm:p-6 relative overflow-hidden" delay={0.12 + i * 0.07}>
                 <div className="flex items-start justify-between">
-                  <Icon3D name={k.icon} size={54} float />
+                  <AppIcon name={k.icon} size={54} />
                   <span className="text-ink-muted group-hover:text-brand-primary transition-colors text-lg leading-none">↗</span>
                 </div>
                 <div className="mt-5 font-display font-extrabold text-[52px] leading-none tabular-nums text-ink">
@@ -243,7 +233,7 @@ export default function DashboardPage() {
             <Glass className="p-7" delay={0.14} tilt={false}>
               <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                 <div className="flex items-center gap-3">
-                  <Icon3D name="satellite_antenna" size={40} float />
+                  <AppIcon name="satellite_antenna" size={40} />
                   <div><div className="kicker !text-[10.5px]">Marketing · 30 días</div><h2 className="mt-1 text-[30px] leading-none text-ink">Captación de leads</h2></div>
                 </div>
                 <div className="flex items-center gap-6">
@@ -259,7 +249,7 @@ export default function DashboardPage() {
             <Glass className="p-7 h-full" delay={0.2} tilt={false}>
               <div className="flex items-center justify-between mb-4"><div className="kicker">Leads calientes</div><Link href="/scoring" className="text-xs font-bold uppercase tracking-[2px] text-brand-primary hover:brightness-125">Ver todo →</Link></div>
               {calientes === null ? <div className="h-40 skeleton rounded-2xl" /> : calientes.length === 0 ? (
-                <div className="py-8 text-center text-ink-muted text-sm"><Icon3D name="fire" size={56} float /><p className="mt-3">Cuando lleguen leads con puntos, los más calientes aparecerán aquí.</p></div>
+                <div className="py-8 text-center text-ink-muted text-sm"><AppIcon name="fire" size={56} /><p className="mt-3">Cuando lleguen leads con puntos, los más calientes aparecerán aquí.</p></div>
               ) : (
                 <ul className="space-y-2.5">
                   {calientes.map((r: any, i: number) => (
@@ -286,11 +276,11 @@ export default function DashboardPage() {
                   <div className="kicker">Pipeline</div>
                   <h2 className="mt-2 text-[34px] text-ink">Embudo por etapa</h2>
                 </div>
-                <Icon3D name="chart_increasing" size={48} float />
+                <AppIcon name="chart_increasing" size={48} />
               </div>
               {etapas.length === 0 ? (
                 <div className="py-14 text-center">
-                  <Icon3D name="crystal_ball" size={70} float />
+                  <AppIcon name="crystal_ball" size={70} />
                   <div className="mt-3 font-display font-bold text-2xl text-ink uppercase tracking-wide">Tu embudo está listo</div>
                   <p className="text-sm text-ink-muted mt-1">Crea tu primera oportunidad y aparecerá aquí, etapa por etapa.</p>
                 </div>
@@ -325,11 +315,11 @@ export default function DashboardPage() {
                   <div className="kicker">Servicio</div>
                   <h2 className="mt-2 text-[34px] text-ink">SLA</h2>
                 </div>
-                <Icon3D name="hourglass_done" size={44} float />
+                <AppIcon name="hourglass_done" size={44} />
               </div>
               {slaTotal === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center text-ink-muted text-sm py-8">
-                  <Icon3D name="shield" size={56} float />
+                  <AppIcon name="shield" size={56} />
                   <p className="mt-3">Sin oportunidades con SLA todavía.</p>
                 </div>
               ) : (
@@ -370,7 +360,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {QUICK.map((q) => (
                   <Link key={q.href} href={q.href} className="group relative rounded-2xl border border-line bg-white/[0.03] hover:bg-brand-primary/[0.08] hover:border-brand-primary/30 p-4 transition-all duration-300 hover:-translate-y-1">
-                    <Icon3D name={q.icon} size={46} />
+                    <AppIcon name={q.icon} size={46} />
                     <div className="mt-3 font-display font-bold text-xl uppercase tracking-wide text-ink">{q.label}</div>
                     <div className="text-xs text-ink-muted">{q.hint}</div>
                   </Link>
@@ -383,11 +373,11 @@ export default function DashboardPage() {
             <Glass className="p-7 max-h-[420px] flex flex-col" delay={0.18} tilt={false}>
               <div className="flex items-center justify-between mb-4">
                 <div className="kicker">Actividad reciente</div>
-                <Icon3D name="bell" size={30} float />
+                <AppIcon name="bell" size={30} />
               </div>
               {notifs.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center text-ink-muted text-sm py-8">
-                  <Icon3D name="eyes" size={56} float />
+                  <AppIcon name="eyes" size={56} />
                   <p className="mt-3">Todo tranquilo. Cuando pase algo, lo verás aquí.</p>
                 </div>
               ) : (

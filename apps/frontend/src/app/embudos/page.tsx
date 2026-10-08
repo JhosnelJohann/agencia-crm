@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Trash, Pencil, ArrowUp, ArrowDown, X } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { AreaChart, EASE, EmptyState, Modal, Panel, Pill, StatTile, Switch, ModuleHero, api, areaCls, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -152,7 +152,7 @@ export default function EmbudosPage() {
               <motion.article key={f.id} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, duration: 0.7, ease: EASE }}
                 className="glass-3d rounded-[24px] p-6 flex flex-col group hover:-translate-y-1.5 transition-transform duration-500">
                 <div className="flex items-start justify-between gap-3">
-                  <Icon3D name="clipboard" size={46} />
+                  <AppIcon name="clipboard" size={46} />
                   <div className="flex items-center gap-2">
                     <Pill tone={f.estado === "activo" ? "good" : f.estado === "pausado" ? "warn" : "neutral"}>{f.estado}</Pill>
                     <Switch checked={f.estado === "activo"} onChange={(v) => cambiarEstado(f, v ? "activo" : "pausado")} label="Publicar formulario" />

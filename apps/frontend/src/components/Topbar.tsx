@@ -9,17 +9,18 @@ import { ClockButton } from "./clock/ClockButton";
 import { CommandPalette } from "@/components/magic/CommandPalette";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { NAV_GROUPS } from "./Sidebar";
-import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 import { useFx } from "@/components/magic/fx";
 import { cn } from "@/lib/utils";
 
 interface Me { id: string; email: string; nombre: string; nivel_acceso: string; foto_perfil_url?: string | null; posiciones?: string[]; departamento?: string | null; }
 
-const QUICK: { label: string; hint: string; href: string; icon: Icon3DName }[] = [
+const QUICK: { label: string; hint: string; href: string; icon: NavIconRef }[] = [
   { label: "Nueva oportunidad", hint: "Pipeline comercial", href: "/oportunidades", icon: "bullseye" },
   { label: "Nuevo contacto", hint: "Lead o cliente", href: "/contactos", icon: "identification_card" },
   { label: "Nueva tarea", hint: "Para ti o el equipo", href: "/tareas", icon: "check_mark_button" },
-  { label: "Redactar correo", hint: "Desde tus buzones", href: "/correo", icon: "e_mail" },
+  { label: "Redactar correo", hint: "Desde tus buzones", href: "/correo", icon: { brand: "gmail" } },
 ];
 
 /** Navbar flotante de GOZZ: identidad del módulo a la izquierda, comando central, acciones a la derecha. */
@@ -57,8 +58,8 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
     setTimeout(() => { window.location.href = "/login"; }, 400);
   };
 
-  // Identidad del módulo actual (sección + etiqueta + icono 3D), de la misma fuente que el dock.
-  let sec = { group: "GOZZ", label: "Panel", icon: "bar_chart" as Icon3DName, index: 1 };
+  // Identidad del módulo actual (sección + etiqueta + icono), de la misma fuente que el dock.
+  let sec = { group: "GOZZ", label: "Panel", icon: "bar_chart" as NavIconRef, index: 1 };
   NAV_GROUPS.forEach((g, gi) => g.items.forEach((it) => {
     if (pathname === it.href || pathname.startsWith(it.href + "/")) sec = { group: g.title, label: it.label, icon: it.icon, index: gi + 1 };
   }));
@@ -76,7 +77,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
 
           {/* Identidad del módulo */}
           <div className="hidden sm:flex items-center gap-3 pl-1.5 pr-4 min-w-0">
-            <Icon3D name={sec.icon} size={34} float />
+            <NavIcon icon={sec.icon} size={36} />
             <div className="leading-none min-w-0">
               <div className="kicker !text-[10.5px] !tracking-[2.6px] whitespace-nowrap">{String(sec.index).padStart(2, "0")} · {sec.group}</div>
               <div className="mt-1 font-display font-bold uppercase text-[19px] tracking-[1.6px] text-ink truncate">{sec.label}</div>
@@ -112,7 +113,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
                     {QUICK.map((q) => (
                       <button key={q.href} onClick={() => { setQuickOpen(false); router.push(q.href); }}
                         className="group w-full flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left hover:bg-white/[0.06] transition">
-                        <Icon3D name={q.icon} size={30} />
+                        <NavIcon icon={q.icon} size={32} />
                         <span className="leading-tight">
                           <span className="block text-sm font-bold text-ink">{q.label}</span>
                           <span className="block text-[11px] text-ink-muted">{q.hint}</span>
@@ -134,7 +135,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
               aria-pressed={fx}
               className={cn(iconBtn, "hidden sm:flex", fx && "border-brand-primary/40 bg-brand-primary/10")}
             >
-              <Icon3D name={fx ? "sparkles" : "dizzy"} size={22} />
+              <AppIcon name={fx ? "sparkles" : "dizzy"} size={20} bare />
             </button>
 
             <div className="hidden sm:block"><ClockButton /></div>
