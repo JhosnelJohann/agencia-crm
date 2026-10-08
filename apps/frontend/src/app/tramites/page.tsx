@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash, Pencil, X } from "@/lib/bootstrap-icons";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
+import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
 import { NumberTicker } from "@/components/magic/NumberTicker";
 
 /**
@@ -44,7 +44,7 @@ const DEFAULT_FORM = {
   es_tramite_administrativo: false,
 };
 
-const ICONOS: Icon3DName[] = ["megaphone", "rocket", "artist_palette", "chart_increasing", "movie_camera", "light_bulb", "globe_showing_americas", "camera", "magic_wand", "gem_stone"];
+const ICONOS: AppIconName[] = ["megaphone", "rocket", "artist_palette", "chart_increasing", "movie_camera", "light_bulb", "globe_showing_americas", "camera", "magic_wand", "gem_stone"];
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const inputCls = "w-full h-11 px-3.5 rounded-xl bg-black/25 border border-line text-sm text-ink outline-none transition focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20";
@@ -165,7 +165,7 @@ export default function ServiciosPage() {
           <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.26), transparent 72%)" }} />
           <div className="relative flex items-center justify-between gap-6 flex-wrap">
             <div className="flex items-center gap-5">
-              <Icon3D name="toolbox" size={84} float />
+              <AppIcon name="toolbox" size={84} />
               <div>
                 <div className="kicker">Catálogo</div>
                 <h1 className="mt-2 text-[clamp(34px,5vw,56px)] leading-none text-ink">Servicios <span className="text-brand-orange text-orange-glow">de la agencia</span></h1>
@@ -197,7 +197,7 @@ export default function ServiciosPage() {
             : servicios.length === 0
               ? (
                 <div className="col-span-full glass-3d rounded-[28px] p-14 text-center">
-                  <Icon3D name="crystal_ball" size={84} float />
+                  <AppIcon name="crystal_ball" size={84} />
                   <div className="mt-4 font-display font-bold text-3xl uppercase text-ink">Aún no tienes servicios</div>
                   <p className="text-ink-sub mt-1">Crea el primero (por ejemplo "Gestión de Meta Ads") y úsalo en tus oportunidades.</p>
                 </div>
@@ -217,7 +217,7 @@ export default function ServiciosPage() {
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="h-14 w-14 rounded-2xl flex items-center justify-center" style={{ background: `${color}22`, boxShadow: `inset 0 0 0 1px ${color}44` }}>
-                          <Icon3D name={ICONOS[i % ICONOS.length]} size={38} />
+                          <AppIcon name={ICONOS[i % ICONOS.length]} size={38} />
                         </div>
                         <span className="text-[10.5px] font-bold uppercase tracking-[2px] px-2.5 py-1 rounded-lg text-white" style={{ background: color }}>{t.codigo}</span>
                       </div>
@@ -254,7 +254,7 @@ export default function ServiciosPage() {
               className="glass-3d glass-blur rounded-[28px] p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto scrollbar-thin" data-lenis-prevent>
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Icon3D name="toolbox" size={40} float />
+                  <AppIcon name="toolbox" size={40} />
                   <h2 className="text-[30px] text-ink">{modal.id ? "Editar servicio" : "Nuevo servicio"}</h2>
                 </div>
                 <button onClick={() => setModal(null)} aria-label="Cerrar" className="h-10 w-10 rounded-xl hover:bg-white/[0.08] flex items-center justify-center"><X className="h-4 w-4" /></button>

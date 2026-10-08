@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, api, areaCls, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -122,7 +122,7 @@ export default function CampanasPage() {
               const pct = c.total ? Math.round(((c.enviados + c.fallidos) / c.total) * 100) : 0;
               return (
                 <motion.article key={c.id} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, duration: 0.7, ease: EASE }} className="glass-3d rounded-[24px] p-6 flex flex-col group hover:-translate-y-1.5 transition-transform duration-500">
-                  <div className="flex items-start justify-between"><Icon3D name={c.estado === "enviada" ? "party_popper" : "e_mail"} size={46} /><Pill tone={tonoEstado(c.estado)}>{c.estado}</Pill></div>
+                  <div className="flex items-start justify-between"><AppIcon name={c.estado === "enviada" ? "party_popper" : "e_mail"} size={46} /><Pill tone={tonoEstado(c.estado)}>{c.estado}</Pill></div>
                   <h3 className="mt-4 font-display font-extrabold text-[26px] leading-tight text-ink">{c.nombre}</h3>
                   <div className="text-xs text-ink-muted mt-1 truncate">{c.asunto || "Sin asunto"} · {c.segmento_nombre || "Todos los contactos"}</div>
                   {c.total > 0 ? (

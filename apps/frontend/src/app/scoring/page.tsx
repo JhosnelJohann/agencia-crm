@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, Switch, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -71,7 +71,7 @@ export default function ScoringPage() {
                     <motion.li key={r.contacto_id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i, ease: EASE }}>
                       <Link href={`/contactos/${r.contacto_id}`} className="group flex items-center gap-4 rounded-2xl border border-line bg-white/[0.03] hover:bg-white/[0.06] hover:border-brand-primary/30 p-3.5 transition">
                         <div className="w-8 text-center font-display font-extrabold text-2xl text-ink-muted tabular-nums">{i + 1}</div>
-                        <Icon3D name={t.icon} size={34} />
+                        <AppIcon name={t.icon} size={34} />
                         <div className="min-w-0 flex-1">
                           <div className="font-bold text-ink truncate">{r.nombre_completo}</div>
                           <div className="text-xs text-ink-muted truncate">{[r.empresa, r.email].filter(Boolean).join(" · ") || r.fuente || "—"}</div>

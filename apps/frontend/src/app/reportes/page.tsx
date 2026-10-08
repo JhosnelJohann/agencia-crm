@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useCurrentUser, initialsOf } from "@/lib/auth-user";
 import { DateRangeField } from "@/components/ui/DateField";
 import { FancySelect } from "@/components/ui/FancySelect";
-import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
+import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
 import { ModuleHero, Panel, EmptyState, Pill, StatTile } from "@/components/marketing/ui";
 
 type Scope = "mine" | "all";
@@ -336,7 +336,7 @@ export default function ReportesPage() {
 
 const PALETTE = ["#e8581a", "#f0b040", "#16b91a", "#5d8fa8", "#e30b0b", "#c96a3d", "#94a3b8", "#FB5607", "#b8460f", "#0EA5E9"];
 
-function DonaCard({ title, icon, data }: { title: string; icon: Icon3DName; data: { name: string; value: number }[] }) {
+function DonaCard({ title, icon, data }: { title: string; icon: AppIconName; data: { name: string; value: number }[] }) {
   const filtered = data.filter((d) => d.value > 0);
   const total = filtered.reduce((s, d) => s + d.value, 0);
 

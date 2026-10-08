@@ -32,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Grano de película de la landing: fijo, sin interacción, mezcla overlay. */}
         <SceneHost />
         <CursorGlow />
-        <div className="grain-overlay" aria-hidden="true" />
         <ThemeProvider>
           {/* Sin Lenis (smooth scroll): su bucle rAF + re-escaneo de contenedores cada 250 ms bloqueaba
               el hilo principal en un CRM con listas en tiempo real. Scroll nativo del navegador. */}

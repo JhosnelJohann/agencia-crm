@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 
 /**
@@ -73,7 +73,7 @@ export default function RedesPage() {
                   <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
                     {marcas(c.perfiles).map((m: any, j: number) => (
                       <motion.div key={m.id ?? j} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * j, ease: EASE, duration: 0.6 }} className="rounded-2xl border border-line bg-white/[0.03] p-5">
-                        <div className="flex items-center gap-3"><Icon3D name="crown" size={38} float /><div className="font-display font-extrabold text-2xl text-ink truncate">{m.label || m.title || m.name || `Marca ${m.id}`}</div></div>
+                        <div className="flex items-center gap-3"><AppIcon name="crown" size={38} /><div className="font-display font-extrabold text-2xl text-ink truncate">{m.label || m.title || m.name || `Marca ${m.id}`}</div></div>
                         <div className="mt-3 flex flex-wrap gap-1.5">{redesDe(m).length ? redesDe(m).map((k) => <Pill key={k} tone="accent">{REDES[k]}</Pill>) : <Pill>sin redes</Pill>}</div>
                         {m.timezone && <div className="mt-3 text-xs text-ink-muted">Zona horaria: {m.timezone}</div>}
                       </motion.div>

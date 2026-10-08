@@ -8,7 +8,7 @@ import {
   MessageSquare, Plus, Check, Edit, Bell, X, Download, Eye, Trash2, FolderOpen, Send, Pencil, Inbox, Cake
 } from "@/lib/bootstrap-icons";
 import { DriveBrowser } from "@/components/drive/DriveBrowser";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { SLABadge } from "@/components/ui/SLABadge";
@@ -172,7 +172,7 @@ export default function OportunidadDetailPage() {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-3xl p-8 mb-6 relative overflow-hidden">
-          <Icon3D name="handshake" size={64} float className="absolute -top-2 -right-2 opacity-90 pointer-events-none hidden sm:block" />
+          <AppIcon name="handshake" size={64} className="absolute -top-2 -right-2 opacity-90 pointer-events-none hidden sm:block" />
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">

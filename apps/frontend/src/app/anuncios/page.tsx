@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, api, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 
 /**

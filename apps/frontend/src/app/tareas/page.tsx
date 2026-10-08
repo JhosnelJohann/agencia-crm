@@ -10,7 +10,7 @@ import { TaskCard, type TareaRow } from "@/components/tareas/TaskCard";
 import { TaskModal } from "@/components/tareas/TaskModal";
 import { KanbanTareas } from "@/components/tareas/KanbanTareas";
 import { TareasPorFecha } from "@/components/tareas/TareasPorFecha";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { FancySelect } from "@/components/ui/FancySelect";
 import { DateRangePopover, type DateRange } from "@/components/ui/DateRangePopover";
 import {
@@ -259,7 +259,7 @@ export default function TareasPage() {
         >
           <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.22), transparent 72%)" }} />
           <div className="relative flex items-center gap-5 min-w-0">
-            <Icon3D name="check_mark_button" size={60} float className="shrink-0" />
+            <AppIcon name="check_mark_button" size={60} className="shrink-0" />
             <div className="min-w-0">
               <div className="kicker">Productividad</div>
               <h1 className="mt-1.5 font-display text-3xl sm:text-5xl font-black leading-tight tracking-tight">
@@ -471,7 +471,7 @@ export default function TareasPage() {
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="glass-3d rounded-[28px] py-16 text-center"
           >
-            <Icon3D name="check_mark_button" size={84} float className="mx-auto" />
+            <AppIcon name="check_mark_button" size={84} className="mx-auto" />
             <h3 className="mt-4 font-display font-bold text-[28px] uppercase tracking-wide text-ink">
               {hasFilters ? "Sin resultados" : "Sin tareas"}
             </h3>

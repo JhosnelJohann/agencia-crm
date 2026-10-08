@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrandMark } from "@/components/magic/BrandMark";
-import { Icon3D } from "@/components/ui/Icon3D";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 /**
  * Formulario público (Módulo 1). Sin sesión: vive fuera del CRM y también sirve incrustado (`?embed=1`).
@@ -100,26 +100,20 @@ export default function FormularioPublico() {
   const marco = embed ? "min-h-0 py-4" : "min-h-screen py-10";
   return (
     <main className={`relative ${marco} px-4 flex items-center justify-center text-ink`}>
-      {!embed && (
-        <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden>
-          <div className="absolute left-[10%] top-[18%]"><Icon3D name="rocket" size={92} float /></div>
-          <div className="absolute right-[11%] bottom-[16%]" style={{ animationDelay: "-2s" }}><Icon3D name="sparkles" size={76} float /></div>
-        </div>
-      )}
       <div className="relative z-10 w-full max-w-[460px]">
         {!embed && <div className="mb-6 flex justify-center"><BrandMark size="md" /></div>}
         <AnimatePresence mode="wait">
           {estado === "cargando" && <div key="c" className="glass-3d rounded-[28px] h-72 skeleton" />}
           {estado === "no" && (
             <motion.div key="n" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass-3d rounded-[28px] p-10 text-center">
-              <Icon3D name="hourglass_done" size={72} float />
+              <AppIcon name="hourglass_done" size={72} />
               <h1 className="mt-4 text-[32px]">Formulario no disponible</h1>
               <p className="mt-2 text-ink-sub">Este enlace no está activo o ya no existe.</p>
             </motion.div>
           )}
           {estado === "enviado" && (
             <motion.div key="e" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ ease: EASE, duration: 0.6 }} className="glass-3d rounded-[28px] p-10 text-center">
-              <Icon3D name="party_popper" size={96} float />
+              <AppIcon name="party_popper" size={96} />
               <h1 className="mt-4 text-[38px]">¡Recibido!</h1>
               <p className="mt-2 text-ink-sub">{msg}</p>
             </motion.div>
