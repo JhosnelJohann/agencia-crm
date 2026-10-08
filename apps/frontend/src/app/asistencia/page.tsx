@@ -68,7 +68,21 @@ export default function AsistenciaPage() {
   );
 }
 
+/** "America/New_York" → "Nueva York": nombre legible de la zona en español. */
+function nombreZona(tz: string) {
+  try {
+    const p = new Intl.DateTimeFormat("es", { timeZone: tz, timeZoneName: "longGeneric" }).formatToParts(new Date());
+    const n = p.find((x) => x.type === "timeZoneName")?.value;
+    if (n) return n.replace(/^hora (de |del )?/i, "");
+  } catch {}
+  return (tz.split("/").pop() || tz).replace(/_/g, " ");
+}
+
 function MiJornada() {
+  // La hora se pinta solo en el navegador: en el servidor saldría con la zona del VPS y React
+  // re-renderizaba la página entera por la diferencia (errores #418/#423/#425).
+  const [montado, setMontado] = useState(false);
+  useEffect(() => { setMontado(true); }, []);
   const [status, setStatus] = useState<any | null>(null);
   const [semana, setSemana] = useState<{ entries: Entry[]; schedule: any; racha: number; logros: any[] } | null>(null);
   const [now, setNow] = useState(Date.now());
@@ -130,7 +144,7 @@ function MiJornada() {
   const breakRemainSS = String(breakRemainingSec % 60).padStart(2, "0");
 
   const tz = status?.schedule?.zona_horaria || "America/New_York";
-  const nowLocal = new Date().toLocaleTimeString("es", { timeZone: tz, hour: "2-digit", minute: "2-digit" });
+  const nowLocal = montado ? new Date().toLocaleTimeString("es", { timeZone: tz, hour: "2-digit", minute: "2-digit" }) : "--:--";
 
   return (
     <div className="space-y-6">
@@ -140,7 +154,7 @@ function MiJornada() {
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="text-[13px] font-ui uppercase tracking-wider opacity-80 flex items-center gap-2">
-                <Clock className="h-3.5 w-3.5" /> Hora local <span className="px-1.5 py-0.5 bg-white/20 rounded-md text-[10px] font-bold">{tz.split("/")[1]}</span>
+                <Clock className="h-3.5 w-3.5" /> Hora local <span className="px-1.5 py-0.5 bg-white/20 rounded-md text-[10px] font-bold">{montado ? nombreZona(tz) : ""}</span>
               </div>
               <div className="font-display text-6xl font-black leading-none tabular-nums mt-1">{nowLocal}</div>
               <div className="text-sm opacity-90 mt-2">

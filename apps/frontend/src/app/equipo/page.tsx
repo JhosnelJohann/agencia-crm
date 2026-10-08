@@ -60,7 +60,7 @@ export default function EquipoPage() {
                 Organigrama
               </Link>
               <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 h-11 min-w-[240px]">
-                <Search className="h-4 w-4 text-white/40" />
+                <Search className="h-4 w-4 text-ink-muted" />
                 <input
                   placeholder="Buscar por nombre, email, departamento..."
                   value={q}
@@ -105,7 +105,7 @@ export default function EquipoPage() {
                       )}
                     </div>
                     <div className="font-display font-black text-base mb-1 truncate max-w-full">{u.nombre}</div>
-                    <div className="flex items-center gap-1 text-[13px] text-white/50 font-ui mb-2 truncate max-w-full">
+                    <div className="flex items-center gap-1 text-[13px] text-ink-sub font-ui mb-2 truncate max-w-full">
                       <Mail className="h-3 w-3 flex-shrink-0" />
                       <span className="truncate">{u.email}</span>
                     </div>
@@ -115,7 +115,7 @@ export default function EquipoPage() {
                         <span className="truncate">{(u.posiciones || [])[0] || u.departamento}</span>
                       </div>
                     ) : (
-                      <div className="text-[12px] text-white/40 font-ui uppercase tracking-wider">Miembro del equipo</div>
+                      <div className="text-[12px] text-ink-muted font-ui uppercase tracking-wider">Miembro del equipo</div>
                     )}
                   </div>
                 </Link>

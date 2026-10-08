@@ -8,7 +8,7 @@ import { Bell, X, MessageSquare, Phone, CheckSquare, AlertTriangle } from "@/lib
 import { toast } from "sonner";
 
 const WELCOMED_KEY = "crm-push-welcomed";
-const SNOOZE_KEY = "crm-push-banner-snooze"; // sessionStorage: oculta el banner esta sesion
+const SNOOZE_KEY = "crm-push-banner-visto"; // localStorage: el aviso se muestra UNA sola vez; luego se activa desde Ajustes → Notificaciones
 
 function urlB64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -65,7 +65,9 @@ export function PushSubscriber() {
       return;
     }
     setPerm(Notification.permission);
-    setSnoozed(sessionStorage.getItem(SNOOZE_KEY) === "1");
+    let visto = false;
+    try { visto = localStorage.getItem(SNOOZE_KEY) === "1"; } catch {}
+    setSnoozed(visto);
 
     let asked = false;
     let cleanup = () => {};
@@ -129,10 +131,14 @@ export function PushSubscriber() {
 
   const snooze = () => {
     setSnoozed(true);
-    try { sessionStorage.setItem(SNOOZE_KEY, "1"); } catch {}
+    try { localStorage.setItem(SNOOZE_KEY, "1"); } catch {}
   };
 
   const visible = perm !== "granted" && perm !== "unsupported" && !snoozed;
+  // Basta con haberlo mostrado: no vuelve a salir aunque no se cierre (pedido: «solo una vez»).
+  useEffect(() => {
+    if (visible) { try { localStorage.setItem(SNOOZE_KEY, "1"); } catch {} }
+  }, [visible]);
 
   return (
     <AnimatePresence>

@@ -1061,7 +1061,7 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
         {!storageReady && (
           <div className="px-5 py-2.5 bg-amber-50/80 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-900/40 flex items-center gap-2 text-xs backdrop-blur">
             <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
-            <span className="text-amber-800 dark:text-amber-300 font-ui">Almacenamiento no configurado — configurá el object store en .env y reiniciá crm-api.</span>
+            <span className="text-amber-800 dark:text-amber-300 font-ui">Drive aún no está disponible: falta conectar el almacenamiento de archivos. Avisa al administrador.</span>
           </div>
         )}
 

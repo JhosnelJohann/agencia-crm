@@ -133,7 +133,7 @@ export default function PerfilEquipoPage() {
                   onClick={() => setTab(t.key)}
                   className={cn(
                     "h-9 px-4 rounded-xl text-xs font-ui uppercase tracking-wider transition",
-                    tab === t.key ? "bg-white/10 text-white" : "text-white/50 hover:text-white/80"
+                    tab === t.key ? "bg-black/[0.06] text-ink" : "text-ink-sub hover:text-ink"
                   )}
                 >
                   {t.label}
@@ -183,7 +183,7 @@ export default function PerfilEquipoPage() {
                   </div>
                 )}
                 {(u.posiciones || [])[0] && u.departamento && (
-                  <div className="text-[13px] font-ui text-white/60 tracking-wide">{u.departamento}</div>
+                  <div className="text-[13px] font-ui text-ink-sub tracking-wide">{u.departamento}</div>
                 )}
                 {!u.activo && <div className="text-[12px] font-ui uppercase tracking-wider text-red-400">Inactivo</div>}
               </div>
@@ -194,14 +194,14 @@ export default function PerfilEquipoPage() {
               <div className="flex items-center gap-2 text-xs">
                 <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center"><Smartphone className="h-4 w-4" /></div>
                 <div>
-                  <div className="font-ui uppercase text-[11px] tracking-wider text-white/40">Aplicación</div>
+                  <div className="font-ui uppercase text-[11px] tracking-wider text-ink-muted">Aplicación</div>
                   <div className="font-semibold">Móvil</div>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center"><Monitor className="h-4 w-4" /></div>
                 <div>
-                  <div className="font-ui uppercase text-[11px] tracking-wider text-white/40">Aplicación</div>
+                  <div className="font-ui uppercase text-[11px] tracking-wider text-ink-muted">Aplicación</div>
                   <div className="font-semibold">Escritorio</div>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function PerfilEquipoPage() {
               <div className="font-display font-black text-sm mb-4">Reconocimientos</div>
               <div className="grid grid-cols-7 gap-2">
                 {[ThumbsUp, Gift, Trophy, DollarSign, Crown, Wine, CakeIcon, Hash, Flag, Star, Heart, Sparkles, UserIcon, Briefcase].map((Icon, i) => (
-                  <div key={i} className="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/30 hover:text-brand-orange transition">
+                  <div key={i} className="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-ink-muted hover:text-brand-orange transition">
                     <Icon className="h-4 w-4" strokeWidth={1.5} />
                   </div>
                 ))}
@@ -1119,11 +1119,11 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
 function InfoRow({ label, value, wide, highlighted }: { label: string; value: string | null; wide?: boolean; highlighted?: boolean }) {
   return (
     <div className={cn(wide && "md:col-span-2")}>
-      <div className="text-[12px] font-ui uppercase tracking-[0.15em] text-white/40 mb-1">{label}</div>
+      <div className="text-[12px] font-ui uppercase tracking-[0.15em] text-ink-muted mb-1">{label}</div>
       {value ? (
-        <div className={cn("text-sm", highlighted ? "text-brand-orange bg-brand-orange/10 px-2 py-1 rounded-md inline-block" : "text-white/90")}>{value}</div>
+        <div className={cn("text-sm", highlighted ? "text-brand-orange bg-brand-orange/10 px-2 py-1 rounded-md inline-block" : "text-ink")}>{value}</div>
       ) : (
-        <div className="text-sm text-white/30 italic">el campo está vacío</div>
+        <div className="text-sm text-ink-muted italic">el campo está vacío</div>
       )}
     </div>
   );
@@ -1229,7 +1229,7 @@ function EditProfileModal({ user, onClose, onSaved, isSuperAdmin, mode }: { user
             {mode === "admin" && <Field label="Posición" value={form.posiciones} onChange={(v: string) => setForm({ ...form, posiciones: v })} />}
             <Field label="Fecha de nacimiento" type="date" value={form.cumpleanos} onChange={(v: string) => setForm({ ...form, cumpleanos: v })} />
             <div>
-              <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-white/60 mb-1 block">Sexo</label>
+              <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-ink-sub mb-1 block">Sexo</label>
               <select value={form.genero} onChange={(e) => setForm({ ...form, genero: e.target.value })} className="w-full h-11 px-3 rounded-xl bg-white/5 border border-white/10 text-sm outline-none focus:border-brand-orange">
                 <option value="">—</option>
                 <option value="M">Masculino</option>
@@ -1240,14 +1240,14 @@ function EditProfileModal({ user, onClose, onSaved, isSuperAdmin, mode }: { user
             {isSuperAdmin && user.nivel_acceso !== "super_admin" && (
               <>
                 <div>
-                  <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-white/60 mb-1 block">Nivel</label>
+                  <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-ink-sub mb-1 block">Nivel</label>
                   <select value={form.nivel_acceso} onChange={(e) => setForm({ ...form, nivel_acceso: e.target.value })} className="w-full h-11 px-3 rounded-xl bg-white/5 border border-white/10 text-sm outline-none focus:border-brand-orange">
                     <option value="usuario">Usuario</option>
                     <option value="admin">Administrador</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-white/60 mb-1 block">Estado</label>
+                  <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-ink-sub mb-1 block">Estado</label>
                   <select value={form.activo ? "1" : "0"} onChange={(e) => setForm({ ...form, activo: e.target.value === "1" })} className="w-full h-11 px-3 rounded-xl bg-white/5 border border-white/10 text-sm outline-none focus:border-brand-orange">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
@@ -1289,7 +1289,7 @@ function EditProfileModal({ user, onClose, onSaved, isSuperAdmin, mode }: { user
 function Field({ label, value, onChange, type = "text", wide = false, textarea = false }: any) {
   return (
     <div className={cn(wide && "md:col-span-2")}>
-      <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-white/60 mb-1 block">{label}</label>
+      <label className="text-[12px] font-ui uppercase tracking-[0.15em] text-ink-sub mb-1 block">{label}</label>
       {textarea ? (
         <textarea value={value || ""} onChange={(e) => onChange(e.target.value)} rows={3} className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm outline-none focus:border-brand-orange resize-none" />
       ) : (
