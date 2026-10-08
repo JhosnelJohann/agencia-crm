@@ -111,7 +111,7 @@ export default function EmbudosPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon="satellite_antenna" kicker="Marketing · captación" title="Embudos" accent="y formularios" subtitle="Páginas de captura con seguimiento de UTM: cada envío crea un contacto, abre una oportunidad y suma puntos de scoring.">
+        <ModuleHero shape="torus" icon="satellite_antenna" kicker="Marketing · captación" title="Embudos" accent="y formularios" subtitle="Páginas de captura con seguimiento de UTM: cada envío crea un contacto, abre una oportunidad y suma puntos de scoring.">
           <StatTile label="Vistas · 30 d" value={k ? k.vistas_30d : null} icon="eyes" />
           <StatTile label="Envíos · 30 d" value={k ? k.envios_30d : null} icon="party_popper" tone="accent" delay={0.06} />
           <StatTile label="Conversión" value={k ? convGlobal : null} suffix="%" icon="bullseye" tone="good" delay={0.12} />

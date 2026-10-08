@@ -1,9 +1,10 @@
 "use client";
-import { useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "@/lib/bootstrap-icons";
 import { NavIcon, type NavIconRef } from "@/components/ui/NavIcon";
 import { NumberTicker } from "@/components/magic/NumberTicker";
+import { WireShape, type WireKind } from "@/components/motion/WireShape";
+import { Sparkline } from "@/components/charts/Sparkline";
 import { cn } from "@/lib/utils";
 
 /** Biblioteca visual compartida por los módulos de marketing (mismo lenguaje que el panel y Servicios). */
@@ -15,13 +16,17 @@ export const btnGhost = "h-11 px-5 rounded-2xl border border-line bg-white/[0.04
 export const btnAurora = "btn-aurora h-11 px-5 rounded-2xl text-white font-bold text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none";
 
 /** Encabezado de módulo: icono (o logo de la plataforma), kicker, titular Barlow y acciones/indicadores a la derecha. */
-export function ModuleHero({ icon, kicker, title, accent, subtitle, children }: {
+export function ModuleHero({ icon, kicker, title, accent, subtitle, children, shape = "icosahedron" }: {
   icon: NavIconRef; kicker: string; title: string; accent?: string; subtitle?: string; children?: React.ReactNode;
+  /** Poliedro de alambre de fondo: cada módulo usa una variante distinta. */
+  shape?: WireKind;
 }) {
   return (
     <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}
       className="glass-3d rounded-[28px] relative overflow-hidden px-6 py-5 sm:px-7 mb-5">
       <div className="pointer-events-none absolute -right-20 -top-24 h-[360px] w-[360px] rounded-full" style={{ background: "radial-gradient(closest-side, rgba(232,88,26,0.24), transparent 72%)" }} />
+      <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden />
+      <WireShape kind={shape} size={300} className="absolute -right-6 top-1/2 -translate-y-1/2 opacity-60 hidden md:block" />
       <div className="relative flex items-center justify-between gap-6 flex-wrap">
         <div className="flex items-center gap-5 min-w-0">
           <NavIcon icon={icon} size={64} className="shrink-0" />
@@ -40,8 +45,12 @@ export function ModuleHero({ icon, kicker, title, accent, subtitle, children }: 
 }
 
 /** Indicador con número animado. */
-export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neutral", delay = 0, decimals = 0 }: {
+export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neutral", delay = 0, decimals = 0, spark, delta }: {
   label: string; value: number | null; suffix?: string; prefix?: string; hint?: string; icon?: NavIconRef; tone?: "neutral" | "accent" | "good" | "bad"; delay?: number; decimals?: number;
+  /** Serie real (p. ej. últimos 30 días) para la mini-gráfica; sin serie no se dibuja nada. */
+  spark?: number[];
+  /** Variación % frente al periodo anterior; null/undefined = sin dato (no se inventa). */
+  delta?: number | null;
 }) {
   const ring = tone === "accent" ? "border-brand-primary/30 bg-brand-primary/[0.08]" : tone === "good" ? "border-brand-green/25 bg-brand-green/[0.06]" : tone === "bad" ? "border-brand-red/25 bg-brand-red/[0.06]" : "border-line bg-white/[0.03]";
   return (
@@ -51,10 +60,18 @@ export function StatTile({ label, value, suffix, prefix, hint, icon, tone = "neu
         <div className="text-[10.5px] uppercase tracking-[2px] text-ink-sub font-semibold">{label}</div>
         {icon && <NavIcon icon={icon} size={26} />}
       </div>
-      <div className="mt-1 font-display font-extrabold text-[34px] leading-none tabular-nums text-ink">
-        <NumberTicker value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
+      <div className="mt-1 flex items-end justify-between gap-3">
+        <div className="font-display font-extrabold text-[34px] leading-none tabular-nums text-ink">
+          <NumberTicker value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
+        </div>
+        {spark && spark.length > 1 && <Sparkline data={spark} width={72} height={26} className="mb-1" />}
       </div>
-      {hint && <div className="mt-1 text-xs text-ink-muted">{hint}</div>}
+      {(hint || delta != null) && (
+        <div className="mt-1 flex items-center gap-2 text-xs text-ink-muted">
+          {delta != null && <Delta value={delta} />}
+          {hint}
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -83,10 +100,24 @@ export function Panel({ title, kicker, icon, right, children, className, delay =
   );
 }
 
-export function EmptyState({ icon, title, text, action }: { icon: NavIconRef; title: string; text: string; action?: React.ReactNode }) {
+/** Variación % estilo terminal financiera: flecha y color según el signo, cifras tabulares. */
+export function Delta({ value }: { value: number }) {
+  const up = value > 0, flat = value === 0;
+  return (
+    <span className={cn("inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums",
+      flat ? "bg-ink/5 text-ink-sub" : up ? "bg-brand-green/10 text-[#15803d]" : "bg-brand-red/10 text-[#b91c1c]")}>
+      {flat ? "■" : up ? "▲" : "▼"} {Math.abs(value).toFixed(Math.abs(value) < 10 ? 1 : 0)}%
+    </span>
+  );
+}
+
+export function EmptyState({ icon, title, text, action, shape = "icosahedron" }: { icon: NavIconRef; title: string; text: string; action?: React.ReactNode; shape?: WireKind }) {
   return (
     <div className="py-14 text-center">
-      <NavIcon icon={icon} size={84} />
+      <div className="relative mx-auto h-[150px] w-[150px] flex items-center justify-center">
+        <WireShape kind={shape} size={150} className="absolute inset-0 opacity-50" speed={0.7} />
+        <NavIcon icon={icon} size={72} className="relative" />
+      </div>
       <div className="mt-4 font-display font-bold text-[28px] uppercase tracking-wide text-ink">{title}</div>
       <p className="mt-1 text-ink-sub max-w-md mx-auto">{text}</p>
       {action && <div className="mt-5 flex justify-center">{action}</div>}
@@ -136,37 +167,8 @@ export function Switch({ checked, onChange, label }: { checked: boolean; onChang
 }
 
 /** Gráfica de área con dos series (SVG puro, animada; sin dependencias pesadas). */
-export function AreaChart({ data, a, b, labelA, labelB }: {
-  data: { dia: string; [k: string]: any }[]; a: string; b?: string; labelA: string; labelB?: string;
-}) {
-  const uid = useId().replace(/:/g, "");
-  const W = 640, H = 190, P = 6;
-  const max = Math.max(1, ...data.map((d) => Number(d[a]) || 0), ...(b ? data.map((d) => Number(d[b]) || 0) : [0]));
-  const x = (i: number) => P + (i * (W - P * 2)) / Math.max(1, data.length - 1);
-  const y = (v: number) => H - P - (v / max) * (H - P * 2 - 10);
-  const line = (k: string) => data.map((d, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(Number(d[k]) || 0).toFixed(1)}`).join(" ");
-  const area = (k: string) => `${line(k)} L${x(data.length - 1)},${H - P} L${x(0)},${H - P} Z`;
-  return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[190px]" role="img" aria-label={`${labelA}${labelB ? " y " + labelB : ""} por día`}>
-        <defs>
-          <linearGradient id={`ga-${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e8581a" stopOpacity="0.55" /><stop offset="1" stopColor="#e8581a" stopOpacity="0" /></linearGradient>
-          <linearGradient id={`gb-${uid}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e2e8f0" stopOpacity="0.28" /><stop offset="1" stopColor="#e2e8f0" stopOpacity="0" /></linearGradient>
-        </defs>
-        {[0.25, 0.5, 0.75].map((t) => <line key={t} x1={P} x2={W - P} y1={H - P - t * (H - P * 2 - 10)} y2={H - P - t * (H - P * 2 - 10)} stroke="rgba(226, 232, 240,0.06)" />)}
-        {b && <><path d={area(b)} fill={`url(#gb-${uid})`} /><motion.path d={line(b)} fill="none" stroke="#e2e8f0" strokeOpacity="0.7" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: EASE }} /></>}
-        <path d={area(a)} fill={`url(#ga-${uid})`} />
-        <motion.path d={line(a)} fill="none" stroke="#e8581a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 0 8px rgba(232,88,26,0.7))" }} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: EASE, delay: 0.1 }} />
-        {data.map((d, i) => (Number(d[a]) > 0 ? <circle key={i} cx={x(i)} cy={y(Number(d[a]))} r="3.2" fill="#e8581a" /> : null))}
-      </svg>
-      <div className="mt-2 flex items-center gap-5 text-xs text-ink-sub">
-        <span className="inline-flex items-center gap-2"><span className="h-2 w-5 rounded-full bg-brand-primary" />{labelA}</span>
-        {b && <span className="inline-flex items-center gap-2"><span className="h-2 w-5 rounded-full bg-ink/70" />{labelB}</span>}
-        <span className="ml-auto text-ink-muted">últimos {data.length} días</span>
-      </div>
-    </div>
-  );
-}
+/** Compatibilidad: el área de 30 días ahora es la gráfica estilo terminal (cursor y valores flotantes). */
+export { TradingArea as AreaChart } from "@/components/charts/TradingArea";
 
 export async function api<T = any>(url: string, init?: RequestInit): Promise<T> {
   const r = await fetch(url, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers || {}) } });

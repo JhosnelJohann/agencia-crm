@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { query } from "./shared/db.js";
 import { requireAuth } from "./shared/auth-middleware.js";
+import { metrica } from "./lib/series.js";
 
 export function registerStatsRoutes(app: Express) {
   app.get("/api/stats/clientes-ganados", requireAuth, async (_req, res) => {
@@ -31,6 +32,28 @@ export function registerStatsRoutes(app: Express) {
     ganados: rows,
     total_count: totals[0]?.total_count || 0,
     total_valor: totals[0]?.total_valor || 0
+  });
+  });
+
+  // Series diarias para las mini-gráficas del panel: periodo actual + anterior (para la variación %).
+  // Solo días con actividad vienen de SQL; lib/series.ts rellena huecos y calcula la variación.
+  app.get("/api/stats/series", requireAuth, async (req, res) => {
+  const dias = Math.max(7, Math.min(90, Number(req.query.dias) || 30));
+  const desde = `NOW() - INTERVAL '${dias * 2} days'`;
+  const [contactos, oportunidades, cobrado] = await Promise.all([
+    query<any>(`SELECT created_at::date AS dia, count(*)::int AS n FROM gozz.contactos_cache
+                WHERE COALESCE(archivado, false) = false AND created_at >= ${desde} GROUP BY 1`),
+    query<any>(`SELECT created_at::date AS dia, count(*)::int AS n FROM gozz.oportunidades
+                WHERE created_at >= ${desde} GROUP BY 1`),
+    query<any>(`SELECT fecha_pago AS dia, COALESCE(SUM(monto), 0)::float8 AS n FROM gozz.oportunidades_pagos
+                WHERE COALESCE(anulado, false) = false AND metodo <> 'descuento_referido' AND fecha_pago >= (${desde})::date GROUP BY 1`),
+  ]);
+  const hoy = new Date();
+  res.json({
+    dias,
+    contactos: metrica(contactos, dias, hoy),
+    oportunidades: metrica(oportunidades, dias, hoy),
+    cobrado: metrica(cobrado, dias, hoy),
   });
   });
 

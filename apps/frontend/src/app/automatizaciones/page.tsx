@@ -84,7 +84,7 @@ export default function AutomatizacionesPage() {
   return (
     <AppShell>
       <div className="max-w-[1500px] mx-auto px-3.5 lg:px-5 pt-5 pb-14">
-        <ModuleHero icon="high_voltage" kicker="Operación · flujos" title="Automatizaciones" accent="e IA" subtitle="Agentes de IA de WhatsApp con n8n, reglas por etapa o etiqueta, recordatorios programados y webhooks por cada evento del CRM." />
+        <ModuleHero shape="cube" icon="high_voltage" kicker="Operación · flujos" title="Automatizaciones" accent="e IA" subtitle="Agentes de IA de WhatsApp con n8n, reglas por etapa o etiqueta, recordatorios programados y webhooks por cada evento del CRM." />
 
         <div className="inline-flex items-center gap-1 glass-3d rounded-2xl p-1.5 mb-6">
           {TABS.map((t) => {
