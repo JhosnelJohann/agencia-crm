@@ -1527,3 +1527,10 @@ html.dark .app-main .glass-topbar:not(:is(.modal-surface, .dark-island) *) {
   background: rgba(255, 255, 255, 0.86);
   border-bottom: 1px solid rgba(15, 23, 42, 0.07);
 }
+
+/* Páginas que son un panel oscuro completo (WhatsApp, Chat): el contenido toma el fondo oscuro del CRM
+   para que alrededor del panel no asome la franja gris perla (se veía como un marco blanco). El único
+   contorno visible es el borde del propio panel, con su degradado naranja a intensidad completa. */
+.app-main:has(.page-dark) { background: transparent; }
+.app-main .page-dark.glass-3d::before { opacity: 0.85; }
+.app-main .page-dark { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 60px -30px rgba(0, 0, 0, 0.7); }
