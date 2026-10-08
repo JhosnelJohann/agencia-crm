@@ -1,12 +1,13 @@
 "use client";
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
-import { Sparkles, X, Download, ZoomIn, ZoomOut, Maximize2, RotateCcw, PhoneMissed, PhoneOff, Phone, Video, Clock as ClockIcon, ChevronDown, ChevronUp, FileText, CheckSquare, MessageSquare, Target, CheckCheck, Circle, CircleCheck, Forward, Trash2, Trophy, Heart, PartyPopper } from "@/lib/bootstrap-icons";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, X, Maximize2, PhoneMissed, PhoneOff, Phone, Video, Clock as ClockIcon, ChevronDown, ChevronUp, FileText, CheckSquare, MessageSquare, Target, CheckCheck, Circle, CircleCheck, Forward, Trash2, Trophy, Heart, PartyPopper } from "@/lib/bootstrap-icons";
 import { initialsOf } from "@/lib/auth-user";
 import { cn } from "@/lib/utils";
 import { MessageStatus, type Status } from "./MessageStatus";
 import { AudioMessage } from "./AudioMessage";
 import { FileMessage } from "./FileMessage";
+import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { FilePreviewModal } from "@/components/drive/DriveBrowser";
 import { archivosDeLaConversacion, esMensajeDeArchivo, posicionDeArchivo, vecinoDeArchivo } from "@/lib/chat-archivos";
 import { CoPilotMessage, CoPilotAvatar, CoPilotThinking, type CoPilotThinkingKind } from "./CoPilotMessage";
@@ -147,14 +148,9 @@ export function ChatMessages({ mensajes, meId, hasMore = false, loadingOlder = f
   const anchorTopRef = useRef(0);
   const actionRefs = useRef<Record<string, MessageActionsHandle | null>>({});  // menú por mensaje (click derecho)
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [usuariosById, setUsuariosById] = useState<Record<string, { nombre: string; foto: string | null }>>({});
-  const zoomSpring = useSpring(1, { stiffness: 280, damping: 28 });
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
 
   const imageMsgs = useMemo(() => IMAGES_IN_MSGS(mensajes), [mensajes]);
-  const lightbox = lightboxIdx !== null ? imageMsgs[lightboxIdx] : null;
 
   // ════════════════════════════════════════════════════════════════════════════════════════
   // EL VISOR DE ARCHIVOS VIVE AQUI, NO DENTRO DE CADA MENSAJE
@@ -240,10 +236,6 @@ export function ChatMessages({ mensajes, meId, hasMore = false, loadingOlder = f
     if (idx >= 0) setLightboxIdx(idx);
   };
   const close = () => setLightboxIdx(null);
-  const prev = () => { if (lightboxIdx === null) return; setLightboxIdx((i) => (i! > 0 ? i! - 1 : imageMsgs.length - 1)); };
-  const next = () => { if (lightboxIdx === null) return; setLightboxIdx((i) => (i! < imageMsgs.length - 1 ? i! + 1 : 0)); };
-  const setZoom = (z: number) => zoomSpring.set(Math.min(5, Math.max(0.4, z)));
-  const resetView = () => { zoomSpring.set(1); x.set(0); y.set(0); };
 
   // Scroll cerca del tope => traer mensajes anteriores (estilo WhatsApp).
   const handleScroll = () => {
@@ -305,22 +297,6 @@ export function ChatMessages({ mensajes, meId, hasMore = false, loadingOlder = f
     if (nearBottom) endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [typingCount, meId]);
 
-  useEffect(() => {
-    if (lightboxIdx === null) return;
-    resetView();
-    setImageLoaded(false);
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowRight") next();
-      else if (e.key === "ArrowLeft") prev();
-      else if (e.key === "+" || e.key === "=") setZoom(zoomSpring.get() + 0.25);
-      else if (e.key === "-" || e.key === "_") setZoom(zoomSpring.get() - 0.25);
-      else if (e.key === "0") resetView();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lightboxIdx]);
 
   return (
     <div ref={scrollRef} onScroll={handleScroll} data-lenis-prevent className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin chat-bg px-5 py-4 space-y-1.5">
@@ -703,149 +679,16 @@ export function ChatMessages({ mensajes, meId, hasMore = false, loadingOlder = f
         />
       )}
 
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            onClick={close}
-            className="fixed inset-0 z-[90] flex flex-col"
-          >
-            {/* Ambient blurred backdrop usando la imagen */}
-            <div
-              className="absolute inset-0 bg-black"
-              style={{
-                backgroundImage: `url(${lightbox.archivo_url})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                filter: "blur(60px) saturate(1.4) brightness(0.45)",
-                transform: "scale(1.2)",
-              }}
-            />
-            <div className="absolute inset-0 bg-black/70" />
-
-            {/* Top toolbar */}
-            <motion.div
-              initial={{ y: -14, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -14, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 320, damping: 26, delay: 0.05 }}
-              className="relative z-10 px-5 py-4 flex items-center gap-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-ui uppercase tracking-[0.2em] text-white/55">Imagen · {(lightboxIdx ?? 0) + 1} / {imageMsgs.length}</div>
-                <div className="text-white font-display font-black truncate">{lightbox.archivo_nombre || "imagen"}</div>
-              </div>
-              <div className="flex items-center gap-1 rounded-2xl bg-white/8 backdrop-blur-xl border border-white/15 p-1 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
-                <button type="button" onClick={() => setZoom(zoomSpring.get() - 0.25)}
-                  className="h-9 w-9 rounded-xl hover:bg-white/15 text-white flex items-center justify-center transition" title="Alejar (-)">
-                  <ZoomOut className="h-4 w-4" />
-                </button>
-                <ZoomBadge zoomSpring={zoomSpring} />
-                <button type="button" onClick={() => setZoom(zoomSpring.get() + 0.25)}
-                  className="h-9 w-9 rounded-xl hover:bg-white/15 text-white flex items-center justify-center transition" title="Acercar (+)">
-                  <ZoomIn className="h-4 w-4" />
-                </button>
-                <div className="w-px h-6 bg-white/15 mx-1" />
-                <button type="button" onClick={resetView}
-                  className="h-9 w-9 rounded-xl hover:bg-white/15 text-white flex items-center justify-center transition" title="Reset (0)">
-                  <RotateCcw className="h-4 w-4" />
-                </button>
-              </div>
-              <a
-                href={lightbox.archivo_url || "#"}
-                download={lightbox.archivo_nombre || true}
-                target="_blank"
-                rel="noopener"
-                onClick={(e) => e.stopPropagation()}
-                className="h-10 px-4 rounded-2xl bg-gradient-to-r from-brand-orange to-neon-magenta text-white font-ui text-[13px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[0_8px_24px_rgba(232,88,26,0.45)] hover:scale-[1.03] active:scale-95 transition"
-              >
-                <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
-                Descargar
-              </a>
-              <button type="button" onClick={close}
-                className="h-10 w-10 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-white flex items-center justify-center transition" title="Cerrar (Esc)">
-                <X className="h-5 w-5" />
-              </button>
-            </motion.div>
-
-            {/* Nav arrows (si hay varias imágenes) */}
-            {imageMsgs.length > 1 && (
-              <>
-                <button type="button" onClick={(e) => { e.stopPropagation(); prev(); }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-white flex items-center justify-center transition" title="Anterior">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <button type="button" onClick={(e) => { e.stopPropagation(); next(); }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-white flex items-center justify-center transition" title="Siguiente">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </button>
-              </>
-            )}
-
-            {/* Imagen pan/zoom */}
-            <motion.div
-              key={lightbox.id}
-              initial={{ scale: 0.9, opacity: 0, y: 24 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 24 }}
-              className="relative z-[5] flex-1 flex items-center justify-center p-6 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-              onDoubleClick={() => { zoomSpring.get() > 1.1 ? resetView() : setZoom(2); }}
-              onWheel={(e) => {
-                e.stopPropagation();
-                setZoom(zoomSpring.get() + (e.deltaY < 0 ? 0.2 : -0.2));
-              }}
-            >
-              {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 flex items-center justify-center">
-                    <motion.div
-                      className="h-6 w-6 rounded-full border-2 border-white/80 border-t-transparent"
-                      animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.9, ease: "linear" }}
-                    />
-                  </div>
-                </div>
-              )}
-              <motion.img
-                src={lightbox.archivo_url || ""}
-                alt={lightbox.archivo_nombre || ""}
-                onLoad={() => setImageLoaded(true)}
-                drag={zoomSpring.get() > 1}
-                dragMomentum={false}
-                style={{ scale: zoomSpring, x, y }}
-                className="max-w-[90vw] max-h-[78vh] object-contain rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.6)] select-none cursor-zoom-in"
-                draggable={false}
-              />
-            </motion.div>
-
-            {/* Hint footer */}
-            <motion.div
-              initial={{ y: 14, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 14, opacity: 0 }}
-              transition={{ delay: 0.2 }}
-              className="relative z-10 pb-4 text-center text-[13px] font-ui text-white/50 space-x-3"
-            >
-              <span>↑↓ zoom · ← → navegar · doble click · Esc cerrar</span>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ImageLightbox
+        imagenes={imageMsgs.map((m) => ({ id: m.id, url: m.archivo_url || "", nombre: m.archivo_nombre }))}
+        indice={lightboxIdx}
+        onIndice={setLightboxIdx}
+        onClose={close}
+      />
     </div>
   );
 }
 
-function ZoomBadge({ zoomSpring }: { zoomSpring: any }) {
-  const [val, setVal] = useState(100);
-  useEffect(() => {
-    const unsub = zoomSpring.on("change", (v: number) => setVal(Math.round(v * 100)));
-    return () => unsub();
-  }, [zoomSpring]);
-  return (
-    <div className="px-2 text-[13px] font-ui font-bold tabular-nums text-white/90 min-w-[52px] text-center">
-      {val}%
-    </div>
-  );
-}
 
 function CallMissedPill({
   payload, meId, createdAt,

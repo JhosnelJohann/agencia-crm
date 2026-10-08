@@ -10,11 +10,15 @@ import fs from "fs";
 import path from "path";
 import { UPLOADS_ROOT, shard, putUploadedBytesToR2 } from "../../../lib/storage.js";
 
+/** El binario de `ffmpeg-static`; si no se descargó (p. ej. pnpm con los scripts de instalación
+ * bloqueados), el `ffmpeg` del sistema. */
 function rutaFfmpeg(): string {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const p = require("ffmpeg-static") as string | null;
-  if (!p) throw new Error("ffmpeg-static no tiene binario para esta plataforma");
-  return p;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const p = require("ffmpeg-static") as string | null;
+    if (p && fs.existsSync(p)) return p;
+  } catch { /* sin el paquete: se usa el del sistema */ }
+  return "ffmpeg";
 }
 
 /** Convierte cualquier audio a OGG/Opus mono 48 kHz (formato de nota de voz de WhatsApp). */

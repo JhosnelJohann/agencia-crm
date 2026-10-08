@@ -54,13 +54,18 @@ export function ConnectionSwitcher({ conexiones, activeId, onSelect, onConnectNe
         className="w-full flex items-center gap-2 min-w-0 rounded-lg px-1.5 py-1 -mx-1.5 hover:bg-black/[0.03] dark:hover:bg-white/5 transition"
       >
         <div className="relative shrink-0">
-          <div className="h-8 w-8 rounded-full bg-brand-green/15 text-brand-green flex items-center justify-center">
-            <WhatsappLogo className="h-4 w-4" weight="fill" />
-          </div>
+          {activa?.perfil_foto_url ? (
+            // Foto de la cuenta de WhatsApp conectada (la del teléfono), como en WhatsApp Web.
+            <img src={activa.perfil_foto_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+          ) : (
+            <div className="h-8 w-8 rounded-full bg-brand-green/15 text-brand-green flex items-center justify-center">
+              <WhatsappLogo className="h-4 w-4" weight="fill" />
+            </div>
+          )}
           {ui && <span className={cn("absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-bg-canvas dark:border-[#0B0F16]", ui.dot)} />}
         </div>
         <div className="flex-1 min-w-0 text-left">
-          <div className="text-sm font-bold truncate">{activa?.nombre || "Sin conexión"}</div>
+          <div className="text-sm font-bold truncate">{activa?.perfil_nombre || activa?.nombre || "Sin conexión"}</div>
           <div className="text-[10px] text-ink-sub truncate">{mostrarTelefono(activa?.telefono ?? null) || ui?.label || "Conecta un número"}</div>
         </div>
         <CaretDown className={cn("h-3.5 w-3.5 text-ink-sub shrink-0 transition-transform", open && "rotate-180")} />

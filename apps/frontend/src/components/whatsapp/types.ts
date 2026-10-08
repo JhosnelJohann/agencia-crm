@@ -4,6 +4,9 @@ export interface WhatsAppConexion {
   telefono: string | null;
   estado: "pendiente" | "conectando" | "conectado" | "desconectado" | "error" | "cerrada";
   ultimo_error: string | null;
+  /** Nombre y foto de la cuenta de WhatsApp conectada (los del teléfono). */
+  perfil_nombre?: string | null;
+  perfil_foto_url?: string | null;
 }
 
 export interface WhatsAppPipelineStage {
@@ -27,7 +30,7 @@ export interface WhatsAppMensaje {
   conversacion_id: string;
   wa_message_id: string | null;
   direccion: "entrante" | "saliente";
-  tipo: "texto" | "imagen" | "archivo" | "audio" | "video" | "sistema";
+  tipo: "texto" | "imagen" | "archivo" | "audio" | "video" | "sistema" | "sticker" | "ubicacion" | "contacto";
   contenido: string | null;
   archivo_url: string | null;
   archivo_nombre: string | null;
@@ -37,6 +40,15 @@ export interface WhatsAppMensaje {
   created_at: string;
   visto_at: string | null;
   visto_por: string | null;
+  es_nota_voz?: boolean;
+  duracion_seg?: number | null;
+  /** Reacción del contacto y la nuestra (emoji) sobre este mensaje. */
+  reaccion?: string | null;
+  reaccion_propia?: string | null;
+  editado_at?: string | null;
+  borrado_at?: string | null;
+  /** ubicacion: {lat,lng,nombre?,direccion?} · contacto: {nombre,telefono?,vcard?,lista?} */
+  datos?: Record<string, any> | null;
 }
 
 export interface WhatsAppConversacionDetalle {
@@ -52,4 +64,6 @@ export interface WhatsAppConversacionDetalle {
   asignado_a: string | null;
   oportunidad_id: string | null;
   tags: WhatsAppTag[];
+  /** "Info" (estado) del contacto en WhatsApp. */
+  info_perfil?: string | null;
 }
