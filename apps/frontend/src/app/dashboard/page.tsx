@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { AppShell } from "@/components/AppShell";
 import { RecognitionsBanner } from "@/components/dashboard/RecognitionsBanner";
 import { NumberTicker } from "@/components/magic/NumberTicker";
@@ -18,6 +17,7 @@ import { Sparkline } from "@/components/charts/Sparkline";
 import { WireShape } from "@/components/motion/WireShape";
 import { CollectionRing } from "@/components/charts/CollectionRing";
 import { FlowDiagram } from "@/components/charts/FlowDiagram";
+import { SegmentDonut } from "@/components/charts/SegmentDonut";
 import { cn } from "@/lib/utils";
 
 interface Metrica { serie: number[]; variacion: number | null; total: number }
@@ -339,29 +339,8 @@ export default function DashboardPage() {
                   <p className="mt-3">Sin oportunidades con SLA todavía.</p>
                 </div>
               ) : (
-                <div className="flex-1 flex items-center gap-4">
-                  <div className="relative h-[170px] w-[170px] shrink-0">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={bySLA} dataKey="value" innerRadius={56} outerRadius={80} paddingAngle={4} stroke="none" cornerRadius={6} isAnimationActive>
-                          {bySLA.map((s) => <Cell key={s.name} fill={s.color} />)}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <div className="font-display font-extrabold text-4xl text-ink tabular-nums">{slaTotal}</div>
-                      <div className="text-[9.5px] uppercase tracking-[2px] text-ink-muted font-semibold">casos</div>
-                    </div>
-                  </div>
-                  <ul className="space-y-2.5 text-sm">
-                    {bySLA.map((s) => (
-                      <li key={s.name} className="flex items-center gap-2.5">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ background: s.color, boxShadow: `0 0 10px ${s.color}` }} />
-                        <span className="text-ink-sub">{s.name}</span>
-                        <span className="ml-auto font-bold text-ink tabular-nums pl-3">{s.value}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex-1 flex items-center">
+                  <SegmentDonut segments={bySLA} size={150} centerLabel="casos" />
                 </div>
               )}
             </Glass>

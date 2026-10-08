@@ -15,6 +15,7 @@ import { SLABadge } from "@/components/ui/SLABadge";
 import { Spotlight } from "@/components/magic/Spotlight";
 import { ShimmerButton } from "@/components/magic/ShimmerButton";
 import { useStages, PipelineStage } from "@/lib/pipeline";
+import { TaperFunnel } from "@/components/charts/TaperFunnel";
 import { FancySelect } from "@/components/ui/FancySelect";
 import { ContactoPicker } from "@/components/oportunidad/ContactoPicker";
 import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
@@ -936,6 +937,20 @@ export default function OportunidadesPage() {
           </ShimmerButton>
           </div>
         </motion.div>
+
+        {(() => {
+          const embudo = [...(stages || [])].filter((s) => s.activa !== false && (!s.es_terminal || s.es_ganado)).sort((a, b) => a.orden - b.orden)
+            .map((s) => ({ label: s.label, value: stageCounts[s.key] ?? 0, color: s.color }));
+          return embudo.some((e) => e.value > 0) ? (
+            <div className="glass-3d rounded-[28px] px-6 py-5 mb-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="kicker !text-[10.5px]">Embudo del pipeline</div>
+                <span className="text-[11px] text-ink-muted">% = paso desde la etapa anterior</span>
+              </div>
+              <TaperFunnel stages={embudo} />
+            </div>
+          ) : null;
+        })()}
 
         <FilterBar value={filtros} onChange={setFiltros} tramites={tramites} users={users} meId={me?.id || null} total={totalFiltrado} filtered={totalFiltrado} />
 

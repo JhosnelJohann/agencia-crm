@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Plus, Trash, Pencil, ArrowUp, ArrowDown, X } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { BarRace } from "@/components/charts/BarRace";
 import { AreaChart, EASE, EmptyState, Modal, Panel, Pill, StatTile, Switch, ModuleHero, api, areaCls, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +118,12 @@ export default function EmbudosPage() {
           <StatTile label="Conversión" value={k ? convGlobal : null} suffix="%" icon="bullseye" tone="good" delay={0.12} />
           <button onClick={() => setEditor({ ...VACIO, campos: PLANTILLA.map((c) => ({ ...c })) })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Nuevo formulario</button>
         </ModuleHero>
+
+        {forms && forms.some((f) => f.vistas > 0 || f.envios > 0) && (
+          <Panel className="mb-5" kicker="Comparativa" title="Formularios en carrera" icon="glowing_star" delay={0.03}>
+            <BarRace rows={forms.map((f) => ({ label: f.nombre, a: f.vistas, b: f.envios }))} labelA="Vistas" labelB="Envíos" />
+          </Panel>
+        )}
 
         <div className="grid grid-cols-12 gap-5 mb-6">
           <Panel className="col-span-12 xl:col-span-8" kicker="Rendimiento" title="Vistas y envíos" icon="chart_increasing" delay={0.05}>

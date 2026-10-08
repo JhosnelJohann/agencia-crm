@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Plus, Trash } from "@/lib/bootstrap-icons";
 import { AppShell } from "@/components/AppShell";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { RadialRings } from "@/components/charts/RadialRings";
 import { EASE, EmptyState, Modal, ModuleHero, Panel, Pill, StatTile, api, areaCls, btnAurora, btnGhost, inputCls, labelCls } from "@/components/marketing/ui";
 import { cn } from "@/lib/utils";
 
@@ -55,7 +56,8 @@ export default function CampanasPage() {
     const env = (camps || []).reduce((n, c) => n + c.enviados, 0);
     const ab = (camps || []).reduce((n, c) => n + c.abiertos, 0);
     const cl = (camps || []).reduce((n, c) => n + c.clics, 0);
-    return { env, aperturas: env ? Math.round((ab / env) * 100) : 0, clics: env ? Math.round((cl / env) * 1000) / 10 : 0 };
+    const tot = (camps || []).reduce((n, c) => n + c.total, 0);
+    return { env, ab, cl, tot, aperturas: env ? Math.round((ab / env) * 100) : 0, clics: env ? Math.round((cl / env) * 1000) / 10 : 0 };
   }, [camps]);
 
   const guardar = async (): Promise<string | null> => {
@@ -105,6 +107,16 @@ export default function CampanasPage() {
           <StatTile label="Clics" value={camps ? kpi.clics : null} suffix="%" icon="bullseye" tone="good" delay={0.12} />
           <button onClick={() => setEd({ ...VACIA, buzon_id: buzones[0]?.id || "" })} className={btnAurora}><Plus className="h-4 w-4" weight="bold" /> Nueva campaña</button>
         </ModuleHero>
+
+        {camps && kpi.env > 0 && (
+          <Panel className="mb-5" kicker="Embudo del correo" title="Entrega, apertura y clic" icon="envelope_with_arrow" delay={0.04}>
+            <RadialRings rings={[
+              { label: "Entregados", pct: kpi.tot ? kpi.env / kpi.tot : 0, color: "#2563eb", detail: `${kpi.env} de ${kpi.tot} destinatarios` },
+              { label: "Abiertos", pct: kpi.ab / kpi.env, color: "#e8581a", detail: `${kpi.ab} aperturas` },
+              { label: "Clics", pct: kpi.cl / kpi.env, color: "#16a34a", detail: `${kpi.cl} clics` },
+            ]} />
+          </Panel>
+        )}
 
         <div className="flex gap-2 mb-5">
           {(["campanas", "segmentos"] as const).map((t) => (

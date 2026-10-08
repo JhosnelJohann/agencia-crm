@@ -20,7 +20,7 @@ export default function LoginPage() {
           <BrandMark size="lg" />
           <div className="kicker mt-4">El CRM de marketing</div>
           <h1 className="mt-2 text-[clamp(24px,4.4vw,34px)] text-ink">
-            No es suerte. Es <span className="text-brand-orange text-orange-glow">sistema.</span>
+            El futuro del marketing <span className="text-brand-orange text-orange-glow">al alcance de tus manos.</span>
           </h1>
         </div>
 
