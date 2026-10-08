@@ -8,6 +8,7 @@ import type {
   WhatsAppOutgoingMessage,
   WhatsAppIncomingMessage,
   WhatsAppConnectionUpdate,
+  WhatsAppCambioMensaje,
 } from "./whatsapp-provider.interface.js";
 
 export class FakeWhatsAppProvider implements WhatsAppProvider {
@@ -16,7 +17,12 @@ export class FakeWhatsAppProvider implements WhatsAppProvider {
   private msgCbs: ((conexionId: string, msg: WhatsAppIncomingMessage) => void)[] = [];
   private statusCbs: ((conexionId: string, waMessageId: string, estado: WhatsAppMensajeEstado) => void)[] = [];
   private contactoCbs: ((conexionId: string, jid: string, info: { jidReal?: string | null; nombre?: string | null }) => void)[] = [];
+  private lidCbs: ((conexionId: string, lid: string, pn: string) => void)[] = [];
+  private cambioCbs: ((conexionId: string, cambio: WhatsAppCambioMensaje) => void)[] = [];
+  private perfilCbs: ((conexionId: string, perfil: { nombre: string | null; fotoUrl: string | null }) => void)[] = [];
   public sent: { conexionId: string; msg: WhatsAppOutgoingMessage }[] = [];
+  public leidos: { conexionId: string; jid: string; waMessageIds: string[] }[] = [];
+  public infos = new Map<string, string | null>();
   private connected = new Set<string>();
   public fotosPerfil = new Map<string, string | null>();
 
@@ -52,6 +58,15 @@ export class FakeWhatsAppProvider implements WhatsAppProvider {
   onContactoResuelto(cb: (conexionId: string, jid: string, info: { jidReal?: string | null; nombre?: string | null }) => void): void {
     this.contactoCbs.push(cb);
   }
+  async resolverInfoPerfil(_conexionId: string, jid: string): Promise<string | null> {
+    return this.infos.get(jid) ?? null;
+  }
+  async marcarLeidos(conexionId: string, jid: string, waMessageIds: string[]): Promise<void> {
+    this.leidos.push({ conexionId, jid, waMessageIds });
+  }
+  onLidMapping(cb: (conexionId: string, lid: string, pn: string) => void): void { this.lidCbs.push(cb); }
+  onCambioMensaje(cb: (conexionId: string, cambio: WhatsAppCambioMensaje) => void): void { this.cambioCbs.push(cb); }
+  onPerfilPropio(cb: (conexionId: string, perfil: { nombre: string | null; fotoUrl: string | null }) => void): void { this.perfilCbs.push(cb); }
 
   // ---- Solo para pruebas / smoke manual local ----
   simulateQr(conexionId: string, qr = "fake-qr-payload"): void {
@@ -73,4 +88,7 @@ export class FakeWhatsAppProvider implements WhatsAppProvider {
   simulateContactoResuelto(conexionId: string, jid: string, info: { jidReal?: string | null; nombre?: string | null }): void {
     this.contactoCbs.forEach((cb) => cb(conexionId, jid, info));
   }
+  simulateLidMapping(conexionId: string, lid: string, pn: string): void { this.lidCbs.forEach((cb) => cb(conexionId, lid, pn)); }
+  simulateCambioMensaje(conexionId: string, cambio: WhatsAppCambioMensaje): void { this.cambioCbs.forEach((cb) => cb(conexionId, cambio)); }
+  simulatePerfilPropio(conexionId: string, perfil: { nombre: string | null; fotoUrl: string | null }): void { this.perfilCbs.forEach((cb) => cb(conexionId, perfil)); }
 }

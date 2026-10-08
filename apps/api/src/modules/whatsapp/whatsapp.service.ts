@@ -6,7 +6,8 @@ import { publicarEvento } from "../../lib/marketing/eventos.js";
 import { query } from "../../shared/db.js";
 import * as repo from "./whatsapp.repository.js";
 import * as oportunidadesService from "../oportunidades/oportunidades.service.js";
-import type { WhatsAppConnectionUpdate, WhatsAppIncomingMessage } from "./providers/whatsapp-provider.interface.js";
+import type { WhatsAppCambioMensaje, WhatsAppConnectionUpdate, WhatsAppIncomingMessage } from "./providers/whatsapp-provider.interface.js";
+import { previewDe } from "./providers/baileys-contenido.js";
 
 function jidToPhone(jid: string): string {
   return jid.split("@")[0] || jid;
@@ -22,6 +23,14 @@ async function notifyEnviar(mensajeId: string): Promise<void> {
   await query("SELECT pg_notify('whatsapp_enviar', $1)", [JSON.stringify({ mensaje_id: mensajeId })]).catch((e) =>
     console.error("[whatsapp notify enviar]", e?.message)
   );
+}
+
+/** Las fotos del CDN de WhatsApp caducan: se descargan y se refrescan cada 7 días. */
+const REFRESCO_FOTO_MS = 7 * 24 * 3600 * 1000;
+export function fotoNecesitaRefresco(c: { foto_perfil_url: string | null; foto_actualizada_at?: string | Date | null }): boolean {
+  if (!c.foto_actualizada_at) return true;
+  if (c.foto_perfil_url && c.foto_perfil_url.startsWith("http")) return true;
+  return Date.now() - new Date(c.foto_actualizada_at).getTime() > REFRESCO_FOTO_MS;
 }
 
 async function notifyPedirFoto(conversacionId: string): Promise<void> {
@@ -80,6 +89,13 @@ export async function registrarActualizacionEstado(conexionId: string, update: W
  * a un contacto por teléfono) y persiste el mensaje de forma idempotente por `wa_message_id`.
  */
 export async function registrarMensajeEntrante(conexionId: string, msg: WhatsAppIncomingMessage): Promise<void> {
+  // @lid → teléfono: si el proveedor ya trae el par, se reconcilia (renombra o fusiona la conversación
+  // que existiera con el @lid); si solo trae el @lid, se busca en el mapa guardado.
+  if (msg.jidLid && msg.jid !== msg.jidLid) await reconciliarLid(conexionId, msg.jidLid, msg.jid);
+  if (msg.jid.endsWith("@lid")) {
+    const pn = await repo.pnDeLid(conexionId, msg.jid);
+    if (pn) msg = { ...msg, jidLid: msg.jid, jid: pn, jidReal: pn };
+  }
   let conversacion = await repo.getConversacionPorJid(conexionId, msg.jid);
   if (!conversacion) {
     const primeraEtapa = await repo.getPrimeraEtapa();
@@ -95,7 +111,7 @@ export async function registrarMensajeEntrante(conexionId: string, msg: WhatsApp
       // directorio de contactos de WhatsApp lo resuelva (`registrarContactoResuelto`).
       nombreWhatsapp: !msg.fromMe ? msg.nombrePerfil ?? null : null,
       fotoPerfilUrl: msg.fotoPerfilUrl ?? null,
-      telefonoReal: msg.jidReal ?? null,
+      telefonoReal: msg.jidReal ?? (msg.jid.endsWith("@s.whatsapp.net") ? msg.jid : null),
       etapaId: primeraEtapa.id,
       contactoId: contacto?.id ?? null,
       contactoVinculoEstado: contacto ? "vinculado_auto" : "sin_vincular",
@@ -124,12 +140,15 @@ export async function registrarMensajeEntrante(conexionId: string, msg: WhatsApp
     archivoUrl: msg.archivoUrl ?? null,
     archivoNombre: msg.archivoNombre ?? null,
     archivoTipo: msg.archivoTipo ?? null,
+    archivoTamanio: msg.archivoTamanio ?? null,
+    esNotaVoz: msg.esNotaVoz ?? false,
+    duracionSeg: msg.duracionSeg ?? null,
+    datos: msg.datos ?? null,
     estadoEntrega: "entregado",
   });
   if (!insertado) return; // ya lo teníamos (reintento del proveedor o eco de un envío propio) — idempotencia
 
-  const preview = msg.contenido || (msg.tipo === "imagen" ? "📷 Imagen" : msg.tipo === "video" ? "🎥 Video" : msg.tipo === "audio" ? "🎤 Audio" : "📎 Archivo");
-  await repo.tocarUltimoMensaje(conversacion.id, preview, direccion);
+  await repo.tocarUltimoMensaje(conversacion.id, previewDe(msg.tipo, msg.contenido, msg.esNotaVoz), direccion);
   await notifyEvento({ tipo: "mensaje", conexion_id: conexionId, conversacion_id: conversacion.id, mensaje: insertado });
   if (direccion === "entrante") {
     void publicarEvento("whatsapp_message_received", {
@@ -210,25 +229,25 @@ export async function listarConversaciones(conexionId: string, filtros: repo.Fil
   // La resolución automática de la foto solo ocurre cuando llega o sale un mensaje nuevo — una
   // conversación vieja sin actividad reciente se quedaría sin foto para siempre. Al listar (y al
   // abrir, ver abajo) se pide de una vez, sin bloquear la respuesta.
-  for (const c of conversaciones) if (!c.foto_perfil_url) notifyPedirFoto(c.id).catch(() => {});
+  for (const c of conversaciones) if (fotoNecesitaRefresco(c)) notifyPedirFoto(c.id).catch(() => {});
   return conversaciones;
 }
 
 export async function obtenerConversacion(id: string) {
   const conversacion = await repo.getConversacion(id);
   if (!conversacion) return null;
-  if (!conversacion.foto_perfil_url) notifyPedirFoto(id).catch(() => {});
+  if (fotoNecesitaRefresco(conversacion)) notifyPedirFoto(id).catch(() => {});
   const tags = await repo.tagsDeConversacion(id);
   return { ...conversacion, tags };
 }
 
 /** El worker escucha esto y, si tiene una conexión activa para esa conversación, intenta
  * resolver su foto de perfil y la guarda — llamado desde whatsapp-connection-manager.ts. */
-export async function registrarFotoPerfilResuelta(conversacionId: string, url: string): Promise<void> {
-  await repo.actualizarFotoPerfil(conversacionId, url);
+export async function registrarFotoPerfilResuelta(conversacionId: string, url: string | null, info?: string | null): Promise<void> {
+  await repo.refrescarFotoPerfil(conversacionId, url, info);
   const conv = await repo.getConversacion(conversacionId);
   if (!conv) return;
-  await notifyEvento({ tipo: "foto_perfil", conexion_id: conv.conexion_id, conversacion_id: conversacionId, foto_perfil_url: url });
+  await notifyEvento({ tipo: "foto_perfil", conexion_id: conv.conexion_id, conversacion_id: conversacionId, foto_perfil_url: conv.foto_perfil_url, info_perfil: conv.info_perfil ?? null });
 }
 
 /** El worker escucha `contacts.upsert`/`contacts.update`/`chats.phoneNumberShare` de Baileys —
@@ -239,9 +258,46 @@ export async function registrarFotoPerfilResuelta(conversacionId: string, url: s
 export async function registrarContactoResuelto(conexionId: string, jid: string, info: { jidReal?: string | null; nombre?: string | null }): Promise<void> {
   const conversacion = await repo.getConversacionPorJid(conexionId, jid);
   if (!conversacion) return;
-  if (info.nombre && !conversacion.nombre_whatsapp) await repo.actualizarNombreSiFalta(conversacion.id, info.nombre);
+  if (info.nombre) await repo.actualizarNombre(conversacion.id, info.nombre);
   if (info.jidReal && !conversacion.telefono_real) await repo.actualizarTelefonoReal(conversacion.id, info.jidReal);
   await notifyEvento({ tipo: "contacto_resuelto", conexion_id: conexionId, conversacion_id: conversacion.id });
+}
+
+/**
+ * Par @lid ↔ teléfono descubierto. Se guarda, y si existe una conversación con el @lid se pasa al
+ * teléfono: se renombra si no había otra con ese número, o se fusiona con ella si ya existía.
+ */
+export async function reconciliarLid(conexionId: string, lid: string, pn: string): Promise<void> {
+  await repo.guardarLidMap(conexionId, lid, pn);
+  const porLid = await repo.getConversacionPorJid(conexionId, lid);
+  if (!porLid) return;
+  const porPn = await repo.getConversacionPorJid(conexionId, pn);
+  if (!porPn) {
+    await repo.cambiarJidConversacion(porLid.id, pn, pn);
+    if (!porLid.contacto_id) {
+      const contacto = await repo.buscarContactoPorTelefono(jidToPhone(pn));
+      if (contacto) await repo.vincularContacto(porLid.id, contacto.id, "vinculado_auto");
+    }
+    await notifyEvento({ tipo: "contacto_resuelto", conexion_id: conexionId, conversacion_id: porLid.id });
+    return;
+  }
+  if (porPn.id === porLid.id) return;
+  await repo.fusionarConversaciones(porLid.id, porPn.id);
+  await notifyEvento({ tipo: "conversacion_fusionada", conexion_id: conexionId, origen_id: porLid.id, conversacion_id: porPn.id });
+}
+export const registrarLidMapping = reconciliarLid;
+
+/** Reacción / edición / borrado de un mensaje que ya teníamos. */
+export async function registrarCambioMensaje(conexionId: string, cambio: WhatsAppCambioMensaje): Promise<void> {
+  const m = await repo.aplicarCambioMensaje(conexionId, cambio.waMessageId, cambio);
+  if (!m) return;
+  await notifyEvento({ tipo: "mensaje_actualizado", conexion_id: conexionId, conversacion_id: m.conversacion_id, mensaje: m });
+}
+
+/** Nombre y foto (ya descargada) de la cuenta conectada. */
+export async function registrarPerfilPropio(conexionId: string, perfil: { nombre: string | null; fotoUrl: string | null }): Promise<void> {
+  await repo.setPerfilConexion(conexionId, perfil.nombre, perfil.fotoUrl);
+  await notifyEvento({ tipo: "perfil", conexion_id: conexionId, perfil_nombre: perfil.nombre, perfil_foto_url: perfil.fotoUrl });
 }
 
 export async function listarMensajes(conversacionId: string, limit?: number, before?: string) {
@@ -249,7 +305,14 @@ export async function listarMensajes(conversacionId: string, limit?: number, bef
 }
 
 export async function marcarLeida(conversacionId: string, userId: string | null) {
+  const waIds = await repo.waIdsNoVistos(conversacionId);
   await repo.marcarLeida(conversacionId, userId);
+  // Como en WhatsApp Web: abrir el chat envía la confirmación de lectura (palomitas azules) al contacto.
+  if (waIds.length) {
+    await query("SELECT pg_notify('whatsapp_leer', $1)", [JSON.stringify({ conversacion_id: conversacionId, wa_ids: waIds })]).catch((e) =>
+      console.error("[whatsapp notify leer]", e?.message)
+    );
+  }
 }
 
 export async function cambiarEtapa(conversacionId: string, etapaId: string) {
@@ -300,7 +363,10 @@ export async function abrirConversacionConContacto(contactoId: string, conexionI
 export async function enviarMensaje(
   conversacionId: string,
   userId: string,
-  d: { tipo: string; contenido?: string | null; archivoUrl?: string | null; archivoNombre?: string | null; archivoTamanio?: number | null }
+  d: {
+    tipo: string; contenido?: string | null; archivoUrl?: string | null; archivoNombre?: string | null; archivoTamanio?: number | null;
+    archivoTipo?: string | null; esNotaVoz?: boolean; duracionSeg?: number | null;
+  }
 ) {
   const conversacion = await repo.getConversacion(conversacionId);
   if (!conversacion) throw new Error("Conversación no encontrada");
@@ -313,13 +379,15 @@ export async function enviarMensaje(
     archivoUrl: d.archivoUrl ?? null,
     archivoNombre: d.archivoNombre ?? null,
     archivoTamanio: d.archivoTamanio ?? null,
+    archivoTipo: d.archivoTipo ?? null,
+    esNotaVoz: d.esNotaVoz ?? false,
+    duracionSeg: d.duracionSeg ?? null,
     enviadoPor: userId,
     estadoEntrega: "pendiente",
   });
   if (!mensaje) throw new Error("No se pudo registrar el mensaje");
 
-  const preview = d.contenido || (d.tipo === "imagen" ? "📷 Imagen" : d.tipo === "video" ? "🎥 Video" : d.tipo === "audio" ? "🎤 Audio" : "📎 Archivo");
-  await repo.tocarUltimoMensaje(conversacionId, preview, "saliente");
+  await repo.tocarUltimoMensaje(conversacionId, previewDe(d.tipo, d.contenido, d.esNotaVoz), "saliente");
   await notifyEnviar(mensaje.id);
   return mensaje;
 }

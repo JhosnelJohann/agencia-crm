@@ -113,4 +113,9 @@ export class MetaCloudWhatsAppProvider implements WhatsAppProvider {
   onMessageStatusUpdate(_cb: (conexionId: string, waMessageId: string, estado: WhatsAppMensajeEstado) => void): void {}
   onContactoResuelto(): void {}
   async resolverFotoPerfil(): Promise<string | null> { return null; } // la Cloud API no expone fotos de perfil
+  async resolverInfoPerfil(): Promise<string | null> { return null; }
+  async marcarLeidos(): Promise<void> {} // la Cloud API marca leído por mensaje vía webhook propio (fuera de alcance)
+  onLidMapping(): void {}
+  onCambioMensaje(): void {}
+  onPerfilPropio(): void {}
 }

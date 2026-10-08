@@ -3,7 +3,8 @@
 // `useMultiFileAuthState` (pensado solo para bots de un solo archivo local, según su propio
 // comentario) para que el proceso pueda reiniciarse/redesplegarse sin perder la sesión de
 // WhatsApp — igual que el resto de GOZZ no guarda estado solo en el disco de una instancia.
-import { BufferJSON, initAuthCreds, proto, type AuthenticationState } from "@whiskeysockets/baileys";
+import type { AuthenticationState } from "@whiskeysockets/baileys" with { "resolution-mode": "import" };
+import { cargarBaileys } from "./baileys-lib.js";
 import { encrypt, decrypt } from "../../../lib/crypto.js";
 import * as repo from "../whatsapp.repository.js";
 
@@ -28,6 +29,7 @@ export async function usePostgresAuthState(conexionId: string): Promise<{
   state: AuthenticationState;
   saveCreds: () => Promise<void>;
 }> {
+  const { BufferJSON, initAuthCreds, proto } = await cargarBaileys();
   const files = await loadFileMap(conexionId);
 
   const readData = (file: string): any => {

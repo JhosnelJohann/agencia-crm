@@ -77,8 +77,27 @@ export function createHttpApp(): HttpApp {
     try {
       const buf = await readUploadedFileBytes("/uploads/" + rel);
       res.setHeader("Content-Type", guessContentType(rel));
-      res.setHeader("Content-Length", String(buf.length));
       res.setHeader("Cache-Control", "private, max-age=300");
+      res.setHeader("Accept-Ranges", "bytes");
+      // HTTP Range: sin esto, el reproductor de audio/vídeo no puede adelantar (y Safari ni reproduce).
+      const rango = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ""));
+      if (rango && (rango[1] || rango[2])) {
+        const total = buf.length;
+        let inicio = rango[1] ? Number(rango[1]) : Math.max(0, total - Number(rango[2]));
+        let fin = rango[1] && rango[2] ? Number(rango[2]) : total - 1;
+        fin = Math.min(fin, total - 1);
+        if (inicio > fin || inicio >= total) {
+          res.status(416).setHeader("Content-Range", `bytes */${total}`);
+          res.end();
+          return;
+        }
+        res.status(206);
+        res.setHeader("Content-Range", `bytes ${inicio}-${fin}/${total}`);
+        res.setHeader("Content-Length", String(fin - inicio + 1));
+        res.end(buf.subarray(inicio, fin + 1));
+        return;
+      }
+      res.setHeader("Content-Length", String(buf.length));
       res.end(buf);
     } catch {
       res.status(404).json({ error: "not_found" });
