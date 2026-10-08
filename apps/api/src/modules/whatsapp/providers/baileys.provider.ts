@@ -211,6 +211,12 @@ export class BaileysWhatsAppProvider implements WhatsAppProvider {
     } catch { return null; }
   }
 
+  async resolverPnDeLid(conexionId: string, lid: string): Promise<string | null> {
+    const sock = this.sockets.get(conexionId);
+    if (!sock || !esLid(lid)) return null;
+    return this.pnDeLid(sock, lid);
+  }
+
   async resolverFotoPerfil(conexionId: string, jid: string): Promise<string | null> {
     const sock = this.sockets.get(conexionId);
     if (!sock) return null;

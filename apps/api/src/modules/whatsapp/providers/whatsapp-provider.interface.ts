@@ -74,6 +74,9 @@ export interface WhatsAppProvider {
   resolverFotoPerfil(conexionId: string, jid: string): Promise<string | null>;
   /** "Info" (estado) del contacto en WhatsApp, si es visible. */
   resolverInfoPerfil(conexionId: string, jid: string): Promise<string | null>;
+  /** Teléfono real de un @lid si el proveedor ya lo conoce (WhatsApp no permite pedirlo bajo demanda:
+   * llega con mensajes nuevos, la sincronización de contactos o el historial). */
+  resolverPnDeLid(conexionId: string, lid: string): Promise<string | null>;
   /** Envía a WhatsApp la confirmación de lectura (palomitas azules) de estos mensajes entrantes. */
   marcarLeidos(conexionId: string, jid: string, waMessageIds: string[]): Promise<void>;
   /** WhatsApp sincroniza su directorio de contactos (nombre guardado en el teléfono, y a veces el

@@ -58,6 +58,10 @@ export class FakeWhatsAppProvider implements WhatsAppProvider {
   onContactoResuelto(cb: (conexionId: string, jid: string, info: { jidReal?: string | null; nombre?: string | null }) => void): void {
     this.contactoCbs.push(cb);
   }
+  public lids = new Map<string, string>();
+  async resolverPnDeLid(_conexionId: string, lid: string): Promise<string | null> {
+    return this.lids.get(lid) ?? null;
+  }
   async resolverInfoPerfil(_conexionId: string, jid: string): Promise<string | null> {
     return this.infos.get(jid) ?? null;
   }
