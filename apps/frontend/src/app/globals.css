@@ -1126,6 +1126,14 @@ html.fx-off .modal-surface {
 }
 /* La escena va detrás de todo (z-index negativo): sobre el fondo de <html>, bajo el contenido. */
 html.fx-off .aurora-mesh { animation: none; }
+/* Vídeo plexus del login: blanco sobre negro → naranja GOZZ; `screen` vuelve transparente el negro. */
+.login-video {
+  filter: sepia(1) saturate(5) hue-rotate(-12deg) brightness(0.85) contrast(1.1);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 35%, transparent 100%);
+}
 
 /* --- Cristal 3D --------------------------------------------------------------------------- */
 :root {
