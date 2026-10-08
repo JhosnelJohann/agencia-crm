@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -496,7 +497,7 @@ export default function ContactosPage() {
             </div>
           ) : vista === "lista" ? (
             <div className="glass rounded-2xl overflow-hidden">
-              <div className="overflow-x-auto">
+              <HorizontalScrollArea>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-left text-[13px] font-ui uppercase tracking-wider text-ink-sub border-b border-black/5">
@@ -564,7 +565,7 @@ export default function ContactosPage() {
                     })}
                   </tbody>
                 </table>
-              </div>
+              </HorizontalScrollArea>
               <Pagination
                 page={page} pageSize={pageSize} total={total} onPageChange={irAPagina} disabled={cargando}
                 pageSizeOptions={TAMANOS_PAGINA} onPageSizeChange={setPageSize} showFirstLast

@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { MarketingTab } from "@/components/contactos/MarketingTab";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -397,7 +398,7 @@ export default function ContactoDetailPage() {
           </div>
         </motion.div>
 
-        <div className="flex items-center gap-1 mb-4 overflow-x-auto pb-2">
+        <HorizontalScrollArea className="flex items-center gap-1 mb-4 pb-2" size="sm">
           {/* 🔴 T3 · «Hay unos contactos a los que les aparece el apartado de documentos y por
               qué otros no» (Juan Manuel, 2026-08-24). No era intermitente: la pestaña estaba
               condicionada a que el contacto viniera de un CRM externo (Pipedrive/Zoho/Bitrix,
@@ -414,7 +415,7 @@ export default function ContactoDetailPage() {
               {t === "referidos" && data.referidos?.length > 0 && <span className="ml-1.5 text-[10px] opacity-80">({data.referidos.length})</span>}
             </button>
           ))}
-        </div>
+        </HorizontalScrollArea>
 
         {tab === "resumen" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

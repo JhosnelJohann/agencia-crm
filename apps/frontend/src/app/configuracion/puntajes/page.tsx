@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -160,7 +161,7 @@ export default function PuntajesConfigPage() {
                   <Users className="h-4 w-4 text-brand-orange" /> Puntajes por usuario ({usuarios.length})
                 </h2>
               </div>
-              <div className="overflow-x-auto">
+              <HorizontalScrollArea>
                 <table className="w-full text-sm">
                   <thead className="bg-white/[0.04]">
                     <tr className="text-[12px] uppercase tracking-wider text-ink-sub font-ui">
@@ -206,7 +207,7 @@ export default function PuntajesConfigPage() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </HorizontalScrollArea>
             </div>
           </div>
         )}

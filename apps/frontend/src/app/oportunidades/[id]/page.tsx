@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -400,7 +401,7 @@ export default function OportunidadDetailPage() {
         </motion.div>
 
         {/* Tabs */}
-        <div className="glass-3d glass-blur rounded-2xl p-1.5 mb-4 flex items-center gap-1 overflow-x-auto scrollbar-thin">
+        <HorizontalScrollArea className="glass-3d glass-blur rounded-2xl p-1.5 mb-4 flex items-center gap-1 scrollbar-thin" size="sm">
           {TABS.map((t) => {
             const Icon = t.Icon;
             const active = tab === t.key;
@@ -418,7 +419,7 @@ export default function OportunidadDetailPage() {
               </button>
             );
           })}
-        </div>
+        </HorizontalScrollArea>
 
         {/* Tab content */}
         <div className="glass-3d rounded-3xl p-8">

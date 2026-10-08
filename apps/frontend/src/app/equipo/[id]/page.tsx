@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -125,7 +126,7 @@ export default function PerfilEquipoPage() {
 
         {/* Tabs */}
         <div className="sticky top-0 z-20 bg-bg-dark/80 backdrop-blur-lg border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-6 md:px-10 overflow-x-auto scrollbar-thin">
+          <HorizontalScrollArea className="max-w-7xl mx-auto px-6 md:px-10 scrollbar-thin" size="sm">
             <div className="flex items-center gap-1 py-2 min-w-max">
               {TABS.map((t) => (
                 <button
@@ -140,7 +141,7 @@ export default function PerfilEquipoPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </HorizontalScrollArea>
         </div>
 
         {tab === "tareas" && <TareasTab userId={id} />}

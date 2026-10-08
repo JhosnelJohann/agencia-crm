@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { WireShape } from "@/components/motion/WireShape";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -1090,7 +1091,7 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
             </button>
           )}
 
-          <div className="flex-1 min-w-0 flex items-center gap-1 overflow-x-auto scrollbar-thin">
+          <HorizontalScrollArea className="flex-1 min-w-0 flex items-center gap-1 scrollbar-thin w-full" outerClassName="flex-1 min-w-0" size="sm">
             {panel !== "carpeta" ? (
               <span className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 font-ui font-bold gradient-orange text-white text-xs">
                 {panel === "compartidos" && <><Share2 className="h-3.5 w-3.5" /> Compartidos conmigo</>}
@@ -1123,7 +1124,7 @@ export function DriveBrowser({ rootScope = "global", oportunidadId, userId, clas
             ) : (
               <div className="text-ink-sub text-xs font-ui">Selecciona una carpeta</div>
             )}
-          </div>
+          </HorizontalScrollArea>
 
           <div className="flex items-center gap-2 shrink-0">
             {/* Search con shortcut kbd */}
@@ -3383,7 +3384,7 @@ function ExcelPreview({ sheets }: { sheets: { name: string; html: string; rows: 
         </div>
       </div>
       {sheets.length > 1 && (
-        <div className="flex items-center gap-0.5 px-2 pt-1 border-b border-line bg-white/[0.04] overflow-x-auto">
+        <HorizontalScrollArea className="flex items-center gap-0.5 px-2 pt-1 border-b border-line bg-white/[0.04]" size="sm">
           {sheets.map((s2, i) => (
             <button
               key={i}
@@ -3398,7 +3399,7 @@ function ExcelPreview({ sheets }: { sheets: { name: string; html: string; rows: 
               {s2.name}
             </button>
           ))}
-        </div>
+        </HorizontalScrollArea>
       )}
       <div className="flex-1 overflow-auto bg-bg-darkcard">
         <div
@@ -3530,7 +3531,7 @@ function PowerPointPreview({ slides }: { slides: { number: number; title: string
           </div>
         </div>
       </div>
-      <div className="border-t border-line bg-bg-darkcard px-3 py-2 flex items-center gap-2 overflow-x-auto">
+      <HorizontalScrollArea className="border-t border-line bg-bg-darkcard px-3 py-2 flex items-center gap-2" size="sm">
         {slides.map((s, i) => (
           <button
             key={i}
@@ -3545,7 +3546,7 @@ function PowerPointPreview({ slides }: { slides: { number: number; title: string
             {s.number}
           </button>
         ))}
-      </div>
+      </HorizontalScrollArea>
     </div>
   );
 }

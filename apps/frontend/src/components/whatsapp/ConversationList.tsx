@@ -1,4 +1,5 @@
 "use client";
+import { HorizontalScrollArea } from "@/components/ui/HorizontalScrollArea";
 import { nombreConversacion } from "@/lib/whatsapp-numero";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -122,7 +123,7 @@ export function ConversationList({
       </div>
 
       <div className="relative shrink-0">
-        <div className="flex items-center gap-1.5 px-3 py-2 overflow-x-auto border-b border-black/5 dark:border-white/10" data-lenis-prevent>
+        <HorizontalScrollArea className="flex items-center gap-1.5 px-3 py-2 border-b border-black/5 dark:border-white/10" size="sm" tone="dark" lenisPrevent>
           <button
             onClick={() => onEtapaFiltroChange(null)}
             className={cn(
@@ -156,11 +157,8 @@ export function ConversationList({
             </button>
           ))}
           <TagFiltroDropdown tags={tags} valor={tagFiltro} onChange={onTagFiltroChange} />
-        </div>
-        {/* El filtro desliza horizontal, pero el borde del panel cortaba el último chip a lo
-            bruto sin ninguna pista de que hay más — esta máscara lo convierte en "desliza para
-            ver más", no en un error visual. */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-[1px] w-8 bg-gradient-to-l from-bg-canvas dark:from-[#0B0F16] to-transparent" />
+        </HorizontalScrollArea>
+        {/* La pista de "hay más" (degradado + flechas) la pone HorizontalScrollArea, solo cuando hay más. */}
       </div>
 
       <div className="flex-1 overflow-y-auto" data-lenis-prevent>

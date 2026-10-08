@@ -1059,7 +1059,7 @@ export default function OportunidadesPage() {
               )}
             </div>
 
-            <div className="overflow-x-auto">
+            <HorizontalScrollArea>
               <table className="w-full text-sm">
                 <thead className="bg-black/[0.02] text-[13px] font-ui uppercase tracking-wider text-ink-sub">
                   <tr>
@@ -1127,7 +1127,7 @@ export default function OportunidadesPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </HorizontalScrollArea>
 
             {/* El MISMO componente que ya usan Contactos y Drive. */}
             <Pagination
